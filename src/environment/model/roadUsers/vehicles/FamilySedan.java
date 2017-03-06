@@ -1,4 +1,4 @@
-package environment.model.vehicles;
+package environment.model.roadUsers.vehicles;
 
 import java.util.Random;
 

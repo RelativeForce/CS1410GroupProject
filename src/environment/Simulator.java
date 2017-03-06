@@ -1,5 +1,7 @@
 package environment;
 
+import environment.model.Station;
+
 /**
  * 
  * This object runs the simulation that the user will interact with.
@@ -10,8 +12,20 @@ package environment;
  */
 public class Simulator {
 	
+	
+	Station station;
+	
 	// Constructor
 	public Simulator(){
+		
+		
+		
+		simulate();
+	}
+	
+	private void simulate(){
+		
+		
 		
 	}
 	
@@ -19,7 +33,7 @@ public class Simulator {
 
 	public static void main(String[] args) {
 
-		// Launch game.
+		Simulator sim = new Simulator();
 		
 	}
 
