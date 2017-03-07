@@ -1,4 +1,4 @@
-package environment.model.vehicles;
+package environment.model.roadUsers.vehicles;
 
 /**
  * The <code>Vehicle</code> class models a <code>Vehicle</code>
