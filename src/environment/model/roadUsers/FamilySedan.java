@@ -20,7 +20,7 @@ public class FamilySedan extends RoadUser {
 	@Override
 	public void shop() {
 		// TODO Auto-generated method stub
-		// Hey mom i am amazing
+		
 	}
 
 }
