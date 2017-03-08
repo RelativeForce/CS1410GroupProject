@@ -6,42 +6,93 @@ import environment.model.locations.Location;
 import environment.model.roadUsers.RoadUser;
 
 public class Station {
-	
+
 	private LinkedList<Location> locations;
-	private HashMap<Class<? extends Location>, RoadUser> toMove;
+	private HashMap<RoadUser, Class<? extends Location>> toMove;
 	private int roadUsersRejected;
-	
-	public Station(){
-		
-		toMove = new HashMap<Class<? extends Location>, RoadUser>();
+	private Class<? extends Location> startLoaction;
+
+	public Station(Class<? extends Location> startLocation) {
+
+		toMove = new HashMap<RoadUser, Class<? extends Location>>();
 		locations = new LinkedList<Location>();
 		roadUsersRejected = 0;
+		this.startLoaction = startLocation;
+
+	}
+
+	public void processLocations() {
+
+		relocateRoadUsers();
+		
+		for(Location location : locations){
+			location.processQueue(toMove);
+		}
 		
 	}
-	
-	public void processLocations(){
-		
-	}
-	
+
 	@Override
-	public String toString(){
-		
-		
+	public String toString() {
+
 		return "";
 	}
-	
-	public void enterStation (RoadUser roadUser){
-		
-		
+
+	public void enterStation(RoadUser roadUser) {
+
+		if (isSpaceInStation(roadUser)) {
+
+			for (Location currentLocation : locations) {
+				if (currentLocation.getClass() == startLoaction && currentLocation.isEnoughSpaceFor(roadUser)) {
+					currentLocation.enter(roadUser);
+					break;
+				}
+			}
+
+		} else {
+			roadUsersRejected++;
+		}
+
 	}
 	
-	private boolean isSpaceInStation(){
-		
-		
+	public int getRoadUsersRejected(){
+		return roadUsersRejected;
+	}
+
+	private boolean isSpaceInStation(RoadUser newRoadUser) {
+
+		for (Location currentLocation : locations) {
+
+			if (currentLocation.getClass() == startLoaction) {
+				if (currentLocation.isEnoughSpaceFor(newRoadUser)) {
+					return true;
+				}
+			}
+		}
+
 		return false;
 	}
-	
-	private void relocateRoadUsers(){
+
+	private void relocateRoadUsers() {
 		
+		for(RoadUser roadUser: toMove.keySet()){
+			
+			Class<? extends Location> nextLocation = toMove.get(roadUser);
+
+			for(Location location : locations){
+				
+				if(location.getClass() == nextLocation && location.isEnoughSpaceFor(roadUser)){
+					
+					location.enter(roadUser);
+					toMove.remove(roadUser);
+					break;
+					
+				}
+			}
+		}
+		
+		if(!toMove.isEmpty()){
+			// Put it back where it came from! Or so help me!
+		}
+
 	}
 }
