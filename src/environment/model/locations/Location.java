@@ -10,14 +10,16 @@ import environment.model.roadUsers.RoadUser;
  * the <code>Station</code>. This should be extended with concrete subclasses.
  * 
  * @author Joshua_Eddy
- * @version 08/03/2017
+ * @version 09/03/2017
  *
  */
 public abstract class Location {
+	
+	// Protected Methods -----------------------------------------------------
 
 	/**
-	 * Contains all the <code>RoadUser</code>s that are present in
-	 * <code>this Location</code>.
+	 * Contains all the {@link RoadUser}s that are present in <code>this</code>
+	 * {@link Location}.
 	 * 
 	 * @see java.util.LinkedList
 	 * @see #processQueue(HashMap)
@@ -26,87 +28,91 @@ public abstract class Location {
 	protected LinkedList<RoadUser> queue;
 
 	/**
-	 * The <code>Class</code> of the next <code>Location</code>. This is generic
-	 * but must be a subclass of <code>Location</code>.
+	 * The <code>Class</code> of the next {@link Location}. This is generic but
+	 * must be a subclass of {@link Location}.
 	 */
 	protected Class<? extends Location> nextLocation;
 
 	/**
-	 * The number of <code>RoadUser</code>s that have passed through this
-	 * <code>Location</code>. The {@link #processQueue(HashMap)} method is
-	 * assumed to process the queue and eventually remove all the
-	 * <code>RoadUser</code>s from <code>this Location</code>.
+	 * The number of {@link RoadUser}s that have passed through this
+	 * {@link Location}. The {@link #processQueue(HashMap)} method is assumed to
+	 * process the queue and eventually remove all the {@link RoadUser}s from
+	 * <code>this</code> {@link Location}.
 	 * 
 	 * @see #processQueue(HashMap)
 	 */
 	protected int roadUsersProcessed;
 
 	/**
-	 * The amount of money that <code>this Location</code> has generated from
-	 * processing the <code>RoadUser</code>s that pass through it.
+	 * The amount of money that <code>this</code> {@link Location} has generated
+	 * from processing the {@link RoadUser}s that pass through it.
 	 * 
 	 * @see #processQueue(HashMap)
 	 */
 	protected double profit;
 
 	/**
-	 * The amount of fuel distributed to the <code>RoadUser</code>s that pass
-	 * through <code>this Location</code>.
+	 * The amount of fuel distributed to the {@link RoadUser}s that pass through
+	 * <code>this</code> {@link Location}.
 	 * 
 	 * @see #processQueue(HashMap)
 	 */
 	protected int fuelSold;
 
 	/**
-	 * This value holds the maximum number of units (size of
-	 * <code>RoadUser</code>s) that this location can have at any given point.
-	 * If this is initialised as <code>0</code> then the maximum size of the
-	 * <code>Location</code>s queue is infinite.
+	 * This value holds the maximum number of units (size of {@link RoadUser}s)
+	 * that this location can have at any given point. If this is initialised as
+	 * <code>0</code> then the maximum size of the {@link Location}'s queue is
+	 * infinite.
 	 */
 	protected int maxQueueSize;
 
+	// Constructor -----------------------------------------------------------
+	
 	/**
-	 * Constructs a new <code>Location</code> for use in the
-	 * <code>Station</code>.
+	 * Constructs a new {@link Location} for use in the <code>Station</code>.
 	 * 
 	 * @param nextLocation
 	 *            The <code>Class</code> of the type of the next
-	 *            <code>Location</code> that <code>this</code> will move the
-	 *            <code>RoadUser</code>s contained with in it too.
+	 *            {@link Location} that <code>this</code> will move the
+	 *            {@link RoadUser}s contained with in it too.
 	 * @param maxQueueSize
-	 *            The maximum number of units (size of <code>RoadUser</code>s)
-	 *            that this location can have at any given point. If this is
+	 *            The maximum number of units (size of {@link RoadUser}s) that
+	 *            this location can have at any given point. If this is
 	 *            initialised as <code>0</code> then the maximum size of the
-	 *            <code>Location</code>s queue is infinite.
+	 *            {@link Location}s queue is infinite.
 	 * @see #processQueue(HashMap)
 	 * @see environment.model.roadUsers.RoadUser
 	 * @see environment.model.Station
 	 */
 	public Location(Class<? extends Location> nextLocation, int maxQueueSize) {
 
-		queue = new LinkedList<RoadUser>();
+		// Initialise all instance fields.
+		this.queue = new LinkedList<RoadUser>();
 		this.nextLocation = nextLocation;
-		roadUsersProcessed = 0;
-		profit = 0;
-		fuelSold = 0;
+		this.roadUsersProcessed = 0;
+		this.profit = 0;
+		this.fuelSold = 0;
 		this.maxQueueSize = maxQueueSize;
 
 	}
 
+	// Public Methods --------------------------------------------------------
+	
 	/**
 	 * Perform a process on the queue at <code>this</code> location. This
 	 * <code>abstract</code> method will be different for each location. This
 	 * method will be called upon every tick of the simulation.
 	 * 
 	 * @param toMove
-	 *            <code>HashMap&lt;RoadUser, Class&lt;? extends Location&gt;&gt;</code>
-	 *            that denotes the <code>RoadUser</code>s that the
-	 *            <code>Station</code> will move to the next
-	 *            <code>Location</code>. The Key of the HashMap is of type
-	 *            <code>RoadUser<code> as each road
-	 *            user to be moved should be unique. The <code>Class&lt;? extends Location&gt;&gt;</code>
-	 *            denotes the next <code>Location</code> of the
-	 *            <code>RoadUser</code> key assigned to it.
+	 *            <code>HashMap&lt;RoadUser, Class&lt;? extends {@link Location}&gt;&gt;</code>
+	 *            that denotes the {@link RoadUser}s that the
+	 *            <code>Station</code> will move to the next {@link Location}.
+	 *            The Key of the {@link HashMap} is of type {@link RoadUser} as
+	 *            each road user to be moved should be unique. The
+	 *            <code>Class&lt;? extends {@link Location}&gt;&gt;</code>
+	 *            denotes the next {@link Location} of the {@link RoadUser} key
+	 *            assigned to it.
 	 * 
 	 * @see environment.model.roadUsers.RoadUser
 	 * @see java.util.HashMap
@@ -115,11 +121,11 @@ public abstract class Location {
 	public abstract void processQueue(HashMap<RoadUser, Class<? extends Location>> toMove);
 
 	/**
-	 * Retrieves the <code>Class</code> of the next <code>Location</code> that
-	 * the <code>RoadUser</code>s inside <code>this Location</code> will be
+	 * Retrieves the <code>Class</code> of the next {@link Location} that the
+	 * <code>RoadUser</code>s inside <code>this</code> {@link Location} will be
 	 * moved to once they have been processed.
 	 * 
-	 * @return <code>Class&lt;? extends Location&gt;&gt;</code>
+	 * @return <code>Class&lt;? extends {@link Location}&gt;&gt;</code>
 	 * 
 	 * @see #processQueue(HashMap)
 	 * @see environment.model.Station
@@ -129,8 +135,8 @@ public abstract class Location {
 	}
 
 	/**
-	 * Retrieves the amount of money collected from the <code>RoadUser</code>s
-	 * that have been processed by <code>this Location</code>.
+	 * Retrieves the amount of money collected from the {@link RoadUser}s that
+	 * have been processed by <code>this</code> {@link Location}.
 	 * 
 	 * @return <code>double</code> profit
 	 * 
@@ -141,8 +147,9 @@ public abstract class Location {
 	}
 
 	/**
-	 * Retrieves the amount of gallons of fuel that <code>this Location</code>
-	 * has sold to the <code>RoadUser</code>s that have been processed.
+	 * Retrieves the amount of gallons of fuel that <code>this</code>
+	 * {@link Location} has sold to the {@link RoadUser}s that have been
+	 * processed.
 	 * 
 	 * @return <code>int</code> gallons of fuel sold.
 	 */
@@ -151,10 +158,10 @@ public abstract class Location {
 	}
 
 	/**
-	 * Retrieves the number of <code>RoadUser</code>s that have been processed
-	 * and removed from <code>this Location</code>.
+	 * Retrieves the number of {@link RoadUser}s that have been processed and
+	 * removed from <code>this</code> {@link Location}.
 	 * 
-	 * @return <code>int</code> number of <code>RoadUser</code>s that have been
+	 * @return <code>int</code> number of {@link RoadUser}s that have been
 	 *         processed.
 	 * @see #processQueue(HashMap)
 	 */
@@ -163,33 +170,33 @@ public abstract class Location {
 	}
 
 	/**
-	 * Adds a <code>RoadUser</code> to <code>this Location</code> only if the
-	 * new <code>RoadUser</code> is not <code>null</code> and there is enough
-	 * space in the queue for it.
+	 * Adds a {@link RoadUser} to <code>this</code> {@link Location} only if the
+	 * new {@link RoadUser} is not <code>null</code> and there is enough space
+	 * in the queue for it.
 	 * 
 	 * @param newRoadUser
-	 *            <code>RoadUser</code> to be added.
+	 *            {@link RoadUser} to be added.
 	 * @see #queue
 	 * @see #maxQueueSize
 	 * @see #processQueue(HashMap)
 	 * @see environment.model.roadUsers.RoadUser
 	 */
 	public void enter(RoadUser newRoadUser) {
-		if (newRoadUser != null && isEnoughSpaceFor(newRoadUser)) {
+		if (newRoadUser != null && isEnoughSpaceFor(newRoadUser) && !queue.contains(newRoadUser)) {
 			queue.add(newRoadUser);
 		}
 	}
 
 	/**
-	 * Checks if the parameter <code>RoadUser</code> can be placed into
-	 * <code>this Location</code> based on the size of the
-	 * <code>RoadUser</code>s vehicle.
+	 * Checks if the parameter {@link RoadUser} can be placed into
+	 * <code>this</code> {@link Location} based on the size of the
+	 * {@link RoadUser}'s vehicle.
 	 * 
 	 * @param roadUser
-	 *            The <code>RoadUser</code> that will potentially be added to
-	 *            <code>this Location</code>.
+	 *            The {@link RoadUser} that will potentially be added to
+	 *            <code>this</code> {@link Location}.
 	 * @return <code>boolean</code> of whether there is enough space for the
-	 *         parameter <code>RoadUser</code> to be added to this location.
+	 *         parameter {@link RoadUser} to be added to this location.
 	 * 
 	 * @see environment.model.Station
 	 * @see environment.model.roadUsers.RoadUser
@@ -211,6 +218,20 @@ public abstract class Location {
 		// Unless the maxQueueSize is zero meaning that there is no maximum size
 		// to the queue in this location.
 		return (currentQueueSize + roadUser.getVehicle().size <= maxQueueSize) || (maxQueueSize == 0);
+	}
+
+	/**
+	 * Used to return a {@link RoadUser} back to the front of the queue because
+	 * the next {@link Location} does not have any space.
+	 * 
+	 * @param roadUser
+	 *            {@link RoadUser} to be added back to the queue
+	 * @see environment.model.roadUsers.RoadUser
+	 */
+	public void returnToQueue(RoadUser roadUser) {
+
+		queue.addFirst(roadUser);
+
 	}
 
 }
