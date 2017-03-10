@@ -34,22 +34,16 @@ package environment.model.roadUsers.vehicles;
  * </p>
  * 
  * @author 	John Berg
- * @version 01/03/2017
+ * @version 09/09/2017
  * @since 	01/03/2017
  */
 public abstract class Vehicle {
 	
 	/**
-	 * The number of time units that the <code>Vehicle</code> has
-	 * existed represented as an <code>int</code>.
-	 */
-	private int timeSpent;
-	/**
 	 * The amount of fuel currently inside the tank of the <code>
-	 * Vehicle</code>, represented as an <code>int</code>. 
+	 * Vehicle</code>, represented as an <code>int</code>.
 	 */
 	private int fuelLevel;
-	//private final Driver driver;
 	/**
 	 * The size of the <code>Vehicle</code>, the <code>double</code>
 	 * representation of the physical space occupied.
@@ -85,12 +79,6 @@ public abstract class Vehicle {
 	 */
 	protected Vehicle(final double size, final int tankSize){
 		
-		/*
-		 * Initialise the timeSpent as 0 since a vehicle has not had any
-		 * time elapse (in the simulation) 
-		 */
-		timeSpent = 0;
-		
 		 /*
 		  * Initialise the fuelLebel as 0 (Assumed fuel level).
 		  */
@@ -111,57 +99,29 @@ public abstract class Vehicle {
 	
 	/**
 	 * Increment the <code>Vehicle</code> objects {@link #fuelLevel}
-	 * by one if the {@link #fuelLevel} is less than the {@link #tankSize}.
+	 * by one.
 	 * 
 	 * <p>
-	 * Increment the {@link #fuelLevel} for the <code>Vehicle</code>when the
-	 * {@link #fuelLevel} is less than the {@link tankSize}, otherwise no
-	 * changes will be made to {@link #fuelLevel} as a <code>Vehicle</code>
-	 * cannot fill it's fuel tank once it is full.
+	 * If the <code>Vehicle</code> object's {@link #fuelLevel} is less than
+	 * the {@link #tankSize}, increment the {@link #fuelLevel} by one;
+	 * otherwise the tank is full and cannot be filled further, which means
+	 * that the {@link #fuelLevel} will not be incremented as a <code>Vehicle
+	 * </code> cannot fill it's fuel tank once it is full.
 	 * </p>
 	 */
-	private void fill(){
+	public final void fill(){
 		
 		//Only increment the fuelLevel if it is less than the tankSize.
 		if(fuelLevel < tankSize) ++fuelLevel;
 	}
 	/**
-	 * Increment {@link #timeSpent} by one unit of time.
-	 * <p>
-	 * If the {@link #timeSpent} is not less than (is equals to) <code>
-	 * Integer.MAX_VALUE</code> then {@link #timeSpent} will not be
-	 * incremented as that would result in {@link #timeSpent} to become
-	 * <code>Integer.MIN_VALUE</code> due to integer overflow.
-	 * </p>
-	 */
-	public final void spendTime(){
-		
-		/*
-		 * Increment the timeSpent.
-		 * 
-		 * As a safeguard against integer overflow, the timeSpent is only
-		 * incremented if timeSpent cannot cause an integer overflow.
-		 * 
-		 * Integer overflow is unlikely.
-		 */
-		
-		if(timeSpent < Integer.MAX_VALUE) ++timeSpent;
-	}
-	/**
-	 * When the <code>Vehicle</code> is refilling it's fuel tank,
-	 * the ... ... ... ((Merge with fill?))
-	 */
-	public final void act(){
-		
-		fill();
-		//tbi
-	}
-	/**
 	 * Check if the <code>Vehicle</code> has completely filled it's fuel tank.
 	 * 
 	 * <p>
-	 * <strong>Cannot be overridden in subclasses</strong> as every <code>Vehicle
-	 * </code> is full when the {@link #fuelLevel} is equal to the {@link #tankSize}.
+	 * Check if the <code>Vehicle</code> the <code>Vehicle</code> has completely
+	 * filled the fuel tank. <strong>Cannot be overridden in subclasses</strong> as
+	 * every instance of <code>Vehicle</code> is full when the {@link #fuelLevel}
+	 * is equal to the {@link #tankSize}.
 	 * </p>
 	 * 
 	 * @return <code>true</code> if the {@link #fuelLevel} is equal to the
@@ -181,11 +141,73 @@ public abstract class Vehicle {
 		return fuelLevel == tankSize;
 	}
 	/**
+	 * Check if two <code>Vehicle</code> objects are equal.
 	 * 
-	 * @return
+	 * <p>
+	 * For an object to equal a <code>Vehicle</code> object, the object must
+	 * 
+	 * <ui type="cirlce">
+	 * 		<li>Be an instance of the {@link Vehicle} class</li>
+	 * 		<li>Have the same {@link #size}</li>
+	 * 		<li>Have the same {@link #tankSize}</li>
+	 * </ui>
+	 * </p>
+	 * 
+	 * @param o The object to be tested for equality against.
+	 * @return <code>true</code> if the tested object is an instance of the
+	 * 		<code>Vehicle</code> class, and the {@link #size} and {@link #tankSize}
+	 * 		attributes is equal to the <code>Vehicle</code> object; otherwise,
+	 * 		returns <code>false</code>.
 	 */
-	//TBI
-	//public abstract Driver getDriver();
-	
-	//Driver class here
+	@Override
+	public boolean equals(Object o){
+		
+		//Check if the object is an instance of the Vehicle class.
+		if(o instanceof Vehicle){
+			
+			//Label the Object as a Vehicle (since o is an instance of Vehicle).
+			Vehicle v = (Vehicle) o;
+			
+			//Check if the size and the tankSize are equal.
+			return this.size == v.size && this.tankSize == v.tankSize;
+		}
+		else{
+			
+			/*
+			 * The Object is not an instance of Vehicle and hence cannot be
+			 * logically equal any Vehicle.
+			 */
+			
+			return false;
+		}
+	}
+	/**
+	 * Get the <code>String</code> representation of the <code>Vehicle</code> object.
+	 * 
+	 * <p>
+	 * Get the <code>String</code> containing the <code>Vehicle</code> objects
+	 * {@link #size} and {@link #tankSize}.
+	 * </p>
+	 * 
+	 * <p>
+	 * Format:
+	 * </p>
+	 * 
+	 * <p>
+	 * <code>Size: 0.85 Tank (Gallons): 5</code>
+	 * </p>
+	 * 
+	 * @return The <code>String</code> representation of the <code>Vehicle</code>
+	 * 		object.
+	 */
+	@Override
+	public String toString(){
+		
+		return new StringBuilder()
+				.append("Size: ")
+				.append(size)
+				.append(" Tank (Gallons): ")
+				.append(tankSize)
+				.toString();
+	}
 }
