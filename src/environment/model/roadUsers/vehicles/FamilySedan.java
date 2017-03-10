@@ -94,6 +94,11 @@ public final class FamilySedan extends Vehicle {
 	@Override
 	public boolean equals(Object o){
 		
+		/*
+		 * Check if o is a FamilySedan, if so, determine the equality in the superclass
+		 * otherwise o cannot be equal to a FamilySedan.
+		 */
+		
 		return o instanceof FamilySedan? super.equals(o): false;
 	}
 	/**

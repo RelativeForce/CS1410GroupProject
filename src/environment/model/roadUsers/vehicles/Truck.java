@@ -64,6 +64,11 @@ public final class Truck extends Vehicle {
 	 */
 	public Truck(){
 		
+		/*
+		 * Set the size of the Vehicle to be the UNIT_SIZE and randomly generate the
+		 * tankSize of the Vehicle.
+		 */
+		
 		super(UNIT_SIZE, RNG.nextInt(TANK_SIZE_RANGE) + MIN_TANK_SIZE);
 	}
 	/**
