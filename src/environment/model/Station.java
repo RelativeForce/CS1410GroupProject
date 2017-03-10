@@ -39,14 +39,14 @@ public class Station {
 	 * {@link Location}. The key for this {@link HashMap} is the
 	 * {@link RoadUser} as this will be unique because the same {@link RoadUser}
 	 * should not be require to move to two separate {@link Locations}s at the
-	 * same time. The value of this {@link HashMap} is the <code>Class</code> of
-	 * the next {@link Location} for the key {@link RoadUser} assigned to it.
+	 * same time. The value of this {@link HashMap} is the current
+	 * {@link Location} the key {@link RoadUser} is in.
 	 * 
 	 * @see java.util.HashMap
 	 * @see environment.model.roadUsers.RoadUser
 	 * @see environment.model.locations.Location
 	 */
-	private HashMap<RoadUser, Class<? extends Location>> toMove;
+	private HashMap<RoadUser, Location> toMove;
 
 	/**
 	 * The <code>int<code> amount of {@link RoadUser}s that <code>this</code>
@@ -83,7 +83,7 @@ public class Station {
 	public Station(Class<? extends Location> startLocation) {
 
 		// Initialise instance fields
-		this.toMove = new HashMap<RoadUser, Class<? extends Location>>();
+		this.toMove = new HashMap<RoadUser, Location>();
 		this.locations = new LinkedList<Location>();
 		this.roadUsersRejected = 0;
 		this.startLoaction = startLocation;
@@ -124,11 +124,6 @@ public class Station {
 
 			// Process the queue at each location.
 			currentLocation.processQueue(toMove);
-
-			// Check if the next location after current location in the chain of
-			// locations has space for the road users added toMove by the most
-			// recent add to.
-			checkNextLocationForSpace(currentLocation);
 
 		}
 
@@ -241,18 +236,18 @@ public class Station {
 		// Retrieve all the road users from toMove and iterate through them.
 		for (RoadUser roadUser : toMove.keySet()) {
 
-			// Retrieve the class of the next location assigned to the current
+			// Retrieve the current location assigned to the current
 			// road user.
-			Class<? extends Location> nextLocation = toMove.get(roadUser);
+			Location currentLocation = toMove.get(roadUser);
 
 			// Iterate though all the locations in the station
 			for (Location location : locations) {
 
-				// if the type of the location of the current location is the
-				// same at the next location the road user needs to be put in
-				// and there is enough space for the road user in that location.
-				// Then add it to said location and remove it from toMove
-				if (location.getClass() == nextLocation && location.isEnoughSpaceFor(roadUser)) {
+				// If the type of the current location is the same at the next
+				// location the road user needs to be put in and there is enough
+				// space for the road user in that location.Then add it to said
+				// location and remove it from toMove.
+				if (location.getClass() == currentLocation.getNextLocation() && location.isEnoughSpaceFor(roadUser)) {
 
 					location.enter(roadUser);
 					toMove.remove(roadUser);
@@ -262,58 +257,37 @@ public class Station {
 			}
 		}
 
+		// If there are any road users that are still in toMove there must be no
+		// space in the locations next in the chain, this means that they should
+		// be returned to their prior location.
+		if (!toMove.isEmpty()) {
+			returnToPriorLocation();
+		}
+
 	}
 
 	/**
-	 * Checks if the {@link Location} after a specified {@link Location} has the
-	 * space require to house the {@link RoadUser}s that have been added to
-	 * {@link #toMove} by the current {@link Location}
-	 * 
-	 * @param currentLocation
-	 *            {@link Location} that added the {@link RoadUser}s to be moved
-	 *            to the next {@link Location}.
+	 * Return all the {@link RoadUser}s in {@link #toMove} to the front of the
+	 * queue in their previous {@link Location}.
 	 * 
 	 * @see environment.model.locations.Location
+	 * @see #toMove
 	 * @see environment.model.roadUsers.RoadUser
 	 */
-	private void checkNextLocationForSpace(Location currentLocation) {
+	private void returnToPriorLocation() {
 
-		// Retrieve all the road users from toMove and iterate through them.
+		// Iterate through all the road users that couldn't be moved to their
+		// next location.
 		for (RoadUser roadUser : toMove.keySet()) {
 
-			// Retrieve the class of the next location assigned to the current
-			// road user.
-			Class<? extends Location> nextLocationClass = toMove.get(roadUser);
+			// Get the previous location of the current road user.
+			Location pastLocation = toMove.get(roadUser);
 
-			// If the next location of the current location is the same as the
-			// next location as the current road user.
-			if (currentLocation.getNextLocation() == nextLocationClass) {
+			// Return the road user to the its previous location. Then remove it
+			// from to move.
+			pastLocation.returnToQueue(roadUser);
+			toMove.remove(roadUser);
 
-				// Remove the current road user from toMove
-				toMove.remove(roadUser);
-
-				// Iterate through all the locations in the station.
-				for (Location nextLocation : locations) {
-
-					// if the type of the next location of the next location of
-					// the road user are the same and there is not enough space
-					// for the road user in that location. Then return it to
-					// said location to toMove
-					if (nextLocation.getClass() == nextLocationClass && nextLocation.isEnoughSpaceFor(roadUser)) {
-
-						toMove.put(roadUser, nextLocationClass);
-
-					}
-				}
-
-				// If the road user is not inside toMove then it cannot be moved
-				// to its next location and thus must wait for another tick in
-				// its current location.
-				if (!toMove.containsKey(roadUser)) {
-					currentLocation.returnToQueue(roadUser);
-				}
-
-			}
 		}
 
 	}

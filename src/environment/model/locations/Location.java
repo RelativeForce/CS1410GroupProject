@@ -14,7 +14,7 @@ import environment.model.roadUsers.RoadUser;
  *
  */
 public abstract class Location {
-	
+
 	// Protected Methods -----------------------------------------------------
 
 	/**
@@ -68,7 +68,7 @@ public abstract class Location {
 	protected int maxQueueSize;
 
 	// Constructor -----------------------------------------------------------
-	
+
 	/**
 	 * Constructs a new {@link Location} for use in the <code>Station</code>.
 	 * 
@@ -98,7 +98,7 @@ public abstract class Location {
 	}
 
 	// Public Methods --------------------------------------------------------
-	
+
 	/**
 	 * Perform a process on the queue at <code>this</code> location. This
 	 * <code>abstract</code> method will be different for each location. This
@@ -109,16 +109,15 @@ public abstract class Location {
 	 *            that denotes the {@link RoadUser}s that the
 	 *            <code>Station</code> will move to the next {@link Location}.
 	 *            The Key of the {@link HashMap} is of type {@link RoadUser} as
-	 *            each road user to be moved should be unique. The
-	 *            <code>Class&lt;? extends {@link Location}&gt;&gt;</code>
-	 *            denotes the next {@link Location} of the {@link RoadUser} key
+	 *            each road user to be moved should be unique. The value denotes
+	 *            the current {@link Location} of the {@link RoadUser} key
 	 *            assigned to it.
 	 * 
 	 * @see environment.model.roadUsers.RoadUser
 	 * @see java.util.HashMap
 	 * @see java.util.LinkedList
 	 */
-	public abstract void processQueue(HashMap<RoadUser, Class<? extends Location>> toMove);
+	public abstract void processQueue(HashMap<RoadUser, Location> toMove);
 
 	/**
 	 * Retrieves the <code>Class</code> of the next {@link Location} that the
