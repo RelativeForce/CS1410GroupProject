@@ -31,9 +31,12 @@ public final class CommandLine implements SimulatorView {
 		System.out.println("==================================");
 	}
 	@Override
-	public final void show(final Station station){
+	public final void show(final int time, final Station station){
 		
 		System.out.println("Station status:");
+		System.out.print(new StringBuilder()
+				.append("Time: ")
+				.append(time));
 		System.out.println(station);
 		System.out.println("----------------------------------");
 	}

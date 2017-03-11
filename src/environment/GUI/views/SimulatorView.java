@@ -14,7 +14,7 @@ import environment.model.Station;
  * 
  * @author John Berg
  * @author Joshua Eddy
- * @version	10/03/2017
+ * @version	11/03/2017
  * @since	06/03/2017
  */
 public interface SimulatorView {
@@ -27,7 +27,8 @@ public interface SimulatorView {
 	 * {@link SimulationView}.</strong>
 	 * </p>
 	 * 
+	 * @param time The ...
 	 * @param station The details of the {@link Station} status.
 	 */
-	public void show(final Station station);
+	public void show(final int time, final Station station);
 }
