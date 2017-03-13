@@ -57,6 +57,23 @@ public class Station {
 	private int roadUsersRejected;
 
 	/**
+	 * The <code>double</code> amount of profit that was lost by
+	 * {@link RoadUser}s being rejected by the station.
+	 * 
+	 * @see environment.model.roadUsers.vehicles.Vehicle
+	 */
+	private double lostFuelProfit;
+
+	/**
+	 * The <code>double</code> amount of profit that was gained from selling
+	 * fuel.
+	 * 
+	 * @see #collateFuelProfit()
+	 * @see #getFuelProfit()
+	 */
+	private double fuelProfit;
+
+	/**
 	 * The first {@link Location} that the {@link RoadUser}s added to
 	 * <code>this</code> {@link Station}.
 	 * 
@@ -78,7 +95,7 @@ public class Station {
 	 * @see #addLocation(Location)
 	 * @see environment.model.roadUsers.RoadUser
 	 * @see environment.model.locations.Location
-	 * @see #enterStation(RoadUser)
+	 * @see #enter(RoadUser)
 	 */
 	public Station(Class<? extends Location> startLocation) {
 
@@ -87,6 +104,7 @@ public class Station {
 		this.locations = new LinkedList<Location>();
 		this.roadUsersRejected = 0;
 		this.startLoaction = startLocation;
+		this.fuelProfit = 0;
 
 	}
 
@@ -152,10 +170,10 @@ public class Station {
 	 * @see environment.model.locations.Location
 	 * 
 	 */
-	public void enterStation(RoadUser roadUser) {
+	public void enter(RoadUser roadUser) {
 
 		// If there is enough space in the station for the parameter RoadUser
-		if (isSpaceInStation(roadUser)) {
+		if (this.canContain(roadUser)) {
 
 			// Iterates through all the locations in the station.
 			for (Location currentLocation : locations) {
@@ -163,7 +181,7 @@ public class Station {
 				// If the current location is of the same type as the start
 				// location of the station and there is enough space in that
 				// location for that road user.
-				if (currentLocation.getClass() == startLoaction && currentLocation.isEnoughSpaceFor(roadUser)) {
+				if (currentLocation.getClass() == startLoaction && currentLocation.canContain(roadUser)) {
 
 					// Add the road user to that location and break to prevent
 					// adding that road user to multiple locations.
@@ -191,6 +209,18 @@ public class Station {
 		return roadUsersRejected;
 	}
 
+	/**
+	 * Retrieves the amount of profit <code>this</code> {@link Station} has
+	 * generated from fuel sales.
+	 * 
+	 * @return <code>double</code> fuel profit.
+	 * 
+	 * @see #
+	 */
+	public double getFuelProfit() {
+		return fuelProfit;
+	}
+
 	// Private Methods -------------------------------------------------------
 
 	/**
@@ -201,7 +231,7 @@ public class Station {
 	 *            {@link RoadUser} to be added to this {@link Station}.
 	 * @return <code>boolean</code> whether there is enough space or not.
 	 */
-	private boolean isSpaceInStation(RoadUser newRoadUser) {
+	private boolean canContain(RoadUser newRoadUser) {
 
 		// Iterate through all the locations in this station.
 		for (Location currentLocation : locations) {
@@ -212,7 +242,7 @@ public class Station {
 
 				// If there is enough space for the road user in one of the
 				// start location then there is enough space in the station.
-				if (currentLocation.isEnoughSpaceFor(newRoadUser)) {
+				if (currentLocation.canContain(newRoadUser)) {
 					return true;
 				}
 			}
@@ -247,7 +277,7 @@ public class Station {
 				// location the road user needs to be put in and there is enough
 				// space for the road user in that location.Then add it to said
 				// location and remove it from toMove.
-				if (location.getClass() == currentLocation.getNextLocation() && location.isEnoughSpaceFor(roadUser)) {
+				if (location.getClass() == currentLocation.getNextLocation() && location.canContain(roadUser)) {
 
 					location.enter(roadUser);
 					toMove.remove(roadUser);
@@ -289,6 +319,14 @@ public class Station {
 			toMove.remove(roadUser);
 
 		}
+
+	}
+
+	/**
+	 * Collects the fuel profit of all the {@link Location}s that produce fuel
+	 * profit and stores the result in {@link #fuelProfit}.
+	 */
+	private void collateFuelProfit() {
 
 	}
 

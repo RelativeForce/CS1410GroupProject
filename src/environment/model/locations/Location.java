@@ -52,14 +52,6 @@ public abstract class Location {
 	protected double profit;
 
 	/**
-	 * The amount of fuel distributed to the {@link RoadUser}s that pass through
-	 * <code>this</code> {@link Location}.
-	 * 
-	 * @see #processQueue(HashMap)
-	 */
-	protected int fuelSold;
-
-	/**
 	 * This value holds the maximum number of units (size of {@link RoadUser}s)
 	 * that this location can have at any given point. If this is initialised as
 	 * <code>0</code> then the maximum size of the {@link Location}'s queue is
@@ -92,7 +84,6 @@ public abstract class Location {
 		this.nextLocation = nextLocation;
 		this.roadUsersProcessed = 0;
 		this.profit = 0;
-		this.fuelSold = 0;
 		this.maxQueueSize = maxQueueSize;
 
 	}
@@ -146,17 +137,6 @@ public abstract class Location {
 	}
 
 	/**
-	 * Retrieves the amount of gallons of fuel that <code>this</code>
-	 * {@link Location} has sold to the {@link RoadUser}s that have been
-	 * processed.
-	 * 
-	 * @return <code>int</code> gallons of fuel sold.
-	 */
-	public int getFuelSold() {
-		return fuelSold;
-	}
-
-	/**
 	 * Retrieves the number of {@link RoadUser}s that have been processed and
 	 * removed from <code>this</code> {@link Location}.
 	 * 
@@ -181,7 +161,7 @@ public abstract class Location {
 	 * @see environment.model.roadUsers.RoadUser
 	 */
 	public void enter(RoadUser newRoadUser) {
-		if (newRoadUser != null && isEnoughSpaceFor(newRoadUser) && !queue.contains(newRoadUser)) {
+		if (newRoadUser != null && canContain(newRoadUser) && !queue.contains(newRoadUser)) {
 			queue.add(newRoadUser);
 		}
 	}
@@ -200,7 +180,7 @@ public abstract class Location {
 	 * @see environment.model.Station
 	 * @see environment.model.roadUsers.RoadUser
 	 */
-	public boolean isEnoughSpaceFor(RoadUser roadUser) {
+	public boolean canContain(RoadUser roadUser) {
 
 		// Holds the cumulative size of the queue.
 		int currentQueueSize = 0;
