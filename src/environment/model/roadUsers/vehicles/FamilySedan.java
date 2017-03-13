@@ -17,7 +17,7 @@ import java.util.Random;
  * </p>
  * 
  * @author 	John
- * @version	10/03/2017
+ * @version	13/03/2017
  * @since 	02/03/2017
  * @see 	Random
  * @see		Vehicle

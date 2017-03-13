@@ -36,7 +36,7 @@ import java.util.Random;
  * </p>
  * 
  * @author 	John Berg
- * @version 09/09/2017
+ * @version 13/09/2017
  * @since 	01/03/2017
  */
 public abstract class Vehicle {
