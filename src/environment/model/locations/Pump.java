@@ -1,6 +1,6 @@
 package environment.model.locations;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import environment.model.roadUsers.RoadUser;
 
@@ -9,7 +9,7 @@ import environment.model.roadUsers.RoadUser;
  * 
  * 
  * @author Karandeep_Saini
- * @version 10/03/2017
+ * @version 17/03/2017
  * 
  * @see environment.model.locations.Location
  * @see environment.model.roadUsers.RoadUser
@@ -42,8 +42,32 @@ public final class Pump extends Location {
 	}
 
 	@Override
-	public void processQueue(HashMap<RoadUser, Location> toMove) {
-		// TODO Auto-generated method stub
+	public void processQueue(Map<RoadUser, Location> toMove) {
+
+		// Retrieves the Road User from the queue.
+		RoadUser ru = queue.peek();
+
+		// Checks if the Vehicle has finished filling.
+		if (ru.getVehicle().isFull()) {
+
+			// Checks if the Road User has completed the shopping.
+			if (ru.hasPaid()) {
+
+				// The Road User is removed from the queue.
+				queue.removeFirst();
+			} else {
+
+				// The road user is moved to the next location.
+				toMove.put(ru, this);
+			}
+		} else {
+
+			// The Road User is required to fill the vehicle.
+			ru.getVehicle().fill();
+
+			// The time spent by each Road User is then incremented.
+			queue.forEach(RoadUser::spendTime);
+		}
 
 	}
 
