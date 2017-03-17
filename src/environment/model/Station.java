@@ -7,7 +7,6 @@ import java.util.Map;
 
 import environment.model.locations.Location;
 import environment.model.locations.Till;
-import environment.model.locations.WaitingArea;
 import environment.model.roadUsers.RoadUser;
 
 /**
@@ -184,14 +183,21 @@ public class Station {
 
 	/**
 	 * Retrieves a <code>String</code> data structure that is used by the
-	 * SimulatorView to display the simulation.
+	 * {@link SimulatorView} to display the simulation.
 	 * 
-	 * @see environment.GUI.views.SimulatorView
+	 * @see environment.GUI.views.CommandLine
 	 */
 	@Override
 	public String toString() {
 
 		String output = "";
+
+		output += "Number of Vechiles: " + numberOfRoadUsers + "\n";
+		output += "Petrol profit:      " + fuelProfit + "\n";
+		output += "Lost petrol profit: " + lostFuelProfit + "\n";
+		output += "Shopping profit:    " + (generalProfit - fuelProfit) + "\n";
+		output += "Total profit:       " + generalProfit + "\n";
+		output += "Total lost profit:  " + (lostFuelProfit + lostSalesProfit) + "\n";
 
 		return output;
 	}
@@ -421,6 +427,8 @@ public class Station {
 				}
 			} else {
 
+				// The road user has no next location, There for it will leave
+				// the station.
 				numberOfRoadUsers--;
 				toMove.remove(roadUser);
 				break;
