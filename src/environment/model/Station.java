@@ -2,7 +2,12 @@ package environment.model;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import environment.model.locations.Location;
+import environment.model.locations.Till;
+import environment.model.locations.WaitingArea;
 import environment.model.roadUsers.RoadUser;
 
 /**
@@ -13,7 +18,7 @@ import environment.model.roadUsers.RoadUser;
  * {@link RoadUser}s between its locations.
  * 
  * @author Joshua_Eddy
- * @version 09/03/2017
+ * @version 17/03/2017
  * 
  * @see environment.GUI.views
  * @see environment.model.roadUsers.RoadUser
@@ -24,7 +29,15 @@ import environment.model.roadUsers.RoadUser;
  */
 public class Station {
 
-	// Private Variables -----------------------------------------------------
+	// Instance Variables ----------------------------------------------------
+
+	/**
+	 * The first {@link Location} that the {@link RoadUser}s added to
+	 * <code>this</code> {@link Station}.
+	 * 
+	 * @see #toMove
+	 */
+	private Class<? extends Location> startLoaction;
 
 	/**
 	 * Contains all the locations that make up the {@link Station}.
@@ -32,7 +45,7 @@ public class Station {
 	 * @see java.util.LinkedList
 	 * @see environment.model.locations.Location
 	 */
-	private LinkedList<Location> locations;
+	private List<Location> locations;
 
 	/**
 	 * Contains the {@link RoadUser}s that need to be moved to the a new
@@ -46,7 +59,7 @@ public class Station {
 	 * @see environment.model.roadUsers.RoadUser
 	 * @see environment.model.locations.Location
 	 */
-	private HashMap<RoadUser, Location> toMove;
+	private Map<RoadUser, Location> toMove;
 
 	/**
 	 * The <code>int<code> amount of {@link RoadUser}s that <code>this</code>
@@ -65,6 +78,20 @@ public class Station {
 	private double lostFuelProfit;
 
 	/**
+	 * The <code>double</code> amount of profit that was lost by a
+	 * {@link RoadUser}s being unhappy and not shopping.
+	 * 
+	 * @see environment.model.roadUsers.RoadUser
+	 */
+	private double lostSalesProfit;
+
+	/**
+	 * The <code>double</code> total profit that <code>this</code>
+	 * {@link Station} has made.
+	 */
+	private double generalProfit;
+
+	/**
 	 * The <code>double</code> amount of profit that was gained from selling
 	 * fuel.
 	 * 
@@ -74,12 +101,9 @@ public class Station {
 	private double fuelProfit;
 
 	/**
-	 * The first {@link Location} that the {@link RoadUser}s added to
-	 * <code>this</code> {@link Station}.
-	 * 
-	 * @see #toMove
+	 * The amount of {@link RoadUser}s that are currently inside this station.
 	 */
-	private Class<? extends Location> startLoaction;
+	private int numberOfRoadUsers;
 
 	// Constructor -----------------------------------------------------------
 
@@ -102,9 +126,17 @@ public class Station {
 		// Initialise instance fields
 		this.toMove = new HashMap<RoadUser, Location>();
 		this.locations = new LinkedList<Location>();
-		this.roadUsersRejected = 0;
 		this.startLoaction = startLocation;
+
+		// Initialise statistic instance fields
 		this.fuelProfit = 0;
+		this.generalProfit = 0;
+
+		this.roadUsersRejected = 0;
+		this.numberOfRoadUsers = 0;
+
+		this.lostFuelProfit = 0;
+		this.lostSalesProfit = 0;
 
 	}
 
@@ -145,6 +177,9 @@ public class Station {
 
 		}
 
+		// Update all financial statistics
+		collateFinances();
+
 	}
 
 	/**
@@ -156,7 +191,9 @@ public class Station {
 	@Override
 	public String toString() {
 
-		return "";
+		String output = "";
+
+		return output;
 	}
 
 	/**
@@ -186,6 +223,7 @@ public class Station {
 					// Add the road user to that location and break to prevent
 					// adding that road user to multiple locations.
 					currentLocation.enter(roadUser);
+					numberOfRoadUsers++;
 					break;
 				}
 			}
@@ -194,6 +232,8 @@ public class Station {
 			// If there is no space for the road user in the station then
 			// increment roadUserRejected to acknowledge a road user has been
 			// rejected.
+			lostFuelProfit += roadUser.getVehicle().getMaxWorth();
+			lostSalesProfit += roadUser.getWorth();
 			roadUsersRejected++;
 		}
 
@@ -219,6 +259,68 @@ public class Station {
 	 */
 	public double getFuelProfit() {
 		return fuelProfit;
+	}
+
+	/**
+	 * Retrieves the number of {@link RoadUser}s are currently in the
+	 * {@link RoadUser}.
+	 * 
+	 * @return <code>int</code> amount of {@link RoadUser}s in the
+	 *         {@link Station}.
+	 * 
+	 *
+	 */
+	public int getNumberOfRoadUsers() {
+		return numberOfRoadUsers;
+	}
+
+	/**
+	 * Returns the number of {@link Location}s in <code>this</code>
+	 * {@link Station}.
+	 * 
+	 * @return <code>int</code> number of locations.
+	 * 
+	 * @see #locations
+	 * @see #addLocation(Location)
+	 */
+	public int getNumberOfLoactions() {
+		return locations.size();
+	}
+
+	/**
+	 * Retrieves the total profit <code>this</code> {@link Station} has
+	 * generated from fuel sales and general sales.
+	 * 
+	 * @return <code>double</code> profit.
+	 * 
+	 * @see #generalProfit
+	 * @see #locations
+	 * @see #fuelProfit
+	 */
+	public double getProfit() {
+		return generalProfit;
+	}
+
+	/**
+	 * The amount of profit that <code>this</code> {@link Station} has lost
+	 * based on {@link RoadUser}s not being happy enough with their service to
+	 * spend any money in the {@link WaitingArea}.
+	 * 
+	 * @return <code>double</code> lost profit.
+	 */
+	public double getLostSalesProfit() {
+		return lostSalesProfit;
+	}
+
+	/**
+	 * The amount of profit that <code>this</code> {@link Station} has lost
+	 * based on {@link Station} not being able to accommodate the new
+	 * {@link RoadUser}.
+	 * 
+	 * @return <code>double</code> profit lost.
+	 */
+	public double getLostFuelProfit() {
+		return lostFuelProfit;
 	}
 
 	// Private Methods -------------------------------------------------------
@@ -266,25 +368,12 @@ public class Station {
 		// Retrieve all the road users from toMove and iterate through them.
 		for (RoadUser roadUser : toMove.keySet()) {
 
-			// Retrieve the current location assigned to the current
-			// road user.
+			// Retrieve the current location assigned to the current road user.
 			Location currentLocation = toMove.get(roadUser);
 
-			// Iterate though all the locations in the station
-			for (Location location : locations) {
+			// Locate and store the road user.
+			findDestinationLocation(roadUser, currentLocation);
 
-				// If the type of the current location is the same at the next
-				// location the road user needs to be put in and there is enough
-				// space for the road user in that location.Then add it to said
-				// location and remove it from toMove.
-				if (location.getClass() == currentLocation.getNextLocation() && location.canContain(roadUser)) {
-
-					location.enter(roadUser);
-					toMove.remove(roadUser);
-					break;
-
-				}
-			}
 		}
 
 		// If there are any road users that are still in toMove there must be no
@@ -292,6 +381,51 @@ public class Station {
 		// be returned to their prior location.
 		if (!toMove.isEmpty()) {
 			returnToPriorLocation();
+		}
+
+	}
+
+	/**
+	 * Iterates through all the {@link Location}s in <code>this</code>
+	 * {@link Station} to find and store the specified {@link RoadUser} in the
+	 * specified currentLocation's next {@link Location}.
+	 * 
+	 * @param roadUser
+	 *            The {@link RoadUser} to be relocated its next
+	 *            {@link Location}.
+	 * @param currentLocation
+	 *            The current {@link Location} of the specified
+	 *            {@link RoadUser}.
+	 * 
+	 * @see environment.model.locations.Location
+	 * @see environment.model.roadUsers.RoadUser
+	 * @see #relocateRoadUsers()
+	 */
+	private void findDestinationLocation(RoadUser roadUser, Location currentLocation) {
+
+		// Iterate though all the locations in the station
+		for (Location location : locations) {
+
+			if (currentLocation.getNextLocation() != null) {
+
+				// If the type of the current location is the same at the
+				// next location the road user needs to be put in and there
+				// is enough space for the road user in that location.Then
+				// add it to said location and remove it from toMove.
+				if (location.getClass() == currentLocation.getNextLocation() && location.canContain(roadUser)) {
+
+					location.enter(roadUser);
+					toMove.remove(roadUser);
+					break;
+
+				}
+			} else {
+
+				numberOfRoadUsers--;
+				toMove.remove(roadUser);
+				break;
+
+			}
 		}
 
 	}
@@ -325,8 +459,27 @@ public class Station {
 	/**
 	 * Collects the fuel profit of all the {@link Location}s that produce fuel
 	 * profit and stores the result in {@link #fuelProfit}.
+	 * 
+	 * @see #processLocations()
 	 */
-	private void collateFuelProfit() {
+	private void collateFinances() {
+
+		// Reset all of the profit to zero.
+		fuelProfit = 0;
+		generalProfit = 0;
+
+		// Iterate through all the locations in the station.
+		for (Location location : locations) {
+
+			// if the current location is a Till add its profit to the specific
+			// fuel profit.
+			if (location instanceof Till) {
+				fuelProfit += location.getProfit();
+			}
+
+			// Add all profit to the general station profit.
+			generalProfit = location.getProfit();
+		}
 
 	}
 
