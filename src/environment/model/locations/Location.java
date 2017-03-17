@@ -1,7 +1,8 @@
 package environment.model.locations;
 
-import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+
 import environment.model.roadUsers.RoadUser;
 
 /**
@@ -10,12 +11,12 @@ import environment.model.roadUsers.RoadUser;
  * the <code>Station</code>. This should be extended with concrete subclasses.
  * 
  * @author Joshua_Eddy
- * @version 09/03/2017
+ * @version 17/03/2017
  *
  */
 public abstract class Location {
 
-	// Protected Methods -----------------------------------------------------
+	// Protected Fields ------------------------------------------------------
 
 	/**
 	 * Contains all the {@link RoadUser}s that are present in <code>this</code>
@@ -52,14 +53,6 @@ public abstract class Location {
 	protected double profit;
 
 	/**
-	 * The amount of fuel distributed to the {@link RoadUser}s that pass through
-	 * <code>this</code> {@link Location}.
-	 * 
-	 * @see #processQueue(HashMap)
-	 */
-	protected int fuelSold;
-
-	/**
 	 * This value holds the maximum number of units (size of {@link RoadUser}s)
 	 * that this location can have at any given point. If this is initialised as
 	 * <code>0</code> then the maximum size of the {@link Location}'s queue is
@@ -92,7 +85,6 @@ public abstract class Location {
 		this.nextLocation = nextLocation;
 		this.roadUsersProcessed = 0;
 		this.profit = 0;
-		this.fuelSold = 0;
 		this.maxQueueSize = maxQueueSize;
 
 	}
@@ -117,7 +109,7 @@ public abstract class Location {
 	 * @see java.util.HashMap
 	 * @see java.util.LinkedList
 	 */
-	public abstract void processQueue(HashMap<RoadUser, Location> toMove);
+	public abstract void processQueue(Map<RoadUser, Location> toMove);
 
 	/**
 	 * Retrieves the <code>Class</code> of the next {@link Location} that the
@@ -146,17 +138,6 @@ public abstract class Location {
 	}
 
 	/**
-	 * Retrieves the amount of gallons of fuel that <code>this</code>
-	 * {@link Location} has sold to the {@link RoadUser}s that have been
-	 * processed.
-	 * 
-	 * @return <code>int</code> gallons of fuel sold.
-	 */
-	public int getFuelSold() {
-		return fuelSold;
-	}
-
-	/**
 	 * Retrieves the number of {@link RoadUser}s that have been processed and
 	 * removed from <code>this</code> {@link Location}.
 	 * 
@@ -181,7 +162,7 @@ public abstract class Location {
 	 * @see environment.model.roadUsers.RoadUser
 	 */
 	public void enter(RoadUser newRoadUser) {
-		if (newRoadUser != null && isEnoughSpaceFor(newRoadUser) && !queue.contains(newRoadUser)) {
+		if (newRoadUser != null && canContain(newRoadUser) && !queue.contains(newRoadUser)) {
 			queue.add(newRoadUser);
 		}
 	}
@@ -195,12 +176,14 @@ public abstract class Location {
 	 *            The {@link RoadUser} that will potentially be added to
 	 *            <code>this</code> {@link Location}.
 	 * @return <code>boolean</code> of whether there is enough space for the
-	 *         parameter {@link RoadUser} to be added to this location.
+	 *         parameter {@link RoadUser} to be added to this location. If the
+	 *         {@link RoadUser} is already in <code>this</code> {@link Location}
+	 *         returns false.
 	 * 
 	 * @see environment.model.Station
 	 * @see environment.model.roadUsers.RoadUser
 	 */
-	public boolean isEnoughSpaceFor(RoadUser roadUser) {
+	public boolean canContain(RoadUser roadUser) {
 
 		// Holds the cumulative size of the queue.
 		int currentQueueSize = 0;
@@ -210,13 +193,14 @@ public abstract class Location {
 			currentQueueSize += roadUserQueue.getVehicle().size;
 		}
 
-		// Returns if the size of the queue including the parameter
+		// Returns true if the size of the queue including the parameter
 		// RoadUser is less than the defined maximum size of
-		// the queue then return true, otherwise return false.
-
-		// Unless the maxQueueSize is zero meaning that there is no maximum size
-		// to the queue in this location.
-		return (currentQueueSize + roadUser.getVehicle().size <= maxQueueSize) || (maxQueueSize == 0);
+		// the queue or the maxQueueSize is zero meaning that there is no
+		// maximum size to the queue in this location. Otherwise return false.
+		// Also return false if the RoadUser is already present in this
+		// location.
+		return ((currentQueueSize + roadUser.getVehicle().size <= maxQueueSize) || (maxQueueSize == 0))
+				&& !queue.contains(roadUser);
 	}
 
 	/**
@@ -229,8 +213,12 @@ public abstract class Location {
 	 */
 	public void returnToQueue(RoadUser roadUser) {
 
-		queue.addFirst(roadUser);
-
+		// If the parameter road user is not already in the queue, return it to
+		// the start of the queue.
+		if (!queue.contains(roadUser)) {
+			queue.addFirst(roadUser);
+			roadUsersProcessed--;
+		}
 	}
 
 }
