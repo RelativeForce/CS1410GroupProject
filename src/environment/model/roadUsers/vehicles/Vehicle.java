@@ -1,5 +1,7 @@
 package environment.model.roadUsers.vehicles;
 
+import java.util.Random;
+
 /**
  * The <code>Vehicle</code> class models a <code>Vehicle</code>
  * which is being refilled with fuel at a fuel station.
@@ -34,11 +36,25 @@ package environment.model.roadUsers.vehicles;
  * </p>
  * 
  * @author 	John Berg
- * @version 09/09/2017
+ * @version 13/09/2017
  * @since 	01/03/2017
  */
 public abstract class Vehicle {
 	
+	/**
+	 * The default price of the <code>Vehicle</code> fuel, represented as
+	 * <code>double</code>.
+	 */
+	private static final double DEFAULT_FUEL_PRICE = 1.20;
+	/**
+	 * The initial seed for the {@link #RNG}.
+	 */
+	private static final long SEED = 9000;
+	/**
+	 * The <code>Random</code> object used to generate properties for the
+	 * <code>Vehicle</code>.
+	 */
+	protected static final Random RNG = new Random(SEED);
 	/**
 	 * The amount of fuel currently inside the tank of the <code>
 	 * Vehicle</code>, represented as an <code>int</code>.
@@ -139,6 +155,49 @@ public abstract class Vehicle {
 		 */
 		
 		return fuelLevel == tankSize;
+	}
+	/**
+	 * Get the current worth of the <code>Vehicle</code>.
+	 * 
+	 * <p>
+	 * The current worth of the <code>Vehicle</code> is the current cost of filling
+	 * the <code>Vehicle</code>. The current worth of the <code>Vehicle</code>
+	 * cannot exceed the {@link #getMaxWorth()}. When the {@link #isFull()} method
+	 * returns <code>true</code>, the current worth is equal to the
+	 * {@link #getMaxWorth()}.
+	 * </p>
+	 * 
+	 * <p>
+	 * The current worth of the <code>Vehicle</code> is calculated as
+	 * <code>{@value #DEFAULT_FUEL_PRICE}*{@link #fuelLevel}</code>.
+	 * </p>
+	 * 
+	 * @return The current cost of filling the <code>Vehicle</code>.
+	 */
+	public final double getCurrentWorth(){
+		
+		//Only using DEFAULT_FUEL_LEVEL whilst no fuel types exists.
+		return fuelLevel*DEFAULT_FUEL_PRICE;
+	}
+	/**
+	 * Get the total worth of refilling the <code>Vehicle</code>.
+	 * 
+	 * <p>
+	 * The max worth of a <code>Vehicle</code> is the cost of filling the fuel tank
+	 * until it is full.
+	 * </p>
+	 * 
+	 * <p>
+	 * The total worth of the <code>Vehicle</code> is calculated as
+	 * <code>{@value #DEFAULT_FUEL_PRICE}*{@link #tankSize}</code>.
+	 * </p>
+	 * 
+	 * @return The total cost of filling the <code>Vehicle</code>.
+	 */
+	public final double getMaxWorth(){
+		
+		//Only using DEFAULT_FUEL_LEVEL whilst no fuel types exists.
+		return tankSize*DEFAULT_FUEL_PRICE;
 	}
 	/**
 	 * Check if two <code>Vehicle</code> objects are equal.

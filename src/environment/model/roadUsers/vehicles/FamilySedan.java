@@ -17,7 +17,7 @@ import java.util.Random;
  * </p>
  * 
  * @author 	John
- * @version	10/03/2017
+ * @version	13/03/2017
  * @since 	02/03/2017
  * @see 	Random
  * @see		Vehicle
@@ -37,15 +37,6 @@ public final class FamilySedan extends Vehicle {
 	 * The range of possible tank sizes of the <code>FamilySedan</code>.
 	 */
 	private static final int TANK_SIZE_RANGE = 7;
-	/**
-	 * The initial seed used for the {@link #RNG}.
-	 */
-	private static final long SEED = 99;
-	/**
-	 * The <code>Random</code> object used to generate properties of
-	 * the <code>FamilySedan</code>.
-	 */
-	private static final Random RNG = new Random(SEED);
 	
 	/**
 	 * Create a new <code>FamilySedan</code>.

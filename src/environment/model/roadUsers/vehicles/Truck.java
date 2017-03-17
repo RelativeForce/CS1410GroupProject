@@ -17,7 +17,7 @@ import java.util.Random;
  * </p>
  * 
  * @author 	John Berg
- * @version 10/03/2017
+ * @version 13/03/2017
  * @since 	09/03/2017
  * @see Random
  * @see Vehicle
@@ -36,15 +36,6 @@ public final class Truck extends Vehicle {
 	 * The range of possible tank sizes for a <code>Truck</code>.
 	 */
 	private static final int TANK_SIZE_RANGE = 11;
-	/**
-	 * The initial seed for the {@link #RNG}.
-	 */
-	private static final long SEED = 9000;
-	/**
-	 * The <code>Random</code> object used to generate properties for the
-	 * <code>Truck</code>.
-	 */
-	private static final Random RNG = new Random(SEED);
 	
 	/**
 	 * Create a new <code>Truck</code>.
