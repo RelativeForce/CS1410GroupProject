@@ -12,7 +12,7 @@ public class Motorbike extends RoadUser {
 	@Override
 	public void shop() {
 		// TODO Auto-generated method stub
-
+		System.out.print("\"Motorbike drivers in the area are thrifty and will never go to the shopping area.\"");
 	}
 
 }

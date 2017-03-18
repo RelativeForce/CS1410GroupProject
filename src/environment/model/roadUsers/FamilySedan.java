@@ -15,6 +15,7 @@ public class FamilySedan extends RoadUser {
 		
 		super(VehicleTypes.FAMILY_SEDAN.create());
 		// TODO Auto-generated constructor stub
+		
 	}
 
 	@Override
