@@ -4,6 +4,8 @@ import environment.model.roadUsers.vehicles.VehicleTypes;
 
 public class Motorbike extends RoadUser {
 	
+	private static final double PROB_TO_SHOP = 0.0;
+	
 	public Motorbike() {
 		super(VehicleTypes.MOTORBIKE.create());
 		// TODO Auto-generated constructor stub

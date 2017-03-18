@@ -18,7 +18,7 @@ public class Truck extends RoadUser {
 	}
 	
 	public void shop() {
-		if (timeSpent < 48) {
+		if (timeSpent < 48 ) {
 			
 		}
 
