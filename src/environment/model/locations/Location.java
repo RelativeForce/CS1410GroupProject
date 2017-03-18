@@ -24,7 +24,7 @@ public abstract class Location {
 	 * 
 	 * @see java.util.LinkedList
 	 * @see #processQueue(HashMap)
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 */
 	protected LinkedList<RoadUser> queue;
 
@@ -75,7 +75,7 @@ public abstract class Location {
 	 *            initialised as <code>0</code> then the maximum size of the
 	 *            {@link Location}s queue is infinite.
 	 * @see #processQueue(HashMap)
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 * @see environment.model.Station
 	 */
 	public Location(Class<? extends Location> nextLocation, int maxQueueSize) {
@@ -105,7 +105,7 @@ public abstract class Location {
 	 *            the current {@link Location} of the {@link RoadUser} key
 	 *            assigned to it.
 	 * 
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 * @see java.util.HashMap
 	 * @see java.util.LinkedList
 	 */
@@ -159,7 +159,7 @@ public abstract class Location {
 	 * @see #queue
 	 * @see #maxQueueSize
 	 * @see #processQueue(HashMap)
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 */
 	public void enter(RoadUser newRoadUser) {
 		if (newRoadUser != null && canContain(newRoadUser) && !queue.contains(newRoadUser)) {
@@ -181,7 +181,7 @@ public abstract class Location {
 	 *         returns false.
 	 * 
 	 * @see environment.model.Station
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 */
 	public boolean canContain(RoadUser roadUser) {
 
@@ -209,7 +209,7 @@ public abstract class Location {
 	 * 
 	 * @param roadUser
 	 *            {@link RoadUser} to be added back to the queue
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 */
 	public void returnToQueue(RoadUser roadUser) {
 

@@ -1,13 +1,13 @@
 package environment.GUI.views;
 
-import javax.swing.JFrame;
+import environment.model.Station;
 
 public class Graph implements SimulatorView {
 
 	@Override
-	public JFrame getJFrame(String station) {
+	public void show(int time, Station station) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 }

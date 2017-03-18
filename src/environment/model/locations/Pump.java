@@ -12,7 +12,7 @@ import environment.model.roadUsers.RoadUser;
  * @version 17/03/2017
  * 
  * @see environment.model.locations.Location
- * @see environment.model.roadUsers.RoadUser
+ * @see environment.model.roadusers.RoadUser
  */
 public final class Pump extends Location {
 
@@ -21,7 +21,7 @@ public final class Pump extends Location {
 	 * {@link Location}.
 	 * 
 	 * @see environment.model.locations.Location
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 */
 	private static final int MAX_QUEUE_SIZE = 3;
 

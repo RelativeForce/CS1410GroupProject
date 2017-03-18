@@ -2,9 +2,9 @@ package environment.model.roadUsers;
 
 import java.util.Random;
 
-import environment.model.roadUsers.vehicles.VehicleTypes;
+import environment.model.roadUsers.vehicles.FamilySedan_Vehicle;
 
-public class FamilySedan extends RoadUser {
+public class FamilySedan_RoadUser extends RoadUser {
 
 	private static final double PROB_TO_SHOP = 0.4;
 	private static final double SPENDING_RANGE = 8;
@@ -14,11 +14,15 @@ public class FamilySedan extends RoadUser {
 	private static final int MINIMUM_SHOPPING_TIME = 12;
 	private static final int MAXIMUM_TIME_TO_SHOP = 60;
 	
-	public FamilySedan() {
+	public FamilySedan_RoadUser() {
 		
-		super(VehicleTypes.FAMILY_SEDAN.create());
+		super(new FamilySedan_Vehicle());
 		// TODO Auto-generated constructor stub
 		
+	}
+	
+	public static boolean exists(double p, double q, double value){
+		return (value > (2 * p)) && (value <= q);
 	}
 
 	@Override
@@ -31,6 +35,12 @@ public class FamilySedan extends RoadUser {
 		    //shop(); 
 			}
 		}
+	}
+
+	@Override
+	public double getWorth() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

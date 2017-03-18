@@ -2,9 +2,9 @@ package environment.model.roadUsers;
 
 import java.util.Random;
 
-import environment.model.roadUsers.vehicles.VehicleTypes;
+import environment.model.roadUsers.vehicles.SmallCar_Vehicle;
 
-public class SmallCar extends RoadUser {
+public class SmallCar_RoadUser extends RoadUser {
 
 	private static final double PROB_TO_SHOP = 0.3;
 	private static final double SPENDING_RANGE = 5;
@@ -15,22 +15,32 @@ public class SmallCar extends RoadUser {
 	private static final int MAXIMUM_TIME_TO_SHOP = 24;
 	private static final int SEED = 11;
 	private static final Random GEN = new Random(SEED);
-	
-	public SmallCar() {
-		super(VehicleTypes.SMALL_CAR.create());
 
+	public SmallCar_RoadUser() {
+		super(new SmallCar_Vehicle());
+
+	}
+	
+	public static boolean exists(double p, double q, double value) {
+		return value <= p;
 	}
 
 	@Override
 	public void shop() {
 		// TODO Auto-generated method stub
 		if (timeSpent < 30) {
-			 Random rn = new Random();
-			    double d = rn.nextDouble();   
-			    if(d<=PROB_TO_SHOP){
-			    //shop(); 
-			
+			Random rn = new Random();
+			double d = rn.nextDouble();
+			if (d <= PROB_TO_SHOP) {
+				// shop();
+
+			}
 		}
 	}
 
+	@Override
+	public double getWorth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

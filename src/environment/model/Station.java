@@ -20,7 +20,7 @@ import environment.model.roadUsers.RoadUser;
  * @version 17/03/2017
  * 
  * @see environment.GUI.views
- * @see environment.model.roadUsers.RoadUser
+ * @see environment.model.roadusers.RoadUser
  * @see java.util.LinkedList
  * @see java.util.HashMap
  * @see environment.model.locations.Location
@@ -55,7 +55,7 @@ public class Station {
 	 * {@link Location} the key {@link RoadUser} is in.
 	 * 
 	 * @see java.util.HashMap
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 * @see environment.model.locations.Location
 	 */
 	private Map<RoadUser, Location> toMove;
@@ -72,7 +72,7 @@ public class Station {
 	 * The <code>double</code> amount of profit that was lost by
 	 * {@link RoadUser}s being rejected by the station.
 	 * 
-	 * @see environment.model.roadUsers.vehicles.Vehicle
+	 * @see environment.model.roadusers.vehicles.Vehicle
 	 */
 	private double lostFuelProfit;
 
@@ -80,7 +80,7 @@ public class Station {
 	 * The <code>double</code> amount of profit that was lost by a
 	 * {@link RoadUser}s being unhappy and not shopping.
 	 * 
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 */
 	private double lostSalesProfit;
 
@@ -116,7 +116,7 @@ public class Station {
 	 *            {@link Location} of that type exists in the station.
 	 * 
 	 * @see #addLocation(Location)
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 * @see environment.model.locations.Location
 	 * @see #enter(RoadUser)
 	 */
@@ -160,7 +160,7 @@ public class Station {
 	 * it will be assuming there is enough space for it in its next
 	 * {@link Location}.
 	 * 
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 * @see environment.model.locations.Location
 	 */
 	public void processLocations() {
@@ -209,7 +209,7 @@ public class Station {
 	 * @param roadUser
 	 *            {@link RoadUser} to be added.
 	 * 
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 * @see environment.model.locations.Location
 	 * 
 	 */
@@ -365,7 +365,7 @@ public class Station {
 	 * {@link Location}.
 	 * 
 	 * @see environment.model.locations.Location
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 * @see #toMove
 	 * 
 	 */
@@ -404,7 +404,7 @@ public class Station {
 	 *            {@link RoadUser}.
 	 * 
 	 * @see environment.model.locations.Location
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 * @see #relocateRoadUsers()
 	 */
 	private void findDestinationLocation(RoadUser roadUser, Location currentLocation) {
@@ -444,7 +444,7 @@ public class Station {
 	 * 
 	 * @see environment.model.locations.Location
 	 * @see #toMove
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 */
 	private void returnToPriorLocation() {
 

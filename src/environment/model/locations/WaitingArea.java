@@ -12,7 +12,7 @@ import environment.model.roadUsers.RoadUser;
  * @author Karandeep_Saini
  * @version 17/03/2017
  * @see environment.model.locations.Locations
- * @see environment.model.roadUsers.RoadUser
+ * @see environment.model.roadusers.RoadUser
  */
 public class WaitingArea extends Location {
 
@@ -21,7 +21,7 @@ public class WaitingArea extends Location {
 	 * {@link Location}.
 	 * 
 	 * @see environment.model.locations.Location
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 */
 	private static final int MAX_QUEUE_SIZE = 0;
 
@@ -78,7 +78,7 @@ public class WaitingArea extends Location {
 	/**
 	 * Places the {@link RoadUser} and adds it to the back of the queue.
 	 * 
-	 * @see environment.model.locations.Location#returnToQueue(environment.model.roadUsers.RoadUser)
+	 * @see environment.model.locations.Location#returnToQueue(environment.model.roadusers.RoadUser)
 	 */
 
 	@Override

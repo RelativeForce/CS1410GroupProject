@@ -21,7 +21,7 @@ import java.util.Random;
  * @see		Random
  * @see 	Vehicle
  */
-public final class SmallCar extends Vehicle {
+public final class SmallCar_Vehicle extends Vehicle {
 	
 	/**
 	 * The physical size representation of the <code>SmallCar
@@ -49,7 +49,7 @@ public final class SmallCar extends Vehicle {
 	 * {@value #TANK_SIZE_RANGE} in range.
 	 * </p>
 	 */
-	public SmallCar(){
+	public SmallCar_Vehicle(){
 		
 		/*
 		 * Invoke the superclass constructor with the arguments for the
@@ -64,7 +64,7 @@ public final class SmallCar extends Vehicle {
 	 * <p>
 	 * Compare an object against the <code>SmallCar</code> the check if the
 	 * object is equal to the <code>SmallCar</code>. If the object is an
-	 * instance of the {@link SmallCar} class, the {@link Vehicle#equals(Object)}
+	 * instance of the {@link SmallCar_Vehicle} class, the {@link Vehicle#equals(Object)}
 	 * method will determine if the object is equal to the <code>SmallCar</code>;
 	 * if the object is not an instance of the <code>SmallCar</code> class then
 	 * object cannot be equal to the <code>SmallCar</code> as the object is not a
@@ -85,7 +85,7 @@ public final class SmallCar extends Vehicle {
 		 * instance of SmallCar the result is fault.
 		 */
 		
-		return o instanceof SmallCar? super.equals(o): false;
+		return o instanceof SmallCar_Vehicle? super.equals(o): false;
 	}
 	/**
 	 * Get the <code>String</code> representation of the <code>SmallCar</code>

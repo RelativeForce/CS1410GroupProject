@@ -21,7 +21,7 @@ import java.util.Random;
  * @see		Random
  * @see 	Vehicle
  */
-public final class Motorbike extends Vehicle {
+public final class Motorbike_Vehicle extends Vehicle {
 	
 	/**
 	 * The physical size representation of the <code>Motorbike</code>.
@@ -42,7 +42,7 @@ public final class Motorbike extends Vehicle {
 	 * {@link Vehicle#tankSize} of {@link #TANK_SIZE} ({@value #TANK_SIZE}).
 	 * </p>
 	 */
-	public Motorbike(){
+	public Motorbike_Vehicle(){
 		
 		/*
 		 * Invoke the superclass constructor with the physical
@@ -79,7 +79,7 @@ public final class Motorbike extends Vehicle {
 		 * the result is false.
 		 */
 		
-		return o instanceof Motorbike? super.equals(o): false;
+		return o instanceof Motorbike_Vehicle? super.equals(o): false;
 	}
 	/**
 	 * Get the <code>String</code> representation of the <code>Motorbike</code>.

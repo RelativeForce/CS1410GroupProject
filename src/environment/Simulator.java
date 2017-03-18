@@ -4,8 +4,8 @@ import java.util.Random;
 
 import environment.GUI.UserInterface;
 import environment.GUI.views.CommandLine;
+import environment.GUI.views.Graph;
 import environment.GUI.views.SimulatorView;
-import environment.GUI.views.Visual;
 import environment.model.Station;
 import environment.model.locations.*;
 import environment.model.roadUsers.*;
@@ -127,7 +127,7 @@ public final class Simulator {
 	 * in that {@link Station}.
 	 * 
 	 * @see environment.model.locations.Location
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 * @see environment.model.Station
 	 */
 	private void simulate() {
@@ -139,7 +139,7 @@ public final class Simulator {
 
 			station.processLocations();
 
-			view.show(station);
+			view.show(tickIndex, station);
 		}
 
 	}
@@ -149,7 +149,7 @@ public final class Simulator {
 	 * {@link Station} in a given tick.
 	 * 
 	 * @see environment.model.Station
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 * @see #between(double)
 	 */
 	private void addRoadUser() {
@@ -158,19 +158,24 @@ public final class Simulator {
 
 		// If value is lower than or equal to p then add a new small car to the
 		// station.
-		if (value <= p) {
-			station.enter(new SmallCar());
+		if (SmallCar_RoadUser.exists(p, q, value)) {
+			station.enter(new SmallCar_RoadUser());
 		}
 
 		// If value is between p and 2p then add a new motor bike to the
 		// station.
-		if (value > p && value <= (2 * p)) {
-			station.enter(new Motorbike());
+		if (Motorbike_RoadUser.exists(numberOfPumps, q, value)) {
+			station.enter(new Motorbike_RoadUser());
 		}
 
 		// If exists is true then add a new family sedan to the station.
-		if (value > (2 * p) && value <= q) {
-			station.enter(new FamilySedan());
+		if (FamilySedan_RoadUser.exists(p, q, value)) {
+			station.enter(new FamilySedan_RoadUser());
+		}
+		
+		// If exists is true then add a new Truck to the station.
+		if(Truck_RoadUser.exists(p, q, value) && hasTrucks){
+			station.enter(new Truck_RoadUser());
 		}
 
 	}
@@ -208,8 +213,8 @@ public final class Simulator {
 		// Select the view.
 		if (ui.getView().equals("Command Line")) {
 			view = new CommandLine();
-		} else if (ui.getView().equals("Visual View")) {
-			view = new Visual();
+		} else if (ui.getView().equals("Graph")) {
+			view = new Graph();
 		}
 
 	}

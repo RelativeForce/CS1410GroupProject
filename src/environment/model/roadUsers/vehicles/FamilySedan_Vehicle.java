@@ -22,7 +22,7 @@ import java.util.Random;
  * @see 	Random
  * @see		Vehicle
  */
-public final class FamilySedan extends Vehicle {
+public final class FamilySedan_Vehicle extends Vehicle {
 	
 	/**
 	 * The physical size representation of the <code>FamilySedan
@@ -55,7 +55,7 @@ public final class FamilySedan extends Vehicle {
 	 * </code> 
 	 * </p>
 	 */
-	public FamilySedan() {
+	public FamilySedan_Vehicle() {
 		
 		/*
 		 * Set the size of the Vehicle to UNIT_SIZE and randomly generate the
@@ -90,7 +90,7 @@ public final class FamilySedan extends Vehicle {
 		 * otherwise o cannot be equal to a FamilySedan.
 		 */
 		
-		return o instanceof FamilySedan? super.equals(o): false;
+		return o instanceof FamilySedan_Vehicle? super.equals(o): false;
 	}
 	/**
 	 * Get the <code>String</code> representation of the <code>FamilySedan</code>.

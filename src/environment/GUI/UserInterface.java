@@ -30,9 +30,11 @@ public class UserInterface {
 	private JFrame display;
 	private JComboBox<String> pDropDown;
 	private JComboBox<String> qDropDown;
+	private JComboBox<String> viewDropDown;
 	private JCheckBox Trucks;
 
 	public UserInterface() {
+		
 		JPanel pPanel = new JPanel();
 		JPanel qPanel = new JPanel();
 		JPanel tillPanel = new JPanel();
@@ -40,6 +42,7 @@ public class UserInterface {
 		JPanel truckPanel = new JPanel();
 		JPanel buttonPanel = new JPanel();
 		JPanel tickPanel = new JPanel();
+		JPanel viewPanel = new JPanel();
 
 		isReady = false;
 		p = -1.0;
@@ -53,9 +56,11 @@ public class UserInterface {
 
 		String[] pOptions = { "0.01", "0.02", "0.03", "0.04", "0.05" };
 		String[] qOptions = { "0.01", "0.02", "0.03", "0.04", "0.05" };
+		String[] viewOptions = {"Command Line", "Graph"};
 
 		pDropDown = new JComboBox<String>(pOptions);
 		qDropDown = new JComboBox<String>(qOptions);
+		viewDropDown = new JComboBox<String>(viewOptions);
 
 		tillsEntry = new JTextField(3);
 		pumpsEntry = new JTextField(3);
@@ -64,11 +69,12 @@ public class UserInterface {
 		JButton submit = new JButton("Submit");
 		JButton cancel = new JButton("Cancel");
 
-		JLabel pLabel = new JLabel("Enter value for P");
-		JLabel qLabel = new JLabel("Enter value for Q");
-		JLabel tillsLabel = new JLabel("Enter number of tills");
-		JLabel pumpLabel = new JLabel("Enter number of pumps");
+		JLabel pLabel = new JLabel("Enter value for P:");
+		JLabel qLabel = new JLabel("Enter value for Q:");
+		JLabel tillsLabel = new JLabel("Enter number of tills:");
+		JLabel pumpLabel = new JLabel("Enter number of pumps;");
 		JLabel tickLabel = new JLabel("How many ten second ticks?");
+		JLabel viewLabel =  new JLabel("Select simulation view:");
 
 		Trucks = new JCheckBox("Allow trucks?");
 
@@ -80,6 +86,7 @@ public class UserInterface {
 		truckPanel.setMinimumSize(new Dimension(200, 100));
 		buttonPanel.setMinimumSize(new Dimension(200, 100));
 		tickPanel.setMinimumSize(new Dimension(200, 100));
+		viewPanel.setMinimumSize(new Dimension(200,200));
 
 		display.setLayout(new GridLayout(7, 1));
 		qPanel.setLayout(new FlowLayout());
@@ -89,6 +96,7 @@ public class UserInterface {
 		truckPanel.setLayout(new FlowLayout());
 		buttonPanel.setLayout(new FlowLayout());
 		tickPanel.setLayout(new FlowLayout());
+		viewPanel.setLayout(new FlowLayout());
 
 		display.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -105,6 +113,8 @@ public class UserInterface {
 		tickPanel.add(tickCount);
 		buttonPanel.add(submit);
 		buttonPanel.add(cancel);
+		viewPanel.add(viewLabel);
+		viewPanel.add(viewDropDown);
 
 		display.add(pPanel);
 		display.add(qPanel);
@@ -112,6 +122,7 @@ public class UserInterface {
 		display.add(pumpPanel);
 		display.add(truckPanel);
 		display.add(tickPanel);
+		display.add(viewPanel);
 		display.add(buttonPanel);
 
 		display.pack();
@@ -174,5 +185,9 @@ public class UserInterface {
 
 	public int getTickCount() {
 		return ticks;
+	}
+	
+	public String getView(){
+		return (String) viewDropDown.getSelectedItem();
 	}
 }

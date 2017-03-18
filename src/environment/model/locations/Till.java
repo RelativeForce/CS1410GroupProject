@@ -2,8 +2,6 @@ package environment.model.locations;
 
 import java.util.Map;
 
-import java.util.Random;
-
 import environment.model.roadUsers.RoadUser;
 
 /**
@@ -14,7 +12,7 @@ import environment.model.roadUsers.RoadUser;
  * @version 17/03/2017
  * 
  * @see environment.model.locations.Location
- * @see environment.model.roadUsers.RoadUser
+ * @see environment.model.roadusers.RoadUser
  *
  */
 public class Till extends Location {
@@ -24,7 +22,7 @@ public class Till extends Location {
 	 * {@link Location}.
 	 * 
 	 * @see environment.model.locations.Location
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 */
 	private static final int MAX_QUEUE_SIZE = 0;
 
@@ -38,7 +36,7 @@ public class Till extends Location {
 	 * {@link getVehicle.getMaxWorth} and moves to the <code>this</code>
 	 * {@link Location} The transaction is added to the {@link profit}
 	 * 
-	 * @see environment.model.roadUsers.RoadUser
+	 * @see environment.model.roadusers.RoadUser
 	 * @see environment.model.locations.Location
 	 */
 	@Override
