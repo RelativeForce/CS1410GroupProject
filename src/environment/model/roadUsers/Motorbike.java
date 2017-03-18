@@ -19,7 +19,7 @@ public class Motorbike extends RoadUser {
 		
 		Random rn = new Random();
 	    double d = rn.nextDouble();   
-	    	if(d<=PROB_TO_SHOP){
+	    	if(d<=PROB_TO_SHOP){ 
 	    	
 		System.out.print("\"Motorbike drivers in the area are thrifty and will never go to the shopping area.\"");
 	}

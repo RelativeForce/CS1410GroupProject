@@ -24,7 +24,7 @@ public class Truck extends RoadUser {
 			Random rn = new Random();
 		    double d = rn.nextDouble();   
 		    if(d<=PROB_TO_SHOP){
-		    //shop();
+		    //shop(); 
 		}
 			
 		}
