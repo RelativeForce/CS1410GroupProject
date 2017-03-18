@@ -39,4 +39,4 @@ public enum RoadUserTypes {
 		return gen.nextInt((int)chance) == 0;
 	}
 
-}
+} 
