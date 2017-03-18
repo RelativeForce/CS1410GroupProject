@@ -1,5 +1,7 @@
 package environment.model.roadUsers;
 
+import java.util.Random;
+
 import environment.model.roadUsers.vehicles.VehicleTypes;
 
 public class Truck extends RoadUser {
@@ -19,6 +21,11 @@ public class Truck extends RoadUser {
 	
 	public void shop() {
 		if (timeSpent < 48 ) {
+			Random rn = new Random();
+		    double d = rn.nextDouble();   
+		    if(d<=PROB_TO_SHOP){
+		    //shop();
+		}
 			
 		}
 

@@ -25,6 +25,10 @@ public class SmallCar extends RoadUser {
 	public void shop() {
 		// TODO Auto-generated method stub
 		if (timeSpent < 30) {
+			 Random rn = new Random();
+			    double d = rn.nextDouble();   
+			    if(d<=PROB_TO_SHOP){
+			    //shop();
 			
 		}
 	}

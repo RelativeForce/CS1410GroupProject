@@ -1,5 +1,7 @@
 package environment.model.roadUsers;
 
+import java.util.Random;
+
 import environment.model.roadUsers.vehicles.VehicleTypes;
 
 public class FamilySedan extends RoadUser {
@@ -23,7 +25,10 @@ public class FamilySedan extends RoadUser {
 	public void shop() {
 		// TODO Auto-generated method stub
 		if (timeSpent < 60) {
-			
+			Random rn = new Random();
+		    double d = rn.nextDouble();   
+		    if(d<=PROB_TO_SHOP){
+		    //shop();
 			}
 		}
 	}
