@@ -7,7 +7,7 @@ import java.util.Map;
 
 import environment.model.locations.Location;
 import environment.model.locations.Till;
-import environment.model.roadUsers.RoadUser;
+import environment.model.roadusers.RoadUser;
 
 /**
  * 
@@ -310,7 +310,7 @@ public class Station {
 	/**
 	 * The amount of profit that <code>this</code> {@link Station} has lost
 	 * based on {@link RoadUser}s not being happy enough with their service to
-	 * spend any money in the {@link WaitingArea}.
+	 * spend any money in the {@link ShoppingArea}.
 	 * 
 	 * @return <code>double</code> lost profit.
 	 */

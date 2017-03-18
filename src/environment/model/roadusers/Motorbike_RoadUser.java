@@ -1,8 +1,8 @@
-package environment.model.roadUsers;
+package environment.model.roadusers;
 
 import java.util.Random;
 
-import environment.model.roadUsers.vehicles.Motorbike_Vehicle;
+import environment.model.roadusers.vehicles.Motorbike_Vehicle;
 
 public class Motorbike_RoadUser extends RoadUser {
 

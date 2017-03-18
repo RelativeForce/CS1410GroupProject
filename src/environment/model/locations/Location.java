@@ -3,7 +3,7 @@ package environment.model.locations;
 import java.util.LinkedList;
 import java.util.Map;
 
-import environment.model.roadUsers.RoadUser;
+import environment.model.roadusers.RoadUser;
 
 /**
  * 

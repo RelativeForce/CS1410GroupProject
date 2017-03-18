@@ -154,7 +154,7 @@ public class UserInterface {
 		}
 	}
 
-	private void dispose() {
+	public void dispose() {
 		display.dispose();
 	}
 

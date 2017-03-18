@@ -8,7 +8,7 @@ import environment.GUI.views.Graph;
 import environment.GUI.views.SimulatorView;
 import environment.model.Station;
 import environment.model.locations.*;
-import environment.model.roadUsers.*;
+import environment.model.roadusers.*;
 
 /**
  * 
@@ -216,6 +216,8 @@ public final class Simulator {
 		} else if (ui.getView().equals("Graph")) {
 			view = new Graph();
 		}
+		
+		ui.dispose();
 
 	}
 
@@ -228,11 +230,11 @@ public final class Simulator {
 
 		// Create all of the pumps and add them to the station.
 		for (int pumpIndex = 0; pumpIndex < numberOfPumps; pumpIndex++) {
-			station.addLocation(new Pump(WaitingArea.class));
+			station.addLocation(new Pump(ShoppingArea.class));
 		}
 
 		// Create a location for road users to wait before they go to the Till.
-		station.addLocation(new WaitingArea(Till.class));
+		station.addLocation(new ShoppingArea(Till.class));
 
 		// Create all of the Tills and add them to the station.
 		for (int tillIndex = 0; tillIndex < numberOfTills; tillIndex++) {

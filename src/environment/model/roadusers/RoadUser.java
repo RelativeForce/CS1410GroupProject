@@ -1,6 +1,6 @@
-package environment.model.roadUsers;
+package environment.model.roadusers;
 
-import environment.model.roadUsers.vehicles.Vehicle;
+import environment.model.roadusers.vehicles.Vehicle;
 
 public abstract class RoadUser {
 

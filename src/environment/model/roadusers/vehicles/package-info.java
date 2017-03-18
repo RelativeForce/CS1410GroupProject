@@ -5,4 +5,4 @@
  * @author Joshua_Eddy
  *
  */
-package environment.model.roadUsers.vehicles;
+package environment.model.roadusers.vehicles;

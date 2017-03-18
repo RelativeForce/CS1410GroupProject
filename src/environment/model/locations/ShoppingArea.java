@@ -2,7 +2,7 @@ package environment.model.locations;
 
 import java.util.Map;
 
-import environment.model.roadUsers.RoadUser;
+import environment.model.roadusers.RoadUser;
 
 /**
  * 
@@ -14,7 +14,7 @@ import environment.model.roadUsers.RoadUser;
  * @see environment.model.locations.Locations
  * @see environment.model.roadusers.RoadUser
  */
-public class WaitingArea extends Location {
+public class ShoppingArea extends Location {
 
 	/**
 	 * The maximum amount of unit space available at <code>this</code>
@@ -25,7 +25,7 @@ public class WaitingArea extends Location {
 	 */
 	private static final int MAX_QUEUE_SIZE = 0;
 
-	public WaitingArea(Class<? extends Location> nextLocation) {
+	public ShoppingArea(Class<? extends Location> nextLocation) {
 		super(nextLocation, MAX_QUEUE_SIZE);
 
 	}
