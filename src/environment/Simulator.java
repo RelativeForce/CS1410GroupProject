@@ -3,8 +3,6 @@ package environment;
 import java.util.Random;
 
 import environment.GUI.UserInterface;
-import environment.GUI.views.CommandLine;
-import environment.GUI.views.Graph;
 import environment.GUI.views.SimulatorView;
 import environment.model.Station;
 import environment.model.locations.*;
@@ -126,6 +124,7 @@ public final class Simulator {
 	 * added to the {@link Station} and then processes all the {@link Location}s
 	 * in that {@link Station}.
 	 * 
+	 * @see #addRoadUser()
 	 * @see environment.model.locations.Location
 	 * @see environment.model.roadusers.RoadUser
 	 * @see environment.model.Station
@@ -145,7 +144,7 @@ public final class Simulator {
 	}
 
 	/**
-	 * Generates all the {@link RoadUser}s that will be added to the
+	 * Generates a {@link RoadUser} that will be added to the
 	 * {@link Station} in a given tick.
 	 * 
 	 * @see environment.model.Station
@@ -172,9 +171,9 @@ public final class Simulator {
 		if (FamilySedan_RoadUser.exists(p, q, value)) {
 			station.enter(new FamilySedan_RoadUser());
 		}
-		
+
 		// If exists is true then add a new Truck to the station.
-		if(Truck_RoadUser.exists(p, q, value) && hasTrucks){
+		if (Truck_RoadUser.exists(p, q, value) && hasTrucks) {
 			station.enter(new Truck_RoadUser());
 		}
 
@@ -184,12 +183,15 @@ public final class Simulator {
 	 * Retrieves all the simulation parameters from the {@link UserInterface}
 	 * and assigns them to the local variables.
 	 * 
+	 * @throws InterruptedException
+	 * 
 	 * @see environment.GUI.UserInterface
 	 */
 	private void getSimulatiorPreferences() {
-                                                                                                                                                                                   
+
 		// Wait for user interface to be ready for information to be retrieved.
-		while (!this.ui.isReady()) {
+		while (!ui.isReady()) {
+			
 		}
 
 		// Get the tickCount from the user interface
@@ -210,13 +212,10 @@ public final class Simulator {
 		// Get whether trucks are included in the simulation.
 		hasTrucks = ui.hasTrucks();
 
-		// Select the view.
-		if (ui.getView().equals("Command Line")) {
-			view = new CommandLine();
-		} else if (ui.getView().equals("Graph")) {
-			view = new Graph();
-		}
-		
+		// Get the view.		
+		view = ui.getView();
+
+		// Close the user interface.
 		ui.dispose();
 
 	}
@@ -250,8 +249,9 @@ public final class Simulator {
 	 * 
 	 * @param args
 	 *            unused.
+	 * @throws InterruptedException
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 
 		// Creates a new Simulation.
 		Simulator simulation = new Simulator();

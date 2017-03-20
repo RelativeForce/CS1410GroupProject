@@ -13,10 +13,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+
+import environment.GUI.views.CommandLine;
+import environment.GUI.views.Graph;
+import environment.GUI.views.SimulatorView;
+
 import javax.swing.JComboBox;
 
 public class UserInterface {
-	private boolean isReady;
+	
+	private volatile boolean isReady;
 	private double p;
 	private double q;
 	private int tills;
@@ -34,7 +40,7 @@ public class UserInterface {
 	private JCheckBox Trucks;
 
 	public UserInterface() {
-		
+
 		JPanel pPanel = new JPanel();
 		JPanel qPanel = new JPanel();
 		JPanel tillPanel = new JPanel();
@@ -56,7 +62,7 @@ public class UserInterface {
 
 		String[] pOptions = { "0.01", "0.02", "0.03", "0.04", "0.05" };
 		String[] qOptions = { "0.01", "0.02", "0.03", "0.04", "0.05" };
-		String[] viewOptions = {"Command Line", "Graph"};
+		String[] viewOptions = { "Command Line", "Graph" };
 
 		pDropDown = new JComboBox<String>(pOptions);
 		qDropDown = new JComboBox<String>(qOptions);
@@ -74,7 +80,7 @@ public class UserInterface {
 		JLabel tillsLabel = new JLabel("Enter number of tills:");
 		JLabel pumpLabel = new JLabel("Enter number of pumps;");
 		JLabel tickLabel = new JLabel("How many ten second ticks?");
-		JLabel viewLabel =  new JLabel("Select simulation view:");
+		JLabel viewLabel = new JLabel("Select simulation view:");
 
 		Trucks = new JCheckBox("Allow trucks?");
 
@@ -86,7 +92,7 @@ public class UserInterface {
 		truckPanel.setMinimumSize(new Dimension(200, 100));
 		buttonPanel.setMinimumSize(new Dimension(200, 100));
 		tickPanel.setMinimumSize(new Dimension(200, 100));
-		viewPanel.setMinimumSize(new Dimension(200,200));
+		viewPanel.setMinimumSize(new Dimension(200, 200));
 
 		display.setLayout(new GridLayout(7, 1));
 		qPanel.setLayout(new FlowLayout());
@@ -150,6 +156,7 @@ public class UserInterface {
 
 		}
 		if (pumps > 0 && tills > 0 && p > 0.00 && q > 0.00 && ticks > 0) {
+			
 			isReady = true;
 		}
 	}
@@ -186,8 +193,17 @@ public class UserInterface {
 	public int getTickCount() {
 		return ticks;
 	}
-	
-	public String getView(){
-		return (String) viewDropDown.getSelectedItem();
+
+	public SimulatorView getView() {
+		
+		SimulatorView view = null;
+		
+		if (((String) viewDropDown.getSelectedItem()).equals("Command Line")) {
+			view = new CommandLine();
+		} else if (((String) viewDropDown.getSelectedItem()).equals("Graph")) {
+			view = new Graph();
+		}
+		
+		return view;
 	}
 }
