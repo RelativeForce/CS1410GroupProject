@@ -33,7 +33,7 @@ public final class Simulator {
 	 * The {@link UserInterface} that the user will input the parameters of the
 	 * simulation.
 	 * 
-	 * @see #getSimulatiorPreferences()
+	 * @see #getSimulationDetails()
 	 * @see environment.GUI.UserInterface
 	 */
 	private UserInterface ui;
@@ -49,7 +49,7 @@ public final class Simulator {
 
 	/**
 	 * The <code>int</code> amount of ticks the simulation will run for. This is
-	 * initialised properly in {@link #getSimulatiorPreferences()}.
+	 * initialised properly in {@link #getSimulationDetails()}.
 	 */
 	private int tickCount;
 
@@ -70,7 +70,7 @@ public final class Simulator {
 	/**
 	 * The number of tills that will be added to the {@link #station}.
 	 * 
-	 * @see #getSimulatiorPreferences()
+	 * @see #getSimulationDetails()
 	 * @see #generateSimulation()
 	 */
 	private int numberOfTills;
@@ -78,7 +78,7 @@ public final class Simulator {
 	/**
 	 * The number of pumps that will be added to the {@link #station}.
 	 * 
-	 * @see #getSimulatiorPreferences()
+	 * @see #getSimulationDetails()
 	 * @see #generateSimulation()
 	 */
 	private int numberOfPumps;
@@ -86,7 +86,7 @@ public final class Simulator {
 	/**
 	 * Whether the simulation has trucks or not.
 	 * 
-	 * @see #getSimulatiorPreferences()
+	 * @see #getSimulationDetails()
 	 */
 	private boolean hasTrucks;
 
@@ -183,11 +183,10 @@ public final class Simulator {
 	 * Retrieves all the simulation parameters from the {@link UserInterface}
 	 * and assigns them to the local variables.
 	 * 
-	 * @throws InterruptedException
 	 * 
 	 * @see environment.GUI.UserInterface
 	 */
-	private void getSimulatiorPreferences() {
+	private void getSimulationDetails() {
 
 		// Wait for user interface to be ready for information to be retrieved.
 		while (!ui.isReady()) {
@@ -232,7 +231,7 @@ public final class Simulator {
 			station.addLocation(new Pump(ShoppingArea.class));
 		}
 
-		// Create a location for road users to wait before they go to the Till.
+		// Create a location for road users to shop before they go to the Till.
 		station.addLocation(new ShoppingArea(Till.class));
 
 		// Create all of the Tills and add them to the station.
@@ -249,15 +248,14 @@ public final class Simulator {
 	 * 
 	 * @param args
 	 *            unused.
-	 * @throws InterruptedException
 	 */
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args){
 
 		// Creates a new Simulation.
 		Simulator simulation = new Simulator();
 
 		// Retrieve all the inputs from the
-		simulation.getSimulatiorPreferences();
+		simulation.getSimulationDetails();
 
 		// Generates the Locations that will make up the station.
 		simulation.generateSimulation();
