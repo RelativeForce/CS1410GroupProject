@@ -14,7 +14,7 @@ import environment.model.roadusers.RoadUser;
  * @version 17/03/2017
  *
  */
-public abstract class Location {
+public abstract class Location implements Cloneable {
 
 	// Protected Fields ------------------------------------------------------
 
@@ -81,11 +81,46 @@ public abstract class Location {
 	public Location(Class<? extends Location> nextLocation, int maxQueueSize) {
 
 		// Initialise all instance fields.
-		this.queue = new LinkedList<RoadUser>();
 		this.nextLocation = nextLocation;
 		this.roadUsersProcessed = 0;
 		this.profit = 0;
 		this.maxQueueSize = maxQueueSize;
+		this.queue = new LinkedList<RoadUser>() {
+
+			/**
+			 * A unique identification number for this version of
+			 * LinkedList&lt;oadUser&gt;
+			 * 
+			 */
+			private static final long serialVersionUID = 184605613956195983L;
+
+			/**
+			 * This performs a deep clone on the
+			 * <code>LinkedList&lt;RoadUser&gt;</code> resulting in an exact
+			 * copy.
+			 * 
+			 * @see java.util.LinkedList
+			 */
+			@Override
+			public LinkedList<RoadUser> clone() {
+
+				// Initialise the LinkedList that will be used as the cloned
+				// LinkedList
+				LinkedList<RoadUser> clone = new LinkedList<RoadUser>();
+
+				// Iterate through all the elements in the LinkedList
+				while (this.iterator().hasNext()) {
+
+					// Add the clone of the current element to the clone
+					// LinkedList.
+					clone.add((RoadUser) this.iterator().next().clone());
+
+				}
+
+				return clone;
+			}
+
+		};
 
 	}
 
@@ -219,6 +254,58 @@ public abstract class Location {
 			queue.addFirst(roadUser);
 			roadUsersProcessed--;
 		}
+	}
+
+	/**
+	 * Performs a deep clone on <code>this</code> {@link Location}. This is
+	 * implemented in the subclasses of <code>this</code>.
+	 * 
+	 * @see environment.model.locations.Location
+	 * @see java.util.LinkedList
+	 */
+	@Override
+	public abstract Location clone();
+
+	@Override
+	public boolean equals(Object o) {
+
+		// If the parameter object is a Location
+		if (o instanceof Location) {
+
+			// Cast to Location
+			Location location = (Location) o;
+
+			// If the Locations next location is the same and this locations
+			// next location.
+			if (this.nextLocation == location.nextLocation) {
+
+				// If both locations have generated the same amount of profit
+				if (this.profit == location.profit) {
+
+					// If both locations have the same maximum queue size.
+					if (this.maxQueueSize == location.maxQueueSize) {
+
+						// If both locations have processed the same number of
+						// road users.
+						if (this.roadUsersProcessed == location.roadUsersProcessed) {
+
+							// If both locations have the same queue of road
+							// users.
+							if (this.queue.equals(location.queue)) {
+
+								// If all the conditions are met the this
+								// location and the parameter location are
+								// identical.
+								return true;
+
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 }

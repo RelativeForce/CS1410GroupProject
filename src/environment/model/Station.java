@@ -85,10 +85,10 @@ public class Station {
 	private double lostSalesProfit;
 
 	/**
-	 * The <code>double</code> total profit that <code>this</code>
+	 * The <code>double</code> sales profit that <code>this</code>
 	 * {@link Station} has made.
 	 */
-	private double generalProfit;
+	private double salesProfit;
 
 	/**
 	 * The <code>double</code> amount of profit that was gained from selling
@@ -129,7 +129,7 @@ public class Station {
 
 		// Initialise statistic instance fields
 		this.fuelProfit = 0;
-		this.generalProfit = 0;
+		this.salesProfit = 0;
 
 		this.roadUsersRejected = 0;
 		this.numberOfRoadUsers = 0;
@@ -195,8 +195,8 @@ public class Station {
 		output += "Number of Vechiles: " + numberOfRoadUsers + "\n";
 		output += "Petrol profit:      " + fuelProfit + "\n";
 		output += "Lost petrol profit: " + lostFuelProfit + "\n";
-		output += "Shopping profit:    " + (generalProfit - fuelProfit) + "\n";
-		output += "Total profit:       " + generalProfit + "\n";
+		output += "Shopping profit:    " + (salesProfit - fuelProfit) + "\n";
+		output += "Total profit:       " + salesProfit + "\n";
 		output += "Total lost profit:  " + (lostFuelProfit + lostSalesProfit) + "\n";
 
 		return output;
@@ -294,17 +294,17 @@ public class Station {
 	}
 
 	/**
-	 * Retrieves the total profit <code>this</code> {@link Station} has
-	 * generated from fuel sales and general sales.
+	 * Retrieves the sales profit <code>this</code> {@link Station} has
+	 * generated from {@link RoadUser}s spending money in {@link ShoppingArea}.
 	 * 
 	 * @return <code>double</code> profit.
 	 * 
-	 * @see #generalProfit
+	 * @see #salesProfit
 	 * @see #locations
 	 * @see #fuelProfit
 	 */
-	public double getProfit() {
-		return generalProfit;
+	public double getSalesProfit() {
+		return salesProfit;
 	}
 
 	/**
@@ -327,6 +327,107 @@ public class Station {
 	 */
 	public double getLostFuelProfit() {
 		return lostFuelProfit;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+
+		// If the parameter object is a Station
+		if (o instanceof Station) {
+
+			// Create a local Station to remove casting to Station repeatedly
+			Station station = (Station) o;
+
+			// If the fuel profit and losses of the stations are the same.
+			if (station.fuelProfit == this.fuelProfit && this.lostFuelProfit == station.lostFuelProfit) {
+
+				// If the sales profit and losses of the stations are the same.
+				if (station.lostSalesProfit == this.lostSalesProfit && this.salesProfit == station.salesProfit) {
+
+					// If both stations have rejected the same amount of road
+					// users.
+					if (station.roadUsersRejected == this.roadUsersRejected) {
+
+						// If the stations contain the same number of road
+						// users.
+						if (this.numberOfRoadUsers == station.numberOfRoadUsers) {
+
+							// If the locations in the station are the same.
+							if (station.locations.equals(this.locations)) {
+
+								// If the stations have the same road users to
+								// be moved to their next locations.
+								if (station.toMove.equals(this.toMove)) {
+
+									// If both stations have the same starting location.
+									if (this.startLoaction == station.startLoaction) {
+
+										// If all these conditions are met then the parameter station and this are identical.
+										return true;
+
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Create a deep clone of <code>this</code> {@link Station}.
+	 * 
+	 * @see java.util.HashMap
+	 * @see java.util.LinkList
+	 * @see java.util.List
+	 * @see java.util.Map
+	 */
+	@Override
+	public Station clone() {
+
+		// Initialise the new Station that will be used as the clone of this.
+		Station cloneStation = new Station(this.startLoaction);
+
+		// Clone the instance fields of this into the clone.
+		cloneStation.fuelProfit = this.fuelProfit;
+		cloneStation.salesProfit = this.salesProfit;
+		cloneStation.numberOfRoadUsers = this.numberOfRoadUsers;
+		cloneStation.lostFuelProfit = this.lostFuelProfit;
+		cloneStation.lostSalesProfit = this.lostSalesProfit;
+		cloneStation.roadUsersRejected = this.roadUsersRejected;
+
+		// Initialise a new Map to be used in the clone as toMove.
+		Map<RoadUser, Location> cloneToMove = new HashMap<RoadUser, Location>();
+
+		// Iterate through all the elements in the toMove Map in this.
+		for (RoadUser roadUser : this.toMove.keySet()) {
+
+			// Add the current element in toMove into the clone of toMove.
+			cloneToMove.put((RoadUser) roadUser.clone(), this.toMove.get(roadUser).clone());
+
+		}
+
+		// Initialise the toMove Map in the clone.
+		cloneStation.toMove = cloneToMove;
+
+		// Initialise a new List to be used in the clone an locations.
+		List<Location> cloneLocations = new LinkedList<Location>();
+
+		// Iterate through all the locations in this station.
+		while (this.locations.iterator().hasNext()) {
+
+			// Add the current location to the clone's version of locations.
+			cloneLocations.add((Location) this.locations.iterator().next().clone());
+
+		}
+
+		// Initialise the locations List in the clone.
+		cloneStation.locations = cloneLocations;
+
+		return cloneStation;
 	}
 
 	// Private Methods -------------------------------------------------------
@@ -474,7 +575,7 @@ public class Station {
 
 		// Reset all of the profit to zero.
 		fuelProfit = 0;
-		generalProfit = 0;
+		salesProfit = 0;
 
 		// Iterate through all the locations in the station.
 		for (Location location : locations) {
@@ -486,7 +587,7 @@ public class Station {
 			}
 
 			// Add all profit to the general station profit.
-			generalProfit = location.getProfit();
+			salesProfit = location.getProfit();
 		}
 
 	}
