@@ -36,7 +36,7 @@ import java.util.Random;
  * </p>
  * 
  * @author 	John Berg
- * @version 13/09/2017
+ * @version 21/09/2017
  * @since 	01/03/2017
  */
 public abstract class Vehicle {
@@ -113,6 +113,44 @@ public abstract class Vehicle {
 		this.tankSize = tankSize;
 	}
 	
+	/**
+	 * Create a new <code>Vehicle<code> by defining the size, tank and current fuel
+	 * level.
+	 * 
+	 * <p>
+	 * Initialise a <code>Vehicle</code> with s specified {@link #size}, {@link #tankSize}
+	 * and {@link #fuelLevel}.
+	 * </p>
+	 * 
+	 * <p>
+	 * This constructor should be used to clone the <code>Vehicle</code> objects.
+	 * </p>
+	 * 
+	 * @param size The size of the <code>Vehicle</code>.
+	 * @param tankSize The tank size of the <code>Vehicle</code>.
+	 * @param fuelLevel The current fuel level of the <code>Vehicle</code>.
+	 */
+	protected Vehicle(final double size, final int tankSize, final int fuelLevel){
+		
+		this.size = size;
+		this.tankSize = tankSize;
+		this.fuelLevel = fuelLevel;
+	}
+	
+	/**
+	 * Get the fuel level of the <code>Vehicle</code>.
+	 * 
+	 * <p>
+	 * Access the current fuel level ({@link #fuelLevel}) from the <code>Vehicle
+	 * </code>.
+	 * </p>
+	 * 
+	 * @return The fuel level of the <code>Vehicle</code>.
+	 */
+	protected final int getFuelLevel(){
+		
+		return fuelLevel;
+	}
 	/**
 	 * Increment the <code>Vehicle</code> objects {@link #fuelLevel}
 	 * by one.
@@ -269,4 +307,20 @@ public abstract class Vehicle {
 				.append(tankSize)
 				.toString();
 	}
+	/**
+	 * Clone the <code>Vehicle</code> into an exact duplicate.
+	 * 
+	 * <p>
+	 * Create an exact duplicate of the <code>Vehicle</code> object and the state
+	 * of the object.
+	 * </p>
+	 * 
+	 * <p>
+	 * <strong>This method must be overridden in subclasses.</strong>
+	 * </p>
+	 * 
+	 * @return An exact duplicate of the <code>Vehicle</code>.
+	 */
+	@Override
+	public abstract Vehicle clone();
 }

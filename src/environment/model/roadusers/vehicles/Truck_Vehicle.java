@@ -3,24 +3,24 @@ package environment.model.roadusers.vehicles;
 import java.util.Random;
 
 /**
- * The <code>Truck</code> class is a subclass of the {@link Vehicle}
+ * The {@link Truck_Vehicle} class is a subclass of the {@link Vehicle}
  * class, which models a Truck.
  * 
  * <p>
- * The <code>Truck</code> usese the {@link vehicle#size} and the
+ * The {@link Truck_Vehicle} uses the {@link vehicle#size} and the
  * {@link Vehicle#tankSize} attributes from the {@link Vehicle}
  * superclass.
  * </p>
  * 
  * <p>
- * <strong>The <code>Truck</code> class cannot be extended.</strong>
+ * <strong>The {@link Truck_Vehicle} class cannot be extended.</strong>
  * </p>
  * 
  * @author 	John Berg
- * @version 13/03/2017
+ * @version 25/03/2017
  * @since 	09/03/2017
- * @see Random
- * @see Vehicle
+ * @see 	Random
+ * @see 	Vehicle
  */
 public final class Truck_Vehicle extends Vehicle {
 	
@@ -29,7 +29,7 @@ public final class Truck_Vehicle extends Vehicle {
 	 */
 	private static final double UNIT_SIZE = 2;
 	/**
-	 * The smallest possible tank size for a <code>Truckk</code>.
+	 * The smallest possible tank size for a <code>Truck</code>.
 	 */
 	private static final int MIN_TANK_SIZE = 30;
 	/**
@@ -61,6 +61,10 @@ public final class Truck_Vehicle extends Vehicle {
 		 */
 		
 		super(UNIT_SIZE, RNG.nextInt(TANK_SIZE_RANGE) + MIN_TANK_SIZE);
+	}
+	private Truck_Vehicle(final double size, final int tankSize, final int fuelLevel){
+		
+		super(size, tankSize, fuelLevel);
 	}
 	/**
 	 * Check if an object is equal to a <code>Truck</code>. 
@@ -123,5 +127,21 @@ public final class Truck_Vehicle extends Vehicle {
 				.append("Truck. ")
 				.append(super.toString())
 				.toString();
+	}
+	/**
+	 * Clone this object into an exact copy.
+	 * 
+	 * <p>
+	 * Create an exact deep clone of the {@link Truck_Vehicle} object. Modifying
+	 * the state of the clone will not modify the state of the original object, and
+	 * vice versa.
+	 * </p>
+	 * 
+	 * @return A deep clone of the {@link Truck_Vehicle} object.
+	 */
+	@Override
+	public final Truck_Vehicle clone(){
+		
+		return new Truck_Vehicle(size, tankSize, getFuelLevel());
 	}
 }
