@@ -16,7 +16,7 @@ import java.util.Random;
  * </p>
  * 
  * @author 	John Berg
- * @version 13/03/2017
+ * @version 24/03/2017
  * @since	01/03/2017
  * @see		Random
  * @see 	Vehicle
@@ -51,6 +51,23 @@ public final class Motorbike_Vehicle extends Vehicle {
 		 */
 		
 		super(UNIT_SIZE, TANK_SIZE);
+	}
+	/**
+	 * Create a new instance of the {@link Motorbike_Vehicle} with a specified size,
+	 * tank and fuel level.
+	 * 
+	 * <p>
+	 * This constructor is only used for creating clones of the {@link Motorbike_Vehicle}
+	 * using the {@link Vehicle#clone()} method.
+	 * </p>
+	 * 
+	 * @param size The size of the {@link Motorbike_Vehicle}.
+	 * @param tankSize The tank size of the {@link Motorbike_Vehicle}.
+	 * @param fuelLevel The current fuel level of the {@link Motorbike_Vehicle}.
+	 */
+	private Motorbike_Vehicle(final double size, final int tankSize, final int fuelLevel){
+		
+		super(size, tankSize, fuelLevel);
 	}
 	/**
 	 * Check if an object is equal to the <code>Motorbike</code> object.
@@ -115,5 +132,21 @@ public final class Motorbike_Vehicle extends Vehicle {
 				.append("Motorbike. ")
 				.append(super.toString())
 				.toString();
+	}
+	/**
+	 * Clone the {@link Motorbike_Vehicle} object into an exact copy.
+	 * 
+	 * <p>
+	 * Create an exact deep clone of the <code>this</code> {@link Motorbike_Vehicle}
+	 * object. Modifying the state of this object will not affect the created clone
+	 * and vice versa.
+	 * </P>
+	 * 
+	 * @return A deep clone of the {@link Motorbike_Vehicle} object.
+	 */
+	@Override
+	public final Motorbike_Vehicle clone(){
+		
+		return new Motorbike_Vehicle(size, tankSize, getFuelLevel());
 	}
 }

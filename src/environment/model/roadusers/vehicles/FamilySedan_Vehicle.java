@@ -17,7 +17,7 @@ import java.util.Random;
  * </p>
  * 
  * @author 	John
- * @version	13/03/2017
+ * @version	25/03/2017
  * @since 	02/03/2017
  * @see 	Random
  * @see		Vehicle
@@ -63,6 +63,23 @@ public final class FamilySedan_Vehicle extends Vehicle {
 		 */
 		
 		super(UNIT_SIZE, RNG.nextInt(TANK_SIZE_RANGE) + MIN_TANK_SIZE);
+	}
+	/**
+	 * Create a new instance of the {@link FamilySedan_Vehicle} class with
+	 * a specified size, tank size and fuel level.
+	 * 
+	 * <p>
+	 * This constructor is only used for creating clones of the
+	 * {@link FamilySedan_Vehicle} using the {link Vehicle#clone()} method.
+	 * </p>
+	 * 
+	 * @param size The size of the {@link FamilySedan_Vehicle}.
+	 * @param tankSize The tank size of the {@link FamilySedan_Vehicle}.
+	 * @param fuelLevel The current fuel level of the {@link FamilySedan_Vehicle}.
+	 */
+	private FamilySedan_Vehicle(final double size, final int tankSize, final int fuelLevel){
+		
+		super(size, tankSize, fuelLevel);
 	}
 	/**
 	 * Check if an object is equal to the <code>FamilySedan</code>.
@@ -123,5 +140,21 @@ public final class FamilySedan_Vehicle extends Vehicle {
 				.append("FamilySedan. ")
 				.append(super.toString())
 				.toString();
+	}
+	/**
+	 * Clone this object into an exact copy.
+	 * 
+	 * <p>
+	 * Create an exact deep clone of the {@link FamilySedan_Vehicle} object. Modifying
+	 * the state of the clone will not modify the state of the original object, and
+	 * vice versa.
+	 * </p>
+	 * 
+	 * @return A deep clone of the {@link FamilySedan_Vehicle}.
+	 */
+	@Override
+	public final FamilySedan_Vehicle clone(){
+		
+		return new FamilySedan_Vehicle(size, tankSize, getFuelLevel());
 	}
 }

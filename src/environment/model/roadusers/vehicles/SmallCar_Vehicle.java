@@ -16,7 +16,7 @@ import java.util.Random;
  * </p>
  * 
  * @author 	John Berg
- * @version 13/03/2017
+ * @version 21/03/2017
  * @since 	01/02/2017
  * @see		Random
  * @see 	Vehicle
@@ -38,13 +38,13 @@ public final class SmallCar_Vehicle extends Vehicle {
 	private static final int TANK_SIZE_RANGE = 3;
 	
 	/**
-	 * Create a <code>SmallCar</code> object.
+	 * Create a {@link SmallCar_Vehicle} object.
 	 * 
 	 * <p>
-	 * Initialise a new <code>SmallCar</code> where the {@link Vehicle#size}
+	 * Initialise a new {@link SmallCar_Vehicle} where the {@link Vehicle#size}
 	 * of the <code>SmallCar</code> is set to {@link #UNIT_SIZE}
-	 * ({@value #UNIT_SIZE}), and the {@link Vehicle#tankSize} of the <code>
-	 * SmallCar</code> is to a minimum of {@link #MIN_TANK_SIZE}
+	 * ({@value #UNIT_SIZE}), and the {@link Vehicle#tankSize} of the
+	 * {@link SmallCar_Vehicle} is to a minimum of {@link #MIN_TANK_SIZE}
 	 * ({@value #MIN_TANK_SIZE}) and up to {@link #TANK_SIZE_RANGE}
 	 * {@value #TANK_SIZE_RANGE} in range.
 	 * </p>
@@ -57,6 +57,22 @@ public final class SmallCar_Vehicle extends Vehicle {
 		 */
 		
 		super(UNIT_SIZE, RNG.nextInt(TANK_SIZE_RANGE) + MIN_TANK_SIZE);
+	}
+	/**
+	 * Create a new {@link SmallCar_Vehicle} with a specified size, tank and fuel level.
+	 * 
+	 * <p>
+	 * This constructor is only for creating deep clones of the {@link SmallCar_Vehicle} in
+	 * association with the {@link SmallCar_Vehicle#clone()} method.
+	 * </p>
+	 * 
+	 * @param size The size of the {@link SmallCar_Vehicle}.
+	 * @param tankSize The tank size of the {@link SmallCar_Vehicle}.
+	 * @param fuelLevel The current fuel level of the {@link SmallCar_Vehicle}.
+	 */
+	private SmallCar_Vehicle(final double size, final int tankSize, final int fuelLevel){
+		
+		super(size, tankSize, fuelLevel);
 	}
 	/**
 	 * Check if an object is equal to the <code>SmallCar</code>.
@@ -120,5 +136,21 @@ public final class SmallCar_Vehicle extends Vehicle {
 				.append("Small car. ")
 				.append(super.toString())
 				.toString();
+	}
+	/**
+	 * Clone the {@link SmallCar_Vehicle} object into an exact copy.
+	 * 
+	 * <p>
+	 * Create an exact deep clone of the {@link SmallCar_Vehicle} object. Modifying
+	 * the state of the clone will not modify the state of the original object, and
+	 * vice versa.
+	 * </p>
+	 * 
+	 * @return A deep clone of the {@link SmallCar_Vehicle} object.
+	 */
+	@Override
+	public final SmallCar_Vehicle clone(){
+		
+		return new SmallCar_Vehicle(size, tankSize, getFuelLevel());
 	}
 }
