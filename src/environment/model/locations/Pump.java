@@ -45,30 +45,32 @@ public final class Pump extends Location implements Cloneable {
 	public void processQueue(Map<RoadUser, Location> toMove) {
 
 		// Retrieves the Road User from the queue.
-		RoadUser ru = queue.peek();
+		RoadUser roadUserAtPump = queue.peek();
 
-		// Checks if the Vehicle has finished filling.
-		if (ru.getVehicle().isFull()) {
+		if (roadUserAtPump != null) {
 
-			// Checks if the Road User has completed the shopping.
-			if (ru.hasPaid()) {
+			// Checks if the Vehicle has finished filling.
+			if (roadUserAtPump.getVehicle().isFull()) {
 
-				// The Road User is removed from the queue.
-				queue.removeFirst();
+				// Checks if the Road User has completed the shopping.
+				if (roadUserAtPump.hasPaid()) {
+
+					// The Road User is removed from the queue.
+					queue.removeFirst();
+				} else {
+
+					// The road user is moved to the next location.
+					toMove.put(roadUserAtPump, this);
+				}
 			} else {
 
-				// The road user is moved to the next location.
-				toMove.put(ru, this);
+				// The Road User is required to fill the vehicle.
+				roadUserAtPump.getVehicle().fill();
+
+				// The time spent by each Road User is then incremented.
+				queue.forEach(RoadUser::spendTime);
 			}
-		} else {
-
-			// The Road User is required to fill the vehicle.
-			ru.getVehicle().fill();
-
-			// The time spent by each Road User is then incremented.
-			queue.forEach(RoadUser::spendTime);
 		}
-
 	}
 
 	/**
