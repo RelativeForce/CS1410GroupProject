@@ -85,42 +85,7 @@ public abstract class Location implements Cloneable {
 		this.roadUsersProcessed = 0;
 		this.profit = 0;
 		this.maxQueueSize = maxQueueSize;
-		this.queue = new LinkedList<RoadUser>() {
-
-			/**
-			 * A unique identification number for this version of
-			 * LinkedList&lt;oadUser&gt;
-			 * 
-			 */
-			private static final long serialVersionUID = 184605613956195983L;
-
-			/**
-			 * This performs a deep clone on the
-			 * <code>LinkedList&lt;RoadUser&gt;</code> resulting in an exact
-			 * copy.
-			 * 
-			 * @see java.util.LinkedList
-			 */
-			@Override
-			public LinkedList<RoadUser> clone() {
-
-				// Initialise the LinkedList that will be used as the cloned
-				// LinkedList
-				LinkedList<RoadUser> clone = new LinkedList<RoadUser>();
-
-				// Iterate through all the elements in the LinkedList
-				while (this.iterator().hasNext()) {
-
-					// Add the clone of the current element to the clone
-					// LinkedList.
-					clone.add((RoadUser) this.iterator().next().clone());
-
-				}
-
-				return clone;
-			}
-
-		};
+		this.queue = new LinkedList<RoadUser>();
 
 	}
 
@@ -265,6 +230,31 @@ public abstract class Location implements Cloneable {
 	 */
 	@Override
 	public abstract Location clone();
+
+	/**
+	 * Clones the queue in <code>this</code> {@link Location}.
+	 * 
+	 * @return <code>LinkedList&lt;RoadUser&gt;</code> identical to the
+	 *         {@link #queue} at <code>this</code> {@link Location}.
+	 */
+	protected LinkedList<RoadUser> cloneQueue() {
+
+		// Initialise the LinkedList that will be used as the cloned
+		// LinkedList
+		LinkedList<RoadUser> clone = new LinkedList<RoadUser>();
+
+		// Iterate through all the elements in the LinkedList
+		while (queue.iterator().hasNext()) {
+
+			// Add the clone of the current element to the clone
+			// LinkedList.
+			clone.add((RoadUser) queue.iterator().next().clone());
+
+		}
+
+		return clone;
+
+	}
 
 	@Override
 	public boolean equals(Object o) {
