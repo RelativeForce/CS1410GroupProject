@@ -1,6 +1,5 @@
 package environment.model.locations;
 
-import java.util.LinkedList;
 import java.util.Map;
 
 import environment.model.roadusers.RoadUser;
@@ -104,7 +103,7 @@ public class ShoppingArea extends Location implements Cloneable {
 		ShoppingArea clone = new ShoppingArea(this.getNextLocation());
 		clone.maxQueueSize = this.maxQueueSize;
 		clone.profit = this.profit;
-		clone.queue = this.queue.clone();
+		clone.queue = super.cloneQueue();
 		clone.roadUsersProcessed = this.roadUsersProcessed;
 
 		return clone;
