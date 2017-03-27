@@ -17,13 +17,24 @@ import environment.model.roadusers.RoadUser;
  * {@link RoadUser}s between its locations.
  * 
  * @author Joshua_Eddy
- * @version 17/03/2017
+ * @version 27/03/2017
  * 
+ * @see #enter(RoadUser)
+ * @see #clone()
+ * @see #addLocation(Location)
+ * @see #getFuelProfit()
+ * @see #getLostFuelProfit()
+ * @see #getNumberOfLoactions()
+ * @see #getSalesProfit()
+ * @see #getLostSalesProfit()
+ * @see #getRoadUsersRejected()
+ * @see #getNumberOfRoadUsers()
  * @see environment.GUI.views
  * @see environment.model.roadusers.RoadUser
+ * @see environment.model.locations.Location
  * @see java.util.LinkedList
  * @see java.util.HashMap
- * @see environment.model.locations.Location
+ * 
  *
  */
 public class Station {
@@ -85,10 +96,10 @@ public class Station {
 	private double lostSalesProfit;
 
 	/**
-	 * The <code>double</code> total profit that <code>this</code>
+	 * The <code>double</code> sales profit that <code>this</code>
 	 * {@link Station} has made.
 	 */
-	private double generalProfit;
+	private double salesProfit;
 
 	/**
 	 * The <code>double</code> amount of profit that was gained from selling
@@ -129,7 +140,7 @@ public class Station {
 
 		// Initialise statistic instance fields
 		this.fuelProfit = 0;
-		this.generalProfit = 0;
+		this.salesProfit = 0;
 
 		this.roadUsersRejected = 0;
 		this.numberOfRoadUsers = 0;
@@ -148,7 +159,7 @@ public class Station {
 	 *            {@link Location}
 	 */
 	public void addLocation(Location newLocation) {
-		if (newLocation != null) {
+		if (newLocation != null && !locations.contains(newLocation)) {
 			locations.add(newLocation);
 		}
 	}
@@ -192,12 +203,13 @@ public class Station {
 
 		String output = "";
 
-		output += "Number of Vechiles: " + numberOfRoadUsers + "\n";
-		output += "Petrol profit:      " + fuelProfit + "\n";
-		output += "Lost petrol profit: " + lostFuelProfit + "\n";
-		output += "Shopping profit:    " + (generalProfit - fuelProfit) + "\n";
-		output += "Total profit:       " + generalProfit + "\n";
-		output += "Total lost profit:  " + (lostFuelProfit + lostSalesProfit) + "\n";
+		output += "Number of Vehicles:          " + numberOfRoadUsers + "\n";
+		output += "Number of Rejected Vehicles: " + roadUsersRejected + "\n";
+		output += "Petrol profit:              £" + fuelProfit + "\n";
+		output += "Lost petrol profit:         £" + lostFuelProfit + "\n";
+		output += "Shopping profit:            £" + salesProfit + "\n";
+		output += "Total profit:               £" + (salesProfit + fuelProfit) + "\n";
+		output += "Total lost profit:          £" + (lostFuelProfit + lostSalesProfit) + "\n";
 
 		return output;
 	}
@@ -215,32 +227,38 @@ public class Station {
 	 */
 	public void enter(RoadUser roadUser) {
 
-		// If there is enough space in the station for the parameter RoadUser
-		if (this.canContain(roadUser)) {
+		if (roadUser != null) {
 
-			// Iterates through all the locations in the station.
-			for (Location currentLocation : locations) {
+			// If there is enough space in the station for the parameter
+			// RoadUser
+			if (this.canContain(roadUser)) {
 
-				// If the current location is of the same type as the start
-				// location of the station and there is enough space in that
-				// location for that road user.
-				if (currentLocation.getClass() == startLoaction && currentLocation.canContain(roadUser)) {
+				// Iterates through all the locations in the station.
+				for (Location currentLocation : locations) {
 
-					// Add the road user to that location and break to prevent
-					// adding that road user to multiple locations.
-					currentLocation.enter(roadUser);
-					numberOfRoadUsers++;
-					break;
+					// If the current location is of the same type as the start
+					// location of the station and there is enough space in that
+					// location for that road user.
+					if (currentLocation.getClass() == startLoaction && currentLocation.canContain(roadUser)) {
+
+						// Add the road user to that location and break to
+						// prevent
+						// adding that road user to multiple locations.
+						currentLocation.enter(roadUser);
+						numberOfRoadUsers++;
+						break;
+					}
 				}
-			}
 
-		} else {
-			// If there is no space for the road user in the station then
-			// increment roadUserRejected to acknowledge a road user has been
-			// rejected.
-			lostFuelProfit += roadUser.getVehicle().getMaxWorth();
-			lostSalesProfit += roadUser.getWorth();
-			roadUsersRejected++;
+			} else {
+				// If there is no space for the road user in the station then
+				// increment roadUserRejected to acknowledge a road user has
+				// been
+				// rejected.
+				lostFuelProfit += roadUser.getVehicle().getMaxWorth();
+				lostSalesProfit += roadUser.getWorth();
+				roadUsersRejected++;
+			}
 		}
 
 	}
@@ -294,17 +312,17 @@ public class Station {
 	}
 
 	/**
-	 * Retrieves the total profit <code>this</code> {@link Station} has
-	 * generated from fuel sales and general sales.
+	 * Retrieves the sales profit <code>this</code> {@link Station} has
+	 * generated from {@link RoadUser}s spending money in {@link ShoppingArea}.
 	 * 
 	 * @return <code>double</code> profit.
 	 * 
-	 * @see #generalProfit
+	 * @see #salesProfit
 	 * @see #locations
 	 * @see #fuelProfit
 	 */
-	public double getProfit() {
-		return generalProfit;
+	public double getSalesProfit() {
+		return salesProfit;
 	}
 
 	/**
@@ -327,6 +345,110 @@ public class Station {
 	 */
 	public double getLostFuelProfit() {
 		return lostFuelProfit;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+
+		// If the parameter object is a Station
+		if (o instanceof Station) {
+
+			// Create a local Station to remove casting to Station repeatedly
+			Station station = (Station) o;
+
+			// If the fuel profit and losses of the stations are the same.
+			if (this.fuelProfit == station.fuelProfit && this.lostFuelProfit == station.lostFuelProfit) {
+
+				// If the sales profit and losses of the stations are the same.
+				if (this.lostSalesProfit == station.lostSalesProfit && this.salesProfit == station.salesProfit) {
+
+					// If both stations have rejected the same amount of road
+					// users.
+					if (this.roadUsersRejected == station.roadUsersRejected) {
+
+						// If the stations contain the same number of road
+						// users.
+						if (this.numberOfRoadUsers == station.numberOfRoadUsers) {
+
+							// If the locations in the station are the same.
+							if (this.locations.equals(station.locations)) {
+
+								// If the stations have the same road users to
+								// be moved to their next locations.
+								if (this.toMove.equals(station.toMove)) {
+
+									// If both stations have the same starting
+									// location.
+									if (this.startLoaction == station.startLoaction) {
+
+										// If all these conditions are met then
+										// the parameter station and this are
+										// identical.
+										return true;
+
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Create a deep clone of <code>this</code> {@link Station}.
+	 * 
+	 * @see java.util.HashMap
+	 * @see java.util.LinkList
+	 * @see java.util.List
+	 * @see java.util.Map
+	 */
+	@Override
+	public Station clone() {
+
+		// Initialise the new Station that will be used as the clone of this.
+		Station cloneStation = new Station(this.startLoaction);
+
+		// Clone the instance fields of this into the clone.
+		cloneStation.fuelProfit = this.fuelProfit;
+		cloneStation.salesProfit = this.salesProfit;
+		cloneStation.numberOfRoadUsers = this.numberOfRoadUsers;
+		cloneStation.lostFuelProfit = this.lostFuelProfit;
+		cloneStation.lostSalesProfit = this.lostSalesProfit;
+		cloneStation.roadUsersRejected = this.roadUsersRejected;
+
+		// Initialise a new Map to be used in the clone as toMove.
+		Map<RoadUser, Location> cloneToMove = new HashMap<RoadUser, Location>();
+
+		// Iterate through all the elements in the toMove Map in this.
+		for (RoadUser roadUser : this.toMove.keySet()) {
+
+			// Add the current element in toMove into the clone of toMove.
+			cloneToMove.put(roadUser.clone(), this.toMove.get(roadUser).clone());
+
+		}
+
+		// Initialise the toMove Map in the clone.
+		cloneStation.toMove = cloneToMove;
+
+		// Initialise a new List to be used in the clone an locations.
+		List<Location> cloneLocations = new LinkedList<Location>();
+
+		// Iterate through all the locations in this station.
+		while (this.locations.iterator().hasNext()) {
+
+			// Add the current location to the clone's version of locations.
+			cloneLocations.add(this.locations.iterator().next().clone());
+
+		}
+
+		// Initialise the locations List in the clone.
+		cloneStation.locations = cloneLocations;
+
+		return cloneStation;
 	}
 
 	// Private Methods -------------------------------------------------------
@@ -378,7 +500,7 @@ public class Station {
 			Location currentLocation = toMove.get(roadUser);
 
 			// Locate and store the road user.
-			findDestinationLocation(roadUser, currentLocation);
+			findDestinationLocation(roadUser, currentLocation.getNextLocation());
 
 		}
 
@@ -393,47 +515,49 @@ public class Station {
 
 	/**
 	 * Iterates through all the {@link Location}s in <code>this</code>
-	 * {@link Station} to find and store the specified {@link RoadUser} in the
-	 * specified currentLocation's next {@link Location}.
+	 * {@link Station} to find and store the specified {@link RoadUser}'s next
+	 * {@link Location}.
 	 * 
 	 * @param roadUser
 	 *            The {@link RoadUser} to be relocated its next
 	 *            {@link Location}.
-	 * @param currentLocation
-	 *            The current {@link Location} of the specified
-	 *            {@link RoadUser}.
+	 * @param nextLocation
+	 *            The <code>Class</code> of the next {@link Location} of the
+	 *            specified {@link RoadUser}.
 	 * 
 	 * @see environment.model.locations.Location
 	 * @see environment.model.roadusers.RoadUser
 	 * @see #relocateRoadUsers()
+	 * @see environment.model.locations.Location#canContain(RoadUser)
+	 * @see environment.model.locations.Location#enter(RoadUser)
 	 */
-	private void findDestinationLocation(RoadUser roadUser, Location currentLocation) {
+	private void findDestinationLocation(RoadUser roadUser, Class<? extends Location> nextLocation) {
 
-		// Iterate though all the locations in the station
-		for (Location location : locations) {
+		if (nextLocation != null) {
 
-			if (currentLocation.getNextLocation() != null) {
+			// Iterate though all the locations in the station
+			for (Location location : locations) {
 
 				// If the type of the current location is the same at the
 				// next location the road user needs to be put in and there
 				// is enough space for the road user in that location.Then
 				// add it to said location and remove it from toMove.
-				if (location.getClass() == currentLocation.getNextLocation() && location.canContain(roadUser)) {
+				if (location.getClass() == nextLocation && location.canContain(roadUser)) {
 
 					location.enter(roadUser);
 					toMove.remove(roadUser);
 					break;
 
 				}
-			} else {
-
-				// The road user has no next location, There for it will leave
-				// the station.
-				numberOfRoadUsers--;
-				toMove.remove(roadUser);
-				break;
-
 			}
+
+		} else {
+
+			// The road user has no next location, There for it will leave
+			// the station.
+			numberOfRoadUsers--;
+			toMove.remove(roadUser);
+
 		}
 
 	}
@@ -474,7 +598,7 @@ public class Station {
 
 		// Reset all of the profit to zero.
 		fuelProfit = 0;
-		generalProfit = 0;
+		salesProfit = 0;
 
 		// Iterate through all the locations in the station.
 		for (Location location : locations) {
@@ -486,7 +610,7 @@ public class Station {
 			}
 
 			// Add all profit to the general station profit.
-			generalProfit = location.getProfit();
+			salesProfit = location.getProfit();
 		}
 
 	}

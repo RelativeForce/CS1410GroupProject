@@ -1,5 +1,6 @@
 package environment.model.locations;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 import environment.model.roadusers.RoadUser;
@@ -10,11 +11,11 @@ import environment.model.roadusers.RoadUser;
  * for different {@link RoadUser}s.
  *
  * @author Karandeep_Saini
- * @version 17/03/2017
+ * @version 27/03/2017
  * @see environment.model.locations.Locations
  * @see environment.model.roadusers.RoadUser
  */
-public class ShoppingArea extends Location {
+public class ShoppingArea extends Location implements Cloneable {
 
 	/**
 	 * The maximum amount of unit space available at <code>this</code>
@@ -94,6 +95,19 @@ public class ShoppingArea extends Location {
 			roadUsersProcessed--;
 
 		}
+
+	}
+
+	@Override
+	public ShoppingArea clone() {
+		
+		ShoppingArea clone = new ShoppingArea(this.getNextLocation());
+		clone.maxQueueSize = this.maxQueueSize;
+		clone.profit = this.profit;
+		clone.queue = this.queue.clone();
+		clone.roadUsersProcessed = this.roadUsersProcessed;
+
+		return clone;
 
 	}
 

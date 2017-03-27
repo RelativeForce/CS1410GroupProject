@@ -1,43 +1,36 @@
 package environment.model.roadusers;
 
-import java.util.Random;
-
 import environment.model.roadusers.vehicles.Motorbike_Vehicle;
 
-public class Motorbike_RoadUser extends RoadUser {
-
-	private static final double PROB_TO_SHOP = 0.0;
+public class Motorbike_RoadUser extends RoadUser implements Cloneable {
 
 	public Motorbike_RoadUser() {
-		super(new Motorbike_Vehicle());
-		// TODO Auto-generated constructor stub
+		super(new Motorbike_Vehicle(), 0, 0);
 	}
-	
-	public static boolean exists(double p, double q, double value){
+
+	public static boolean exists(double p, double q, double value) {
 		return (value > p) && (value <= (2 * p));
 	}
 
 	@Override
 	public void shop() {
-		// TODO Auto-generated method stub
-
-		Random rn = new Random();
-		double d = rn.nextDouble();
-		if (d <= PROB_TO_SHOP) {
-
-			System.out.print("\"Motorbike drivers in the area are thrifty and will never go to the shopping area.\"");
-		}
-
+		// Doesn't Shop
 	}
 
 	@Override
 	public double getWorth() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+
 	@Override
-	public boolean willShop(){
+	public boolean willShop() {
 		return false;
+	}
+
+	public Motorbike_RoadUser clone() {
+
+		Motorbike_RoadUser clone = (Motorbike_RoadUser) super.createClone(new Motorbike_RoadUser());
+
+		return clone;
 	}
 }
