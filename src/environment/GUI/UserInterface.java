@@ -2,7 +2,6 @@ package environment.GUI;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -13,33 +12,111 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 
 import environment.GUI.views.CommandLine;
 import environment.GUI.views.Graph;
 import environment.GUI.views.SimulatorView;
 
-import javax.swing.JComboBox;
-
+/**
+ *
+ * Provides the functionality and creates a User interface that takes inputs
+ * from the user checks if they are viable for the solution and then sends them
+ * to the simulator to accurately represent what the user wants.
+ *
+ * @author David_Wightman
+ * @version 21/03/2017
+ * 
+ * @see #getNumberOfPumps()
+ * @see #getNumberOfTills()
+ * @see #getP()
+ * @see #getQ()
+ * @see #getTickCount()
+ * @see #getView()
+ * 
+ */
 public class UserInterface {
-	
+	// Instance variables -------------------------------------
+
+	/**
+	 * boolean dictating when the system is ready for submission.
+	 */
 	private volatile boolean isReady;
-	private double p;
-	private double q;
-	private int tills;
-	private int pumps;
-	private int ticks;
+	/**
+	 * Boolean dictating wether or not trucks are allowed
+	 */
 	private boolean trucks;
 
+	/**
+	 * Value representing the value of P
+	 */
+	private double p;
+	/**
+	 * Value representing the value of Q
+	 */
+	private double q;
+
+	/**
+	 * Value representing the number of tills
+	 */
+	private int tills;
+	/**
+	 * Value representing the number of pumps
+	 */
+	private int pumps;
+	/**
+	 * Value representing the number of ticks
+	 */
+	private int ticks;
+
+	/**
+	 * Text field to allow users to enter a tills number
+	 */
 	private JTextField tillsEntry;
+	/**
+	 * Text field to allow users to enter a pumps number
+	 */
 	private JTextField pumpsEntry;
+	/**
+	 * Text field to allow users to enter a tick count
+	 */
 	private JTextField tickCount;
+
+	/**
+	 * Jframe responsible for loading the JPanels onto
+	 */
 	private JFrame display;
+
+	/**
+	 * Drop down box containing options for Q
+	 */
 	private JComboBox<String> pDropDown;
+	/**
+	 * Drop down box containing options for Q
+	 */
 	private JComboBox<String> qDropDown;
+	/**
+	 * Drop down box containing options for selectable views
+	 */
 	private JComboBox<String> viewDropDown;
+
+	/**
+	 * Checkbox which allows the user to set if trucks is true or false
+	 */
 	private JCheckBox Trucks;
 
+	/**
+	 * Constructs a new {@link UserInterface} by initialising the private
+	 * variables and then creating frames with which to store them on as well as
+	 * formatting and organising these frames.Also creates action listeners
+	 * allowing the window to detect when the user is ready to submit values to
+	 * the {@link SimulatorView}.
+	 */
 	public UserInterface() {
+
+		// Create new JPanels and assign them names relevant to the objects they
+		// will be handling.
 
 		JPanel pPanel = new JPanel();
 		JPanel qPanel = new JPanel();
@@ -50,6 +127,8 @@ public class UserInterface {
 		JPanel tickPanel = new JPanel();
 		JPanel viewPanel = new JPanel();
 
+		// Assign negative values to the initialised variables so they will fail
+		// a later check unless changed.
 		isReady = false;
 		p = -1.0;
 		q = -1.0;
@@ -58,43 +137,53 @@ public class UserInterface {
 		ticks = -1;
 		trucks = false;
 
+		// create a new JFrame for the initialised display
 		display = new JFrame();
-
+		// create string arrays for the options in the previously initialised
+		// Drop down boxes
 		String[] pOptions = { "0.01", "0.02", "0.03", "0.04", "0.05" };
 		String[] qOptions = { "0.01", "0.02", "0.03", "0.04", "0.05" };
 		String[] viewOptions = { "Command Line", "Graph" };
 
+		// create new JComboBox<string> objects for the initialised ComboBoxes
+		// and assign them the String arrays.
 		pDropDown = new JComboBox<String>(pOptions);
 		qDropDown = new JComboBox<String>(qOptions);
 		viewDropDown = new JComboBox<String>(viewOptions);
 
+		// Initialise the JTextField with the set sizes for entry.
 		tillsEntry = new JTextField(3);
 		pumpsEntry = new JTextField(3);
 		tickCount = new JTextField(8);
 
+		// Initialise the Jbuttons and set the text that will appear on them
 		JButton submit = new JButton("Submit");
 		JButton cancel = new JButton("Cancel");
 
+		// Initialise the JLabels and set the text that they will use
 		JLabel pLabel = new JLabel("Enter value for P:");
 		JLabel qLabel = new JLabel("Enter value for Q:");
 		JLabel tillsLabel = new JLabel("Enter number of tills:");
-		JLabel pumpLabel = new JLabel("Enter number of pumps;");
+		JLabel pumpLabel = new JLabel("Enter number of pumps:");
 		JLabel tickLabel = new JLabel("How many ten second ticks?");
 		JLabel viewLabel = new JLabel("Select simulation view:");
 
+		// initialise the Jcheckbox and set the text that appear next to it
 		Trucks = new JCheckBox("Allow trucks?");
 
-		display.setMinimumSize(new Dimension(200, 700));
-		qPanel.setMinimumSize(new Dimension(200, 100));
-		pPanel.setMinimumSize(new Dimension(200, 100));
-		tillPanel.setMinimumSize(new Dimension(200, 100));
-		pumpPanel.setMinimumSize(new Dimension(200, 100));
-		truckPanel.setMinimumSize(new Dimension(200, 100));
-		buttonPanel.setMinimumSize(new Dimension(200, 100));
-		tickPanel.setMinimumSize(new Dimension(200, 100));
-		viewPanel.setMinimumSize(new Dimension(200, 200));
+		// Assign preferred sizes to the initialised JPanels
+		display.setPreferredSize(new Dimension(250, 500));
+		qPanel.setPreferredSize(new Dimension(200, 50));
+		pPanel.setPreferredSize(new Dimension(200, 50));
+		tillPanel.setPreferredSize(new Dimension(200, 50));
+		pumpPanel.setPreferredSize(new Dimension(200, 50));
+		truckPanel.setPreferredSize(new Dimension(200, 50));
+		buttonPanel.setPreferredSize(new Dimension(200, 50));
+		tickPanel.setPreferredSize(new Dimension(200, 50));
+		viewPanel.setPreferredSize(new Dimension(200, 50));
 
-		display.setLayout(new GridLayout(7, 1));
+		// Initialise new layouts and assign them to JPanels
+		display.setLayout(new FlowLayout());
 		qPanel.setLayout(new FlowLayout());
 		pPanel.setLayout(new FlowLayout());
 		tillPanel.setLayout(new FlowLayout());
@@ -104,8 +193,10 @@ public class UserInterface {
 		tickPanel.setLayout(new FlowLayout());
 		viewPanel.setLayout(new FlowLayout());
 
+		// Assign the default close operation of the window to be nothing
 		display.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
+		// Add the initialised objects to the respective panels
 		pPanel.add(pLabel);
 		pPanel.add(pDropDown);
 		qPanel.add(qLabel);
@@ -117,11 +208,12 @@ public class UserInterface {
 		truckPanel.add(Trucks);
 		tickPanel.add(tickLabel);
 		tickPanel.add(tickCount);
-		buttonPanel.add(submit);
-		buttonPanel.add(cancel);
 		viewPanel.add(viewLabel);
 		viewPanel.add(viewDropDown);
+		buttonPanel.add(submit);
+		buttonPanel.add(cancel);
 
+		// Add the constructed panels to the display panel
 		display.add(pPanel);
 		display.add(qPanel);
 		display.add(tillPanel);
@@ -131,12 +223,16 @@ public class UserInterface {
 		display.add(viewPanel);
 		display.add(buttonPanel);
 
+		// Pack the display into a singular object and then make it visible to
+		// the user
 		display.pack();
 		display.setVisible(true);
 
+		// Create an action listener for each button and link it to a function
 		submit.addActionListener(e -> submit());
 		cancel.addActionListener(e -> dispose());
 
+		// Create an action listener for the window and link it to a function
 		display.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				dispose();
@@ -144,66 +240,139 @@ public class UserInterface {
 		});
 	}
 
+	/**
+	 * Handles values from the {@link UserInterface} and sets them to the
+	 * private variables whilst also handling errors caused by user entries the
+	 * system cannot handle. Also creates an error message to warn users that
+	 * entered values may not be acceptable and then calls the {@link dispose}
+	 * command.
+	 */
 	private void submit() {
 		try {
+			// Takes values from the user entry fields and assign them to
+			// respective variables
 			pumps = Integer.parseInt(tillsEntry.getText());
 			tills = Integer.parseInt(pumpsEntry.getText());
 			p = Double.parseDouble((String) pDropDown.getSelectedItem());
 			q = Double.parseDouble((String) qDropDown.getSelectedItem());
 			trucks = Trucks.isSelected();
 			ticks = Integer.parseInt(tickCount.getText());
+			// catch any exception thrown by the recovered values and do nothing
 		} catch (Exception e) {
 
 		}
+		// Test if all of the values are positive to ensure feasibility of the
+		// simulation
 		if (pumps > 0 && tills > 0 && p > 0.00 && q > 0.00 && ticks > 0) {
-			
+			// if ths if statement is met set isReady to true
 			isReady = true;
 		}
+		// if conditions are not met
+		else {
+			// Create an alert message warning the user and provide a button to
+			// close the alert.
+			Object[] options = { "OK" };
+			JOptionPane.showOptionDialog(null, "Please make sure all the values enterred are positive and feasible",
+					"Warning: Inputted value error", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
+					options, options[0]);
+		}
+
 	}
 
+	/**
+	 * Removes and destroys the visual element of the {@link UserInterface}
+	 */
 	public void dispose() {
 		display.dispose();
 	}
 
+	/**
+	 * Retrieves the value of <strong>isReady</strong> from the
+	 * {@link UserInterface}.
+	 * 
+	 * @return <code>boolean</code> value of <strong>isReady</strong>.
+	 */
 	public boolean isReady() {
 		return isReady;
 
 	}
 
+	/**
+	 * Retrieves the value of <strong>p</strong> from the {@link UserInterface}.
+	 * 
+	 * @return <code>double</code> value of <strong>p</strong>.
+	 */
 	public double getP() {
 		return p;
 	}
 
+	/**
+	 * Retrieves the value of <strong>q</strong> from the {@link UserInterface}.
+	 * 
+	 * @return <code>double</code> value of <strong>q</strong>.
+	 */
 	public double getQ() {
 		return q;
 	}
 
+	/**
+	 * Retrieves the value of <strong>trucks</strong> from the
+	 * {@link UserInterface}.
+	 * 
+	 * @return <code>boolean</code> value of <strong>trucks</strong>.
+	 */
 	public boolean hasTrucks() {
 		return trucks;
 	}
 
+	/**
+	 * Retrieves the value of <strong>pumps</strong> from the
+	 * {@link UserInterface}.
+	 * 
+	 * @return <code>Int</code> value of <strong>pumps</strong>.
+	 */
 	public int getNumberOfPumps() {
 		return pumps;
 	}
 
+	/**
+	 * Retrieves the value of <strong>tills</strong> from the
+	 * {@link UserInterface}.
+	 * 
+	 * @return <code>Int</code> value of <strong>tills</strong>.
+	 */
 	public int getNumberOfTills() {
 		return tills;
 	}
 
+	/**
+	 * Retrieves the value of <strong>ticks</strong> from the
+	 * {@link UserInterface}.
+	 * 
+	 * @return <code>Int</code> value of <strong>ticks</strong>.
+	 */
 	public int getTickCount() {
 		return ticks;
 	}
 
+	/**
+	 * Handles the view setting chosen by the user sent from the
+	 * {@link UserInterface} nulls the current view and then sets view to be in
+	 * accordance with the new value.
+	 * 
+	 * @return <code>SimulatorView<code>
+	 */
 	public SimulatorView getView() {
-		
+		// Set the value in simulator view to null
 		SimulatorView view = null;
-		
+		// If The string matches command line then set view to command line
 		if (((String) viewDropDown.getSelectedItem()).equals("Command Line")) {
 			view = new CommandLine();
+			// if the string matches graph then set the view to graphical view
 		} else if (((String) viewDropDown.getSelectedItem()).equals("Graph")) {
 			view = new Graph();
 		}
-		
+		// return the value in view
 		return view;
 	}
 }
