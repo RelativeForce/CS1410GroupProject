@@ -1,5 +1,6 @@
 package environment.model.locations;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 import environment.model.roadusers.RoadUser;
@@ -9,13 +10,13 @@ import environment.model.roadusers.RoadUser;
  * Place where a {@link RoadUser} pays for the transaction.
  * 
  * @author Karandeep_Saini
- * @version 17/03/2017
+ * @version 27/03/2017
  * 
  * @see environment.model.locations.Location
  * @see environment.model.roadusers.RoadUser
  *
  */
-public class Till extends Location {
+public class Till extends Location implements Cloneable{
 
 	/**
 	 * The maximum amount of unit space available at <code>this</code>
@@ -75,5 +76,17 @@ public class Till extends Location {
 		}
 
 	}
+	
+	@Override
+	public Till clone() {
 
+		Till clone = new Till(this.getNextLocation());
+		clone.maxQueueSize = this.maxQueueSize;
+		clone.profit = this.profit;
+		clone.queue =  this.queue.clone();
+		clone.roadUsersProcessed = this.roadUsersProcessed;
+
+		return clone;
+
+}
 }

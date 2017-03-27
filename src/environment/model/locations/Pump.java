@@ -1,5 +1,6 @@
 package environment.model.locations;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 import environment.model.roadusers.RoadUser;
@@ -9,12 +10,12 @@ import environment.model.roadusers.RoadUser;
  * 
  * 
  * @author Karandeep_Saini
- * @version 17/03/2017
+ * @version 27/03/2017
  * 
  * @see environment.model.locations.Location
  * @see environment.model.roadusers.RoadUser
  */
-public final class Pump extends Location {
+public final class Pump extends Location implements Cloneable {
 
 	/**
 	 * The maximum amount of unit space available at <code>this</code>
@@ -69,6 +70,24 @@ public final class Pump extends Location {
 			queue.forEach(RoadUser::spendTime);
 		}
 
+	}
+
+	/**
+	 * Create an exact copy of this {@link Pump} which is a subclass of
+	 * {@link Location}.
+	 * 
+	 * @see environment.model.locations.Pump
+	 */
+	@Override
+	public Pump clone() {
+
+		Pump clone = new Pump(this.getNextLocation());
+		clone.maxQueueSize = this.maxQueueSize;
+		clone.profit = this.profit;
+		clone.queue = this.queue.clone();
+		clone.roadUsersProcessed = this.roadUsersProcessed;
+
+		return clone;
 	}
 
 }
