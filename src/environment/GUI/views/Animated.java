@@ -34,7 +34,8 @@ public final class Animated extends JFrame implements SimulatorView {
 	 */
 	public Animated(){
 		
-		super("");
+		//Create the JFrame
+		super("blah blah blah");
 		super.setLayout(null);
 		
 		//Set the JFrame size
@@ -43,6 +44,8 @@ public final class Animated extends JFrame implements SimulatorView {
 		super.setMaximumSize(new Dimension(500, 500));
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		
+		//Create JPanel
 		
 		super.pack();
 		super.setVisible(true);

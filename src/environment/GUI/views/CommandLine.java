@@ -54,7 +54,8 @@ public final class CommandLine implements SimulatorView {
 		System.out.println("Station status:");
 		System.out.print(new StringBuilder()
 				.append("Time: ")
-				.append(time));
+				.append(time)
+				.append("\n"));
 		System.out.println(station);
 		System.out.println("----------------------------------");
 	}
