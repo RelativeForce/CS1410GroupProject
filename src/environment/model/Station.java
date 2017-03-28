@@ -1,11 +1,15 @@
 package environment.model;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import environment.model.locations.Location;
+import environment.model.locations.Pump;
+import environment.model.locations.ShoppingArea;
 import environment.model.locations.Till;
 import environment.model.roadusers.RoadUser;
 
@@ -17,7 +21,7 @@ import environment.model.roadusers.RoadUser;
  * {@link RoadUser}s between its locations.
  * 
  * @author Joshua_Eddy
- * @version 27/03/2017
+ * @version 28/03/2017
  * 
  * @see #enter(RoadUser)
  * @see #clone()
@@ -85,7 +89,7 @@ public class Station {
 	 * 
 	 * @see environment.model.roadusers.vehicles.Vehicle
 	 */
-	private double lostFuelProfit;
+	private Map<Class<? extends RoadUser>, Double> lostFuelprofit;
 
 	/**
 	 * The <code>double</code> amount of profit that was lost by a
@@ -93,13 +97,17 @@ public class Station {
 	 * 
 	 * @see environment.model.roadusers.RoadUser
 	 */
-	private double lostSalesProfit;
+	private Map<Class<? extends RoadUser>, Double> lostSalesProfit;
 
 	/**
-	 * The <code>double</code> sales profit that <code>this</code>
-	 * {@link Station} has made.
+	 * The amount of {@link RoadUser}s that are currently inside this station.
 	 */
-	private double salesProfit;
+	private int numberOfRoadUsers;
+
+	/**
+	 * The number of road users that have passed through the station.
+	 */
+	private Map<Class<? extends RoadUser>, Double> roadUsersProcessed;
 
 	/**
 	 * The <code>double</code> amount of profit that was gained from selling
@@ -108,12 +116,13 @@ public class Station {
 	 * @see #collateFuelProfit()
 	 * @see #getFuelProfit()
 	 */
-	private double fuelProfit;
+	private Map<Class<? extends RoadUser>, Double> fuelProfit;
 
 	/**
-	 * The amount of {@link RoadUser}s that are currently inside this station.
+	 * The <code>double</code> sales profit that <code>this</code>
+	 * {@link Station} has made.
 	 */
-	private int numberOfRoadUsers;
+	private Map<Class<? extends RoadUser>, Double> salesProfit;
 
 	// Constructor -----------------------------------------------------------
 
@@ -139,14 +148,13 @@ public class Station {
 		this.startLoaction = startLocation;
 
 		// Initialise statistic instance fields
-		this.fuelProfit = 0;
-		this.salesProfit = 0;
-
+		this.fuelProfit = new HashMap<Class<? extends RoadUser>, Double>();
+		this.salesProfit = new HashMap<Class<? extends RoadUser>, Double>();
+		this.roadUsersProcessed = new HashMap<Class<? extends RoadUser>, Double>();
+		this.lostSalesProfit = new HashMap<Class<? extends RoadUser>, Double>();
+		this.lostFuelprofit = new HashMap<Class<? extends RoadUser>, Double>();
 		this.roadUsersRejected = 0;
 		this.numberOfRoadUsers = 0;
-
-		this.lostFuelProfit = 0;
-		this.lostSalesProfit = 0;
 
 	}
 
@@ -187,9 +195,6 @@ public class Station {
 
 		}
 
-		// Update all financial statistics
-		collateFinances();
-
 	}
 
 	/**
@@ -201,15 +206,22 @@ public class Station {
 	@Override
 	public String toString() {
 
+		DecimalFormat money = new DecimalFormat("#.##");
+		money.setRoundingMode(RoundingMode.CEILING);
+		DecimalFormat integer = new DecimalFormat("#");
+		integer.setRoundingMode(RoundingMode.CEILING);
+
 		String output = "";
 
-		output += "Number of Vehicles:          " + numberOfRoadUsers + "\n";
-		output += "Number of Rejected Vehicles: " + roadUsersRejected + "\n";
-		output += "Petrol profit:              £" + fuelProfit + "\n";
-		output += "Lost petrol profit:         £" + lostFuelProfit + "\n";
-		output += "Shopping profit:            £" + salesProfit + "\n";
-		output += "Total profit:               £" + (salesProfit + fuelProfit) + "\n";
-		output += "Total lost profit:          £" + (lostFuelProfit + lostSalesProfit) + "\n";
+		output += "Vehicles in station:         " + numberOfRoadUsers + "\n";
+		output += "Vehicles rejected:           " + roadUsersRejected + "\n";
+		output += "Vehicles processed:          " + integer.format(sum(roadUsersProcessed)) + "\n";
+		output += "Petrol profit:              £" + money.format(sum(fuelProfit)) + "\n";
+		output += "Lost petrol profit:         £" + money.format(sum(lostFuelprofit)) + "\n";
+		output += "Shopping profit:            £" + money.format(sum(salesProfit)) + "\n";
+		output += "Lost Shopping profit:       £" + money.format(sum(lostSalesProfit)) + "\n";
+		output += "Total profit:               £" + money.format(sum(salesProfit) + sum(fuelProfit)) + "\n";
+		output += "Total lost profit:          £" + money.format(sum(lostFuelprofit) + sum(lostSalesProfit)) + "\n";
 
 		return output;
 	}
@@ -227,36 +239,40 @@ public class Station {
 	 */
 	public void enter(RoadUser roadUser) {
 
+		// Stores whether the station has rejected the road user attempting to
+		// enter the station. It is true until the road user is placed in a
+		// location.
+		boolean rejected = true;
+
 		if (roadUser != null) {
 
 			// If there is enough space in the station for the parameter
 			// RoadUser
-			if (this.canContain(roadUser)) {
 
-				// Iterates through all the locations in the station.
-				for (Location currentLocation : locations) {
+			// Iterates through all the locations in the station.
+			for (Location currentLocation : locations) {
 
-					// If the current location is of the same type as the start
-					// location of the station and there is enough space in that
-					// location for that road user.
-					if (currentLocation.getClass() == startLoaction && currentLocation.canContain(roadUser)) {
+				// If the current location is of the same type as the start
+				// location of the station and there is enough space in that
+				// location for that road user.
+				if (currentLocation.getClass() == startLoaction && currentLocation.canContain(roadUser)) {
 
-						// Add the road user to that location and break to
-						// prevent
-						// adding that road user to multiple locations.
-						currentLocation.enter(roadUser);
-						numberOfRoadUsers++;
-						break;
-					}
+					// Add the road user to that location and break to
+					// prevent
+					// adding that road user to multiple locations.
+					currentLocation.enter(roadUser);
+					rejected = false;
+					numberOfRoadUsers++;
+					break;
 				}
+			}
 
-			} else {
+			if (rejected) {
 				// If there is no space for the road user in the station then
 				// increment roadUserRejected to acknowledge a road user has
-				// been
-				// rejected.
-				lostFuelProfit += roadUser.getVehicle().getMaxWorth();
-				lostSalesProfit += roadUser.getWorth();
+				// been rejected.
+				update(lostFuelprofit, roadUser.getClass(), roadUser.getVehicle().getMaxWorth());
+				update(lostSalesProfit, roadUser.getClass(), roadUser.getWorth());
 				roadUsersRejected++;
 			}
 		}
@@ -282,7 +298,7 @@ public class Station {
 	 * @see #
 	 */
 	public double getFuelProfit() {
-		return fuelProfit;
+		return sum(fuelProfit);
 	}
 
 	/**
@@ -322,7 +338,7 @@ public class Station {
 	 * @see #fuelProfit
 	 */
 	public double getSalesProfit() {
-		return salesProfit;
+		return sum(salesProfit);
 	}
 
 	/**
@@ -333,7 +349,7 @@ public class Station {
 	 * @return <code>double</code> lost profit.
 	 */
 	public double getLostSalesProfit() {
-		return lostSalesProfit;
+		return sum(lostSalesProfit);
 	}
 
 	/**
@@ -344,7 +360,7 @@ public class Station {
 	 * @return <code>double</code> profit lost.
 	 */
 	public double getLostFuelProfit() {
-		return lostFuelProfit;
+		return sum(lostFuelprofit);
 	}
 
 	@Override
@@ -357,10 +373,11 @@ public class Station {
 			Station station = (Station) o;
 
 			// If the fuel profit and losses of the stations are the same.
-			if (this.fuelProfit == station.fuelProfit && this.lostFuelProfit == station.lostFuelProfit) {
+			if (this.fuelProfit.equals(station.fuelProfit) && this.lostFuelprofit.equals(station.lostFuelprofit)) {
 
 				// If the sales profit and losses of the stations are the same.
-				if (this.lostSalesProfit == station.lostSalesProfit && this.salesProfit == station.salesProfit) {
+				if (this.lostSalesProfit.equals(station.lostSalesProfit)
+						&& this.salesProfit.equals(station.salesProfit)) {
 
 					// If both stations have rejected the same amount of road
 					// users.
@@ -413,26 +430,37 @@ public class Station {
 		Station cloneStation = new Station(this.startLoaction);
 
 		// Clone the instance fields of this into the clone.
-		cloneStation.fuelProfit = this.fuelProfit;
-		cloneStation.salesProfit = this.salesProfit;
 		cloneStation.numberOfRoadUsers = this.numberOfRoadUsers;
-		cloneStation.lostFuelProfit = this.lostFuelProfit;
-		cloneStation.lostSalesProfit = this.lostSalesProfit;
 		cloneStation.roadUsersRejected = this.roadUsersRejected;
 
-		// Initialise a new Map to be used in the clone as toMove.
-		Map<RoadUser, Location> cloneToMove = new HashMap<RoadUser, Location>();
-
-		// Iterate through all the elements in the toMove Map in this.
-		for (RoadUser roadUser : this.toMove.keySet()) {
-
-			// Add the current element in toMove into the clone of toMove.
-			cloneToMove.put(roadUser.clone(), this.toMove.get(roadUser).clone());
-
-		}
+		cloneStation.lostFuelprofit = cloneStatistic(lostFuelprofit);
+		cloneStation.lostSalesProfit = cloneStatistic(this.lostSalesProfit);
+		cloneStation.roadUsersProcessed = cloneStatistic(this.roadUsersProcessed);
+		cloneStation.fuelProfit = cloneStatistic(this.fuelProfit);
+		cloneStation.salesProfit = cloneStatistic(this.salesProfit);
 
 		// Initialise the toMove Map in the clone.
-		cloneStation.toMove = cloneToMove;
+		cloneStation.toMove = cloneToMove();
+
+		// Initialise the locations List in the clone.
+		cloneStation.locations = cloneLocations();
+
+		return cloneStation;
+	}
+
+	// Private Methods -------------------------------------------------------
+
+	private Map<Class<? extends RoadUser>, Double> cloneStatistic(Map<Class<? extends RoadUser>, Double> toClone) {
+
+		Map<Class<? extends RoadUser>, Double> clone = new HashMap<Class<? extends RoadUser>, Double>();
+
+		for (Class<? extends RoadUser> key : toClone.keySet()) {
+			clone.put(key, toClone.get(key).doubleValue());
+		}
+		return clone;
+	}
+
+	private List<Location> cloneLocations() {
 
 		// Initialise a new List to be used in the clone an locations.
 		List<Location> cloneLocations = new LinkedList<Location>();
@@ -444,42 +472,23 @@ public class Station {
 			cloneLocations.add(this.locations.iterator().next().clone());
 
 		}
-
-		// Initialise the locations List in the clone.
-		cloneStation.locations = cloneLocations;
-
-		return cloneStation;
+		return cloneLocations;
 	}
 
-	// Private Methods -------------------------------------------------------
+	private Map<RoadUser, Location> cloneToMove() {
 
-	/**
-	 * Checks if there is enough space for a specified {@link RoadUser} inside
-	 * <code>this</code> {@link RoadUser}.
-	 * 
-	 * @param newRoadUser
-	 *            {@link RoadUser} to be added to this {@link Station}.
-	 * @return <code>boolean</code> whether there is enough space or not.
-	 */
-	private boolean canContain(RoadUser newRoadUser) {
+		// Initialise a new Map to be used in the clone as toMove.
+		Map<RoadUser, Location> cloneToMove = new HashMap<RoadUser, Location>();
 
-		// Iterate through all the locations in this station.
-		for (Location currentLocation : locations) {
+		// Iterate through all the elements in the toMove Map in this.
+		for (RoadUser roadUser : this.toMove.keySet()) {
 
-			// If current location is the same type as this stations start
-			// location.
-			if (currentLocation.getClass() == startLoaction) {
+			// Add the current element in toMove into the clone of toMove.
+			cloneToMove.put(roadUser.clone(), this.toMove.get(roadUser).clone());
 
-				// If there is enough space for the road user in one of the
-				// start location then there is enough space in the station.
-				if (currentLocation.canContain(newRoadUser)) {
-					return true;
-				}
-			}
 		}
+		return cloneToMove;
 
-		// Otherwise there is not enough space in the station.
-		return false;
 	}
 
 	/**
@@ -499,8 +508,26 @@ public class Station {
 			// Retrieve the current location assigned to the current road user.
 			Location currentLocation = toMove.get(roadUser);
 
-			// Locate and store the road user.
-			findDestinationLocation(roadUser, currentLocation.getNextLocation());
+			// Locate and store the road user and if it is successfully added to
+			// its next location than update the statistics.
+			if (findDestinationLocation(roadUser, currentLocation.getNextLocation())) {
+
+				// If the road user has left the till then add the vehicles
+				// value to the fuel profit of the vehicles of that type.
+				if (currentLocation instanceof Till) {
+					update(fuelProfit, roadUser.getClass(), roadUser.getVehicle().getMaxWorth());
+				}
+				// If the road user has left the shopping area add its worth to
+				// the sales profit for road users of that type.
+				if (currentLocation instanceof ShoppingArea) {
+					update(salesProfit, roadUser.getClass(), roadUser.getWorth());
+				}
+
+				if (currentLocation instanceof Pump) {
+
+				}
+
+			}
 
 		}
 
@@ -524,6 +551,8 @@ public class Station {
 	 * @param nextLocation
 	 *            The <code>Class</code> of the next {@link Location} of the
 	 *            specified {@link RoadUser}.
+	 * @return <code>boolean</code> whether the {@link RoadUser} was added to
+	 *         its next location.
 	 * 
 	 * @see environment.model.locations.Location
 	 * @see environment.model.roadusers.RoadUser
@@ -531,7 +560,7 @@ public class Station {
 	 * @see environment.model.locations.Location#canContain(RoadUser)
 	 * @see environment.model.locations.Location#enter(RoadUser)
 	 */
-	private void findDestinationLocation(RoadUser roadUser, Class<? extends Location> nextLocation) {
+	private boolean findDestinationLocation(RoadUser roadUser, Class<? extends Location> nextLocation) {
 
 		if (nextLocation != null) {
 
@@ -546,18 +575,20 @@ public class Station {
 
 					location.enter(roadUser);
 					toMove.remove(roadUser);
-					break;
+					return true;
 
 				}
 			}
+			return false;
 
 		} else {
 
 			// The road user has no next location, There for it will leave
 			// the station.
 			numberOfRoadUsers--;
+			update(roadUsersProcessed, roadUser.getClass(), 1);
 			toMove.remove(roadUser);
-
+			return true;
 		}
 
 	}
@@ -588,31 +619,31 @@ public class Station {
 
 	}
 
-	/**
-	 * Collects the fuel profit of all the {@link Location}s that produce fuel
-	 * profit and stores the result in {@link #fuelProfit}.
-	 * 
-	 * @see #processLocations()
-	 */
-	private void collateFinances() {
+	private void update(Map<Class<? extends RoadUser>, Double> stat, Class<? extends RoadUser> type, double amount) {
 
-		// Reset all of the profit to zero.
-		fuelProfit = 0;
-		salesProfit = 0;
+		if (!stat.keySet().contains(type)) {
+			stat.put(type, 0.0);
+		}
+		for (Class<? extends RoadUser> currentType : stat.keySet()) {
 
-		// Iterate through all the locations in the station.
-		for (Location location : locations) {
-
-			// if the current location is a Till add its profit to the specific
-			// fuel profit.
-			if (location instanceof Till) {
-				fuelProfit += location.getProfit();
+			if (currentType == type) {
+				Double currentStat = stat.get(type);
+				currentStat += amount;
+				stat.replace(currentType, currentStat);
 			}
 
-			// Add all profit to the general station profit.
-			salesProfit = location.getProfit();
 		}
 
+	}
+
+	private double sum(Map<Class<? extends RoadUser>, Double> stat) {
+
+		Double total = 0.0;
+		for (Class<? extends RoadUser> currentType : stat.keySet()) {
+			total += stat.get(currentType);
+
+		}
+		return total;
 	}
 
 }
