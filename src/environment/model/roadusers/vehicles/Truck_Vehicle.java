@@ -62,9 +62,23 @@ public final class Truck_Vehicle extends Vehicle {
 		
 		super(UNIT_SIZE, RNG.nextInt(TANK_SIZE_RANGE) + MIN_TANK_SIZE);
 	}
-	private Truck_Vehicle(final double size, final int tankSize, final int fuelLevel){
+	/**
+	 * Create a new {@link Truck_Vehicle} with a specified size, tank and fuel level.
+	 * 
+	 * <p>
+	 * This constructor is only for creating deep clones of the {@link Truck_Vehicle} in
+	 * association with the {@link Vehicle#getCloneConstructor()} method.
+	 * </p>
+	 * 
+	 * @param size The size of the {@link Truck_Vehicle}.
+	 * @param tankSize The tank size of the {@link Truck_Vehicle}.
+	 * @param fuelLevel The current fuel level of the {@link Truck_Vehicle}.
+	 * @param fuelType The fuel type of the {@link Truck_Vehicle}
+	 */
+	private Truck_Vehicle(final double size, final int tankSize,
+			final int fuelLevel, final FuelType fuelType){
 		
-		super(size, tankSize, fuelLevel);
+		super(size, tankSize, fuelLevel, fuelType);
 	}
 	/**
 	 * Check if an object is equal to a <code>Truck</code>. 
@@ -129,12 +143,11 @@ public final class Truck_Vehicle extends Vehicle {
 				.toString();
 	}
 	/**
-	 * Clone this object into an exact copy.
+	 * Create a deep clone of the {@link Truck_Vehicle}.
 	 * 
 	 * <p>
-	 * Create an exact deep clone of the {@link Truck_Vehicle} object. Modifying
-	 * the state of the clone will not modify the state of the original object, and
-	 * vice versa.
+	 * Create a logical equivalent of the {@link Truck_Vehicle} object which
+	 * has an identical state to that of the original object.
 	 * </p>
 	 * 
 	 * @return A deep clone of the {@link Truck_Vehicle} object.
@@ -142,6 +155,6 @@ public final class Truck_Vehicle extends Vehicle {
 	@Override
 	public final Truck_Vehicle clone(){
 		
-		return new Truck_Vehicle(size, tankSize, getFuelLevel());
+		return new Truck_Vehicle(size, tankSize, getFuelLevel(), fuelType);
 	}
 }

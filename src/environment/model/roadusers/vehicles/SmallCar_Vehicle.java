@@ -63,16 +63,18 @@ public final class SmallCar_Vehicle extends Vehicle {
 	 * 
 	 * <p>
 	 * This constructor is only for creating deep clones of the {@link SmallCar_Vehicle} in
-	 * association with the {@link SmallCar_Vehicle#clone()} method.
+	 * association with the {@link Vehicle#getCloneConstructor()} method.
 	 * </p>
 	 * 
 	 * @param size The size of the {@link SmallCar_Vehicle}.
 	 * @param tankSize The tank size of the {@link SmallCar_Vehicle}.
 	 * @param fuelLevel The current fuel level of the {@link SmallCar_Vehicle}.
+	 * @param fuelType The fuel type of the {@link SmallCar_Vehicle}
 	 */
-	private SmallCar_Vehicle(final double size, final int tankSize, final int fuelLevel){
+	private SmallCar_Vehicle(final double size, final int tankSize,
+			final int fuelLevel, final FuelType fuelType){
 		
-		super(size, tankSize, fuelLevel);
+		super(size, tankSize, fuelLevel, fuelType);
 	}
 	/**
 	 * Check if an object is equal to the <code>SmallCar</code>.
@@ -138,12 +140,11 @@ public final class SmallCar_Vehicle extends Vehicle {
 				.toString();
 	}
 	/**
-	 * Clone the {@link SmallCar_Vehicle} object into an exact copy.
+	 * Create a deep clone of the {@link SmallCar_Vehicle}.
 	 * 
 	 * <p>
-	 * Create an exact deep clone of the {@link SmallCar_Vehicle} object. Modifying
-	 * the state of the clone will not modify the state of the original object, and
-	 * vice versa.
+	 * Create a logical equivalent of the {@link SmallCar_Vehicle} object which
+	 * has an identical state to that of the original object.
 	 * </p>
 	 * 
 	 * @return A deep clone of the {@link SmallCar_Vehicle} object.
@@ -151,6 +152,6 @@ public final class SmallCar_Vehicle extends Vehicle {
 	@Override
 	public final SmallCar_Vehicle clone(){
 		
-		return new SmallCar_Vehicle(size, tankSize, getFuelLevel());
+		return new SmallCar_Vehicle(size, tankSize, getFuelLevel(), fuelType);
 	}
 }
