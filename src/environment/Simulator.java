@@ -13,7 +13,7 @@ import environment.model.roadusers.*;
  * This object runs the simulation that the user will interact with.
  * 
  * @author Joshua_Eddy
- * @version 17/03/2017
+ * @version 03/04/2017
  *
  */
 public final class Simulator {
@@ -138,14 +138,17 @@ public final class Simulator {
 
 			station.processLocations();
 
-			view.show(tickIndex, station);
+			// Here a clone of the station is passed to the simulator view to
+			// ensure that any changes made to the station that is passed to the
+			// SimulatorView do not effect the simulation.
+			view.show(tickIndex, station.clone());
 		}
 
 	}
 
 	/**
-	 * Generates a {@link RoadUser} that will be added to the
-	 * {@link Station} in a given tick.
+	 * Generates a {@link RoadUser} that will be added to the {@link Station} in
+	 * a given tick.
 	 * 
 	 * @see environment.model.Station
 	 * @see environment.model.roadusers.RoadUser
@@ -190,7 +193,7 @@ public final class Simulator {
 
 		// Wait for user interface to be ready for information to be retrieved.
 		while (!ui.isReady()) {
-			
+
 		}
 
 		// Get the tickCount from the user interface
@@ -211,7 +214,7 @@ public final class Simulator {
 		// Get whether trucks are included in the simulation.
 		hasTrucks = ui.hasTrucks();
 
-		// Get the view.		
+		// Get the view.
 		view = ui.getView();
 
 		// Close the user interface.
@@ -249,7 +252,7 @@ public final class Simulator {
 	 * @param args
 	 *            unused.
 	 */
-	public static void main(String[] args){
+	public static void main(String[] args) {
 
 		// Creates a new Simulation.
 		Simulator simulation = new Simulator();

@@ -1,6 +1,7 @@
 package environment.model.locations;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import environment.model.roadusers.RoadUser;
@@ -11,7 +12,7 @@ import environment.model.roadusers.RoadUser;
  * the <code>Station</code>. This should be extended with concrete subclasses.
  * 
  * @author Joshua_Eddy
- * @version 17/03/2017
+ * @version 03/04/2017
  *
  */
 public abstract class Location implements Cloneable {
@@ -244,11 +245,11 @@ public abstract class Location implements Cloneable {
 		LinkedList<RoadUser> clone = new LinkedList<RoadUser>();
 
 		// Iterate through all the elements in the LinkedList
-		while (queue.iterator().hasNext()) {
+		for (RoadUser roadUser : this.queue) {
 
 			// Add the clone of the current element to the clone
 			// LinkedList.
-			clone.add((RoadUser) queue.iterator().next().clone());
+			clone.add(roadUser.clone());
 
 		}
 
@@ -296,6 +297,15 @@ public abstract class Location implements Cloneable {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Retrieves the {@link RoadUser}s in the queue
+	 * 
+	 * @return
+	 */
+	public List<RoadUser> getQueue() {
+		return queue;
 	}
 
 }
