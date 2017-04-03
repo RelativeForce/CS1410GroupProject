@@ -21,7 +21,7 @@ import environment.model.roadusers.RoadUser;
  * {@link RoadUser}s between its locations.
  * 
  * @author Joshua_Eddy
- * @version 29/03/2017
+ * @version 03/04/2017
  * 
  * @see #enter(RoadUser)
  * @see #clone()
@@ -164,8 +164,6 @@ public class Station {
 
 	// Constructor ------------------------------------------------------------
 
-	// Constructor -----------------------------------------------------------
-
 	/**
 	 * Constructs a <code>new</code> {@link Station}.
 	 * 
@@ -199,8 +197,6 @@ public class Station {
 	}
 
 	// Public Methods ---------------------------------------------------------
-
-	// Public Methods --------------------------------------------------------
 
 	/**
 	 * Adds a specified {@link Location} to <code>this</code> {@link Station}.
@@ -458,6 +454,18 @@ public class Station {
 	}
 
 	/**
+	 * Retrieves the {@link Location}s in <code>this</code> {@link Station.java}
+	 * 
+	 * @return <code>{@link List}&lt;{@link Location}&gt;</code> containing all
+	 *         the locations in <code>this</code> {@link Station}.
+	 */
+	public List<Location> getLocations() {
+
+		return locations;
+
+	}
+
+	/**
 	 * Create a deep clone of <code>this</code> {@link Station}.
 	 * 
 	 * @see java.util.HashMap
@@ -491,8 +499,6 @@ public class Station {
 	}
 
 	// Private Methods -------------------------------------------------------
-	// // Private Methods
-	// -------------------------------------------------------
 
 	/**
 	 * Clones a specified statistic {@link Map}.
@@ -524,10 +530,10 @@ public class Station {
 		List<Location> cloneLocations = new LinkedList<Location>();
 
 		// Iterate through all the locations in this station.
-		while (this.locations.iterator().hasNext()) {
+		for (Location location : this.locations) {
 
 			// Add the current location to the clone's version of locations.
-			cloneLocations.add(this.locations.iterator().next().clone());
+			cloneLocations.add(location.clone());
 
 		}
 		return cloneLocations;
