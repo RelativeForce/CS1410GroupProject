@@ -15,6 +15,7 @@ import javax.swing.WindowConstants;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
+import environment.GUI.views.Animated;
 import environment.GUI.views.CommandLine;
 import environment.GUI.views.Graph;
 import environment.GUI.views.SimulatorView;
@@ -371,12 +372,10 @@ public class UserInterface {
 			// if the string matches graph then set the view to graphical view
 		} else if (((String) viewDropDown.getSelectedItem()).equals("Graph")) {
 			view = new Graph();
+		} else if (((String) viewDropDown.getSelectedItem()).equals("animated view")) {
+			view = new Animated();
 		}
-		else if(((String) viewDropDown.getSelectedItem()).equals("animated view")){
-				view = new Animation();
-			}
-		
-	
+
 		// return the value in view
 		return view;
 	}
