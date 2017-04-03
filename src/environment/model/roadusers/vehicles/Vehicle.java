@@ -24,7 +24,7 @@ import java.util.Random;
  * <p>
  * Subclasses of the <code>Vehicle</code> class should
  * 
- * <ui type="circle">
+ * <ui>
  * 		<li>Have a fixed physical size</li>
  * 		<li>Have a fixed fuel tank size</li>
  * 		<li>Have a fuel level</li>
@@ -36,16 +36,12 @@ import java.util.Random;
  * </p>
  * 
  * @author 	John Berg
- * @version 21/09/2017
+ * @version 31/09/2017
  * @since 	01/03/2017
+ * @see 	Cloneable
  */
-public abstract class Vehicle {
+public abstract class Vehicle implements Cloneable {
 	
-	/**
-	 * The default price of the <code>Vehicle</code> fuel, represented as
-	 * <code>double</code>.
-	 */
-	private static final double DEFAULT_FUEL_PRICE = 1.20;
 	/**
 	 * The initial seed for the {@link #RNG}.
 	 */
@@ -80,6 +76,11 @@ public abstract class Vehicle {
 	public final int tankSize;
 	
 	/**
+	 * 
+	 */
+	public final FuelType fuelType;
+	
+	/**
 	 * Create a new <code>Vehicle</code> object.
 	 * 
 	 * <p>
@@ -111,6 +112,11 @@ public abstract class Vehicle {
 		 * constructor tankSize argument.
 		 */
 		this.tankSize = tankSize;
+		
+		/*
+		 * Select a fuel type from the the FuelType enum.
+		 */
+		fuelType = FuelType.generateFuelType(RNG);
 	}
 	
 	/**
@@ -118,8 +124,8 @@ public abstract class Vehicle {
 	 * level.
 	 * 
 	 * <p>
-	 * Initialise a <code>Vehicle</code> with s specified {@link #size}, {@link #tankSize}
-	 * and {@link #fuelLevel}.
+	 * Initialise a <code>Vehicle</code> with s specified {@link #size}, {@link #tankSize},
+	 * {@link #fuelLevel} and a {@link #fuelType}.
 	 * </p>
 	 * 
 	 * <p>
@@ -129,23 +135,25 @@ public abstract class Vehicle {
 	 * @param size The size of the <code>Vehicle</code>.
 	 * @param tankSize The tank size of the <code>Vehicle</code>.
 	 * @param fuelLevel The current fuel level of the <code>Vehicle</code>.
+	 * @param fuelType The fuelType of the <code>Vehicle</code>.
 	 */
-	protected Vehicle(final double size, final int tankSize, final int fuelLevel){
+	protected Vehicle(final double size, final int tankSize,
+			final int fuelLevel, final FuelType fuelType){
 		
 		this.size = size;
 		this.tankSize = tankSize;
 		this.fuelLevel = fuelLevel;
+		this.fuelType = fuelType;
 	}
-	
 	/**
-	 * Get the fuel level of the <code>Vehicle</code>.
+	 * Get the current fuel level of the {@link Vehicle}.
 	 * 
 	 * <p>
-	 * Access the current fuel level ({@link #fuelLevel}) from the <code>Vehicle
-	 * </code>.
+	 * Used to allow subclasses of the {@link Vehicle} class to
+	 * access the {@link #fuelLevel} without modifying it.
 	 * </p>
 	 * 
-	 * @return The fuel level of the <code>Vehicle</code>.
+	 * @return The current fuel level of the {@link Vehicle}.
 	 */
 	protected final int getFuelLevel(){
 		
@@ -207,15 +215,14 @@ public abstract class Vehicle {
 	 * 
 	 * <p>
 	 * The current worth of the <code>Vehicle</code> is calculated as
-	 * <code>{@value #DEFAULT_FUEL_PRICE}*{@link #fuelLevel}</code>.
+	 * <code>{@value #fuelType}*{@link #fuelLevel}</code>.
 	 * </p>
 	 * 
 	 * @return The current cost of filling the <code>Vehicle</code>.
 	 */
 	public final double getCurrentWorth(){
 		
-		//Only using DEFAULT_FUEL_LEVEL whilst no fuel types exists.
-		return fuelLevel*DEFAULT_FUEL_PRICE;
+		return fuelLevel*fuelType.price;
 	}
 	/**
 	 * Get the total worth of refilling the <code>Vehicle</code>.
@@ -227,15 +234,14 @@ public abstract class Vehicle {
 	 * 
 	 * <p>
 	 * The total worth of the <code>Vehicle</code> is calculated as
-	 * <code>{@value #DEFAULT_FUEL_PRICE}*{@link #tankSize}</code>.
+	 * <code>{@value #fuelType}*{@link #tankSize}</code>.
 	 * </p>
 	 * 
 	 * @return The total cost of filling the <code>Vehicle</code>.
 	 */
 	public final double getMaxWorth(){
 		
-		//Only using DEFAULT_FUEL_LEVEL whilst no fuel types exists.
-		return tankSize*DEFAULT_FUEL_PRICE;
+		return fuelType.price*tankSize;
 	}
 	/**
 	 * Check if two <code>Vehicle</code> objects are equal.
@@ -247,14 +253,15 @@ public abstract class Vehicle {
 	 * 		<li>Be an instance of the {@link Vehicle} class</li>
 	 * 		<li>Have the same {@link #size}</li>
 	 * 		<li>Have the same {@link #tankSize}</li>
+	 * 		<li>Have the same {@link #fuelType}</li>
 	 * </ui>
 	 * </p>
 	 * 
 	 * @param o The object to be tested for equality against.
 	 * @return <code>true</code> if the tested object is an instance of the
-	 * 		<code>Vehicle</code> class, and the {@link #size} and {@link #tankSize}
-	 * 		attributes is equal to the <code>Vehicle</code> object; otherwise,
-	 * 		returns <code>false</code>.
+	 * 		<code>Vehicle</code> class, and the {@link #size}, {@link #tankSize}
+	 * 		and {@link #fuelType} attributes is equal to the <code>Vehicle</code>
+	 * 		object; otherwise, returns <code>false</code>.
 	 */
 	@Override
 	public boolean equals(Object o){
@@ -265,8 +272,9 @@ public abstract class Vehicle {
 			//Label the Object as a Vehicle (since o is an instance of Vehicle).
 			Vehicle v = (Vehicle) o;
 			
-			//Check if the size and the tankSize are equal.
-			return this.size == v.size && this.tankSize == v.tankSize;
+			//Check if the size, tankSize and fuelType are equal.
+			return this.size == v.size && this.tankSize == v.tankSize
+					&& this.fuelType == v.fuelType;
 		}
 		else{
 			
@@ -311,12 +319,7 @@ public abstract class Vehicle {
 	 * Clone the <code>Vehicle</code> into an exact duplicate.
 	 * 
 	 * <p>
-	 * Create an exact duplicate of the <code>Vehicle</code> object and the state
-	 * of the object.
-	 * </p>
-	 * 
-	 * <p>
-	 * <strong>This method must be overridden in subclasses.</strong>
+	 * <Strong>Must be implemented in subclasses</strong>.
 	 * </p>
 	 * 
 	 * @return An exact duplicate of the <code>Vehicle</code>.

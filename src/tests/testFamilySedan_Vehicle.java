@@ -305,7 +305,7 @@ public final class testFamilySedan_Vehicle {
 		 */
 		assertTrue(familySedans.stream().noneMatch(fs -> {
 			
-			FamilySedan_Vehicle fsClone = fs.clone();
+			Vehicle fsClone = fs.clone();
 			
 			while(!fsClone.isFull()){
 				

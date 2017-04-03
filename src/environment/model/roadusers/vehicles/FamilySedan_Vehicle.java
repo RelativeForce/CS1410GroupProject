@@ -17,7 +17,7 @@ import java.util.Random;
  * </p>
  * 
  * @author 	John
- * @version	25/03/2017
+ * @version	31/03/2017
  * @since 	02/03/2017
  * @see 	Random
  * @see		Vehicle
@@ -66,20 +66,23 @@ public final class FamilySedan_Vehicle extends Vehicle {
 	}
 	/**
 	 * Create a new instance of the {@link FamilySedan_Vehicle} class with
-	 * a specified size, tank size and fuel level.
+	 * a specified size, tank size, fuel level and fuel type.
 	 * 
 	 * <p>
 	 * This constructor is only used for creating clones of the
-	 * {@link FamilySedan_Vehicle} using the {link Vehicle#clone()} method.
+	 * {@link FamilySedan_Vehicle} using the {@link Vehicle#getCloneConstructor()}
+	 * method.
 	 * </p>
 	 * 
 	 * @param size The size of the {@link FamilySedan_Vehicle}.
 	 * @param tankSize The tank size of the {@link FamilySedan_Vehicle}.
 	 * @param fuelLevel The current fuel level of the {@link FamilySedan_Vehicle}.
+	 * @param fuelType The fuel type of the {@link FamilySedan_Vehicle}.
 	 */
-	private FamilySedan_Vehicle(final double size, final int tankSize, final int fuelLevel){
+	private FamilySedan_Vehicle(final double size, final int tankSize,
+			final int fuelLevel, final FuelType fuelType){
 		
-		super(size, tankSize, fuelLevel);
+		super(size, tankSize, fuelLevel, fuelType);
 	}
 	/**
 	 * Check if an object is equal to the <code>FamilySedan</code>.
@@ -142,19 +145,18 @@ public final class FamilySedan_Vehicle extends Vehicle {
 				.toString();
 	}
 	/**
-	 * Clone this object into an exact copy.
+	 * Create a deep clone of the {@link FamilySedan_Vehicle}.
 	 * 
 	 * <p>
-	 * Create an exact deep clone of the {@link FamilySedan_Vehicle} object. Modifying
-	 * the state of the clone will not modify the state of the original object, and
-	 * vice versa.
+	 * Create a logical equivalent of the {@link FamilySedan_Vehicle} object which
+	 * has an identical state to that of the original object.
 	 * </p>
 	 * 
-	 * @return A deep clone of the {@link FamilySedan_Vehicle}.
+	 * @return A deep clone of the {@link FamilySedan_Vehicle} object.
 	 */
 	@Override
 	public final FamilySedan_Vehicle clone(){
 		
-		return new FamilySedan_Vehicle(size, tankSize, getFuelLevel());
+		return new FamilySedan_Vehicle(size, tankSize, getFuelLevel(), fuelType);
 	}
 }

@@ -16,7 +16,7 @@ import java.util.Random;
  * </p>
  * 
  * @author 	John Berg
- * @version 24/03/2017
+ * @version 31/03/2017
  * @since	01/03/2017
  * @see		Random
  * @see 	Vehicle
@@ -58,16 +58,18 @@ public final class Motorbike_Vehicle extends Vehicle {
 	 * 
 	 * <p>
 	 * This constructor is only used for creating clones of the {@link Motorbike_Vehicle}
-	 * using the {@link Vehicle#clone()} method.
+	 * using the {@link Vehicle#getCloneConstructor()} method.
 	 * </p>
 	 * 
 	 * @param size The size of the {@link Motorbike_Vehicle}.
 	 * @param tankSize The tank size of the {@link Motorbike_Vehicle}.
 	 * @param fuelLevel The current fuel level of the {@link Motorbike_Vehicle}.
+	 * @param fuelType The fuel type of the {@link Motorbike_Vehicle}.
 	 */
-	private Motorbike_Vehicle(final double size, final int tankSize, final int fuelLevel){
+	private Motorbike_Vehicle(final double size, final int tankSize,
+			final int fuelLevel, final FuelType fuelType){
 		
-		super(size, tankSize, fuelLevel);
+		super(size, tankSize, fuelLevel, fuelType);
 	}
 	/**
 	 * Check if an object is equal to the <code>Motorbike</code> object.
@@ -134,19 +136,18 @@ public final class Motorbike_Vehicle extends Vehicle {
 				.toString();
 	}
 	/**
-	 * Clone the {@link Motorbike_Vehicle} object into an exact copy.
+	 * Create a deep clone of the {@link Motorbike_Vehicle}.
 	 * 
 	 * <p>
-	 * Create an exact deep clone of the <code>this</code> {@link Motorbike_Vehicle}
-	 * object. Modifying the state of this object will not affect the created clone
-	 * and vice versa.
-	 * </P>
+	 * Create a logical equivalent of the {@link Motorbike_Vehicle} object which
+	 * has an identical state to that of the original object.
+	 * </p>
 	 * 
 	 * @return A deep clone of the {@link Motorbike_Vehicle} object.
 	 */
 	@Override
 	public final Motorbike_Vehicle clone(){
 		
-		return new Motorbike_Vehicle(size, tankSize, getFuelLevel());
+		return new Motorbike_Vehicle(size, tankSize, getFuelLevel(), fuelType);
 	}
 }
