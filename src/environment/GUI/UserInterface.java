@@ -143,7 +143,7 @@ public class UserInterface {
 		// Drop down boxes
 		String[] pOptions = { "0.01", "0.02", "0.03", "0.04", "0.05" };
 		String[] qOptions = { "0.01", "0.02", "0.03", "0.04", "0.05" };
-		String[] viewOptions = { "Command Line", "Graph" };
+		String[] viewOptions = { "Command Line", "Graph", "Animated View" };
 
 		// create new JComboBox<string> objects for the initialised ComboBoxes
 		// and assign them the String arrays.
@@ -372,6 +372,11 @@ public class UserInterface {
 		} else if (((String) viewDropDown.getSelectedItem()).equals("Graph")) {
 			view = new Graph();
 		}
+		else if(((String) viewDropDown.getSelectedItem()).equals("animated view")){
+				view = new Animation();
+			}
+		
+	
 		// return the value in view
 		return view;
 	}
