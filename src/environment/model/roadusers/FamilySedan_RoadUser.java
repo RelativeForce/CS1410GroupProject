@@ -3,13 +3,12 @@ package environment.model.roadusers;
 import java.util.Random;
 
 import environment.model.roadusers.vehicles.FamilySedan_Vehicle;
-import environment.model.roadusers.RoadUser;
 
 /**
  * The <code>FamilySedan</code> class is a subclass of the {@link RoadUser}
  * class, which models a Family Sedan User.
  * 
- * @author Adrian_Wong
+ * @author Adrian_Wong, Josh_Eddy
  * @version 04/04/2017
  * @since	21/03/2017
  * @see		roadusers
