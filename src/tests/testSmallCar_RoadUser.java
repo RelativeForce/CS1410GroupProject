@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import environment.model.roadusers.SmallCar_RoadUser;
+
 public class testSmallCar_RoadUser {
 
 	@Before
@@ -12,8 +14,31 @@ public class testSmallCar_RoadUser {
 	}
 
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testGetWorth() {
+		SmallCar_RoadUser test = new SmallCar_RoadUser();
+		double actual = test.getWorth();
+		double expected = 10.0;
+		assertTrue(expected == actual);
 	}
 
+	@Test
+	public void testWillShop() {
+		SmallCar_RoadUser test = new SmallCar_RoadUser();
+		assertTrue(test.willShop());
+		assertFalse(test.willShop());
+	}
+
+	@Test
+	public void testHasPaid() {
+		SmallCar_RoadUser test = new SmallCar_RoadUser();
+		assertTrue(test.hasPaid());
+		assertFalse(test.hasPaid());
+	}
+
+	@Test
+	public void testDoneShopping() {
+		SmallCar_RoadUser test = new SmallCar_RoadUser();
+		assertTrue(test.doneShopping());
+		assertFalse(test.doneShopping());
+	}
 }
