@@ -13,7 +13,7 @@ import environment.model.roadusers.*;
  * This object runs the simulation that the user will interact with.
  * 
  * @author Joshua_Eddy
- * @version 03/04/2017
+ * @version 04/04/2017
  *
  */
 public final class Simulator {
@@ -103,7 +103,8 @@ public final class Simulator {
 
 		// Create and display a window where the user will input all of the
 		// parameters of the simulation.
-		this.ui = new UserInterface();
+		// Initialise the user interface to null.
+		this.ui = null;
 
 		// Pumps are given as the starting location type.
 		this.station = new Station(Pump.class);
@@ -113,6 +114,31 @@ public final class Simulator {
 		this.numberOfPumps = 0;
 		this.numberOfTills = 0;
 		this.hasTrucks = false;
+
+	}
+
+	// Inner Classes ----------------------------------------------------------
+
+	/**
+	 * Used to convey a simple {@link RuntimeException} with the data gathered
+	 * from the {@link UserInterface}.
+	 * 
+	 * @see environment.GUI.UserInterface
+	 * @see environment.model.Station
+	 * 
+	 * @author Joshua_Eddy
+	 *
+	 */
+	private class SimulationDetailsException extends RuntimeException {
+
+		/**
+		 * Identifies <code>this</code> {@link RuntimeException}.
+		 */
+		private static final long serialVersionUID = 89469236891365865L;
+
+		public SimulationDetailsException(String s) {
+			super(s);
+		}
 
 	}
 
@@ -143,6 +169,20 @@ public final class Simulator {
 			// SimulatorView do not effect the simulation.
 			view.show(tickIndex, station.clone());
 		}
+
+	}
+
+	/**
+	 * Creates a <code>new</code> {@link UserInterface} and displays it to the
+	 * user.
+	 * 
+	 * @see #ui
+	 * @see #getSimulationDetails()
+	 */
+	private void displayUserInterface() {
+
+		// Initialise an new user interface.
+		this.ui = new UserInterface();
 
 	}
 
@@ -199,23 +239,53 @@ public final class Simulator {
 		// Get the tickCount from the user interface
 		tickCount = ui.getTickCount();
 
+		// If the tick count is invalid, throw a runtime exception.
+		if (tickCount < 0) {
+			throw new SimulationDetailsException("The number of ticks must be non-negative [Simulation Error]");
+		}
+
 		// Get p from user interface.
 		p = ui.getP();
+
+		// If the p is invalid, throw a runtime exception.
+		if (p < 0) {
+			throw new SimulationDetailsException("p must be non-negative [Simulation Error]");
+		}
 
 		// Get q from user interface.
 		q = ui.getQ();
 
+		// If the q is invalid, throw a runtime exception.
+		if (q < 0) {
+			throw new SimulationDetailsException("q must be non-negative [Simulation Error]");
+		}
+
 		// Get number of pumps from user interface.
 		numberOfPumps = ui.getNumberOfPumps();
 
+		// If the number of pumps is invalid, throw a runtime exception.
+		if (numberOfPumps < 0) {
+			throw new SimulationDetailsException("The number of pumps must be non-negative [Simulation Error]");
+		}
+
 		// Get number of tills from user interface.
 		numberOfTills = ui.getNumberOfTills();
+
+		// If the number of tills is invalid, throw a runtime exception.
+		if (numberOfTills < 0) {
+			throw new SimulationDetailsException("The number of tills must be non-negative [Simulation Error]");
+		}
 
 		// Get whether trucks are included in the simulation.
 		hasTrucks = ui.hasTrucks();
 
 		// Get the view.
 		view = ui.getView();
+
+		// If the view is invalid, throw a runtime exception.
+		if (view == null) {
+			throw new SimulationDetailsException("No Simulator View is specified [Simulation Error]");
+		}
 
 		// Close the user interface.
 		ui.dispose();
@@ -257,6 +327,9 @@ public final class Simulator {
 		// Creates a new Simulation.
 		Simulator simulation = new Simulator();
 
+		// Displays the user interface.
+		simulation.displayUserInterface();
+
 		// Retrieve all the inputs from the
 		simulation.getSimulationDetails();
 
@@ -265,6 +338,9 @@ public final class Simulator {
 
 		// Starts the simulation.
 		simulation.simulate();
+
+		// Exit the application.
+		System.exit(0);
 	}
 
 }
