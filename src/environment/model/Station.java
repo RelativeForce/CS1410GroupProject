@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import environment.GUI.views.SimulatorView;
 import environment.model.locations.Location;
 import environment.model.locations.Pump;
 import environment.model.locations.ShoppingArea;
@@ -33,7 +34,7 @@ import environment.model.roadusers.RoadUser;
  * @see #getLostSalesProfit()
  * @see #getRoadUsersRejected()
  * @see #getNumberOfRoadUsers()
- * @see environment.GUI.views
+ * @see environment.GUI
  * @see environment.model.roadusers.RoadUser
  * @see environment.model.locations.Location
  * @see java.util.LinkedList
