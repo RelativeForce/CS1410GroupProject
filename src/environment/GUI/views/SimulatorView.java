@@ -31,4 +31,17 @@ public interface SimulatorView {
 	 * @param station The details of the {@link Station} status.
 	 */
 	public void show(final int time, final Station station);
+	
+	/**
+	 * Set the {@link SimulatorView} to terminate.
+	 * 
+	 * <p>
+	 * Flag the {@link SimulatorView} to terminate either when:
+	 * <ul>
+	 * 		<li>This method is called</li>
+	 * 		<li>When the {@link SimulatorView} has finished execution</li>
+	 * </ul>
+	 * </p>
+	 */
+	public void setEnd();
 }

@@ -31,12 +31,12 @@ import environment.model.roadusers.vehicles.Vehicle;
  * @see 	Stream
  * @see		SmallCar_Vehicle
  */
-public final class testSmallCar_Vehicle {
+public final class TestSmallCar_Vehicle extends TestVehicle {
 	
-	/**
-	 * The list containing {@link SmallCar_Vehicle} objects to be tested.
-	 */
-	private List<SmallCar_Vehicle> smallCars;
+	public TestSmallCar_Vehicle(){
+		
+		super(SmallCar_Vehicle.class);
+	}
 	
 	/**
 	 * Before a <code>@Test</code> method is run, renew the {@link #smallCars}
@@ -45,39 +45,9 @@ public final class testSmallCar_Vehicle {
 	@Before
 	public void setUp() {
 		
-		smallCars = Stream.generate(SmallCar_Vehicle::new)
+		vehicles = Stream.generate(SmallCar_Vehicle::new)
 				.limit(300)
 				.collect(Collectors.toList());
-	}
-	/**
-	 * Test if all {@link SmallCar_Vehicle} objects have the correct size
-	 */
-	@Test
-	public void testSize(){
-		
-		assertTrue(smallCars.stream().allMatch(sc -> sc.size == 1.0));
-	}
-	/**
-	 * Test to see if all {@link SmallCar_Vehicle} objects have the correct
-	 * {@link Vehicle#tankSize}, from the {@link #smallCars} sample space, all entries
-	 * should be between 7 and 9, and every tankSize from 7 to 9 must appear at least
-	 * once.
-	 */
-	@Test
-	public void testTankSize(){
-		
-		//At least one car should have a tank size of 7.
-		assertTrue(smallCars.stream().anyMatch(sc -> sc.tankSize == 7));
-		
-		//At least one car should have a tank size of 8.
-		assertTrue(smallCars.stream().anyMatch(sc -> sc.tankSize == 8));
-		
-		//At least one car should have a tank size of 9.
-		assertTrue(smallCars.stream().anyMatch(sc -> sc.tankSize == 9));
-		
-		//No car is allowed to have a tank size less than 7 or greater than 9.
-		assertTrue(smallCars.stream().allMatch(
-				sc-> 7 <= sc.tankSize && sc.tankSize <= 9));
 	}
 	/**
 	 * Test to see if all {@link SmallCar_Vehicle} objects' {@link Vehicle#isFull()}
@@ -93,10 +63,10 @@ public final class testSmallCar_Vehicle {
 	public void testIsFull(){
 		
 		//No car is full from the start.
-		assertTrue(smallCars.stream().noneMatch(Vehicle::isFull));
+		assertTrue(vehicles.stream().noneMatch(Vehicle::isFull));
 		
 		//Fill all cars until full.
-		assertTrue(smallCars.stream().map(sc -> {
+		assertTrue(vehicles.stream().map(sc -> {
 			
 			while(!sc.isFull()){
 				
@@ -108,7 +78,7 @@ public final class testSmallCar_Vehicle {
 		}).allMatch(Vehicle::isFull));
 		
 		//Filling the cars further still results in the cars being full.
-		assertTrue(smallCars.stream().map(sc -> {
+		assertTrue(vehicles.stream().map(sc -> {
 			
 			sc.fill();
 			return sc;
@@ -129,16 +99,16 @@ public final class testSmallCar_Vehicle {
 	public void testFill(){
 		
 		//No car is filled up yet.
-		assertTrue(smallCars.stream().noneMatch(Vehicle::isFull));
+		assertTrue(vehicles.stream().noneMatch(Vehicle::isFull));
 		
 		//Fill all cars
-		smallCars.forEach(SmallCar_Vehicle::fill);
+		vehicles.forEach(Vehicle::fill);
 		
 		//No car has been filled up fully
-		assertTrue(smallCars.stream().noneMatch(Vehicle::isFull));
+		assertTrue(vehicles.stream().noneMatch(Vehicle::isFull));
 		
 		//Fill all cars.
-		smallCars.forEach(sc -> {
+		vehicles.forEach(sc -> {
 			
 			while(!sc.isFull()){
 				
@@ -147,7 +117,7 @@ public final class testSmallCar_Vehicle {
 		});
 		
 		//All cars are full.
-		assertTrue(smallCars.stream().allMatch(Vehicle::isFull));
+		assertTrue(vehicles.stream().allMatch(Vehicle::isFull));
 	}
 	/**
 	 * Test the {@link Vehicle#getCurrentWorth()} method.
@@ -163,10 +133,10 @@ public final class testSmallCar_Vehicle {
 	public void testGetCurrentWorth(){
 		
 		//All cars have an initial worth of 0.0.
-		assertTrue(smallCars.stream().allMatch(sc -> 0 == sc.getCurrentWorth()));
+		assertTrue(vehicles.stream().allMatch(sc -> 0 == sc.getCurrentWorth()));
 		
 		//Fill the cars and check that the current worth is greater than 0.
-		smallCars.stream().map(sc -> {
+		vehicles.stream().map(sc -> {
 			
 			sc.fill();
 			return sc;
@@ -174,7 +144,7 @@ public final class testSmallCar_Vehicle {
 		}).forEach(sc -> assertTrue(0.0 < sc.getCurrentWorth()));
 		
 		//The worth after filling the car is not the same as its previous worth.
-		assertTrue(smallCars.stream()
+		assertTrue(vehicles.stream()
 				.noneMatch(sc -> {
 					
 					double temp = sc.getCurrentWorth();
@@ -185,7 +155,7 @@ public final class testSmallCar_Vehicle {
 				}));
 		
 		//Fill all the cars
-		smallCars.forEach(sc -> {
+		vehicles.forEach(sc -> {
 			
 			while(!sc.isFull()){
 				
@@ -194,12 +164,12 @@ public final class testSmallCar_Vehicle {
 		});
 		
 		//All cars have now reached their max worth.
-		assertTrue(smallCars.stream()
+		assertTrue(vehicles.stream()
 				.allMatch(sc -> sc.getCurrentWorth() == sc.getMaxWorth()));
 		
 		//Fill the cars again will not change the current worth.
-		smallCars.forEach(Vehicle::fill);
-		assertTrue(smallCars.stream()
+		vehicles.forEach(Vehicle::fill);
+		assertTrue(vehicles.stream()
 				.allMatch(sc -> sc.getCurrentWorth() == sc.getMaxWorth()));
 	}
 	/**
@@ -213,9 +183,9 @@ public final class testSmallCar_Vehicle {
 	@Test
 	public void testGetMaxWorth(){
 		
-		smallCars.forEach(sc1 -> {
+		vehicles.forEach(sc1 -> {
 			
-			smallCars.forEach(sc2 -> {
+			vehicles.forEach(sc2 -> {
 				
 				//If a car has a smaller tank size it also has a lesser max worth.
 				assertEquals(sc1.tankSize <= sc2.tankSize,
@@ -243,37 +213,15 @@ public final class testSmallCar_Vehicle {
 		SmallCar_Vehicle testSc = new SmallCar_Vehicle();
 		
 		//At least one cat should equal.
-		assertTrue(smallCars.stream().anyMatch(sc -> sc.equals(testSc)
+		assertTrue(vehicles.stream().anyMatch(sc -> sc.equals(testSc)
 				&& sc.size == testSc.size
 				&& sc.tankSize == testSc.tankSize));
 		
 		//Small cars cannot be equal to other Vehicles.
-		assertTrue(smallCars.stream()
+		assertTrue(vehicles.stream()
 				.noneMatch(sc -> sc.equals(new Motorbike_Vehicle())));
-		assertTrue(smallCars.stream()
+		assertTrue(vehicles.stream()
 				.noneMatch(sc -> sc.equals(new FamilySedan_Vehicle())));
-	}
-	/**
-	 * Test the {@link Vehicle#toString()} method in the {@link SmallCar_Vehicle}
-	 * class.
-	 * 
-	 * <p>
-	 * Check that the {@link String} produced by the {@link SmallCar_Vehicle} is
-	 * produced correctly.
-	 * </p>
-	 */
-	@Test
-	public void testToString(){
-		
-		//All cars follow the same String format.
-		assertTrue(smallCars.stream()
-				.allMatch(sc -> new StringBuilder()
-						.append("Small car. Size: ")
-						.append(sc.size)
-						.append(" Tank (Gallons): ")
-						.append(sc.tankSize)
-						.toString()
-						.equals(sc.toString())));
 	}
 	/**
 	 * Test the {@link Vehicle#clone()} method from the {@link SmallCar_Vehicle}
@@ -294,18 +242,18 @@ public final class testSmallCar_Vehicle {
 		
 		
 		//Clones must not share the same memory location.
-		assertTrue(smallCars.stream().noneMatch(sc -> sc == sc.clone()));
+		assertTrue(vehicles.stream().noneMatch(sc -> sc == sc.clone()));
 		
 		//Clones must equal the original object.
-		assertTrue(smallCars.stream().allMatch(sc -> sc.equals(sc.clone())));
+		assertTrue(vehicles.stream().allMatch(sc -> sc.equals(sc.clone())));
 		
 		/*
 		 * Changing the state of the clone does not change the state of the
 		 * original object
 		 */
-		assertTrue(smallCars.stream().noneMatch(sc -> {
+		assertTrue(vehicles.stream().noneMatch(sc -> {
 			
-			SmallCar_Vehicle scClone = sc.clone();
+			Vehicle scClone = sc.clone();
 			
 			while(!scClone.isFull()){
 				
@@ -316,7 +264,7 @@ public final class testSmallCar_Vehicle {
 		}));
 		
 		//Clones must share the same state as the original object.
-		assertTrue(smallCars.stream().map(sc -> {
+		assertTrue(vehicles.stream().map(sc -> {
 			
 			while(!sc.isFull()){
 				
