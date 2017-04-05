@@ -210,7 +210,7 @@ public final class Simulator {
 
 		// If value is between p and 2p then add a new motor bike to the
 		// station.
-		if (Motorbike_RoadUser.exists(numberOfPumps, q, value)) {
+		if (Motorbike_RoadUser.exists(p, q, value)) {
 			station.enter(new Motorbike_RoadUser());
 		}
 

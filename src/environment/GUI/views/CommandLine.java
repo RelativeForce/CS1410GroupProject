@@ -1,6 +1,13 @@
 package environment.GUI.views;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 import environment.model.Station;
+import environment.model.roadusers.FamilySedan_RoadUser;
+import environment.model.roadusers.Motorbike_RoadUser;
+import environment.model.roadusers.SmallCar_RoadUser;
+import environment.model.roadusers.Truck_RoadUser;
 
 /**
  * The <code>CommandLine</code> class displays information of the simulation via
@@ -73,8 +80,50 @@ public final class CommandLine implements SimulatorView {
 		// If the simulation has ended.
 		if (this.end) {
 
+			DecimalFormat money = new DecimalFormat("#.##");
+			money.setRoundingMode(RoundingMode.CEILING);
+			DecimalFormat integer = new DecimalFormat("####");
+			integer.setRoundingMode(RoundingMode.CEILING);
+
 			// Display the final ticks details.
-			
+
+			System.out.println("Simulation Results:");
+			System.out.println("----------------------------------");
+			System.out.println(
+					"Vehicle Type\tProcessed\tRejected\tFuel Profit\tSales Profit\tLost Fuel Profit\tLost Sales Profit");
+
+			// Processed and Rejected
+			System.out.println(
+					"Small Car\t" + integer.format(station.getRoadUsersProcessed().get(SmallCar_RoadUser.class))
+							+ "\t\t" + integer.format(station.getRoadUsersRejected().get(SmallCar_RoadUser.class))
+							+ "\t\t£" + money.format(station.getFuelProfit().get(SmallCar_RoadUser.class)) + "\t\t£"
+							+ money.format(station.getSalesProfit().get(SmallCar_RoadUser.class)) + "\t\t£"
+							+ money.format(station.getLostFuelProfit().get(SmallCar_RoadUser.class)) + "\t\t\t£"
+							+ money.format(station.getLostSalesProfit().get(SmallCar_RoadUser.class)));
+
+			System.out.println(
+					"Family Sedan\t" + integer.format(station.getRoadUsersProcessed().get(FamilySedan_RoadUser.class))
+							+ "\t\t" + integer.format(station.getRoadUsersRejected().get(FamilySedan_RoadUser.class))
+							+ "\t\t£" + money.format(station.getFuelProfit().get(FamilySedan_RoadUser.class)) + "\t\t£"
+							+ money.format(station.getSalesProfit().get(FamilySedan_RoadUser.class)) + "\t\t£"
+							+ money.format(station.getLostFuelProfit().get(FamilySedan_RoadUser.class)) + "\t\t\t£"
+							+ money.format(station.getLostSalesProfit().get(FamilySedan_RoadUser.class)));
+
+			System.out.println(
+					"Motorbike\t" + integer.format(station.getRoadUsersProcessed().get(Motorbike_RoadUser.class))
+							+ "\t\t" + integer.format(station.getRoadUsersRejected().get(Motorbike_RoadUser.class))
+							+ "\t\t£" + money.format(station.getFuelProfit().get(Motorbike_RoadUser.class)) + "\t\t£"
+							+ money.format(station.getSalesProfit().get(Motorbike_RoadUser.class)) + "\t\t£"
+							+ money.format(station.getLostFuelProfit().get(Motorbike_RoadUser.class)) + "\t\t\t£"
+							+ money.format(station.getLostSalesProfit().get(Motorbike_RoadUser.class)));
+
+			System.out.println("Truck\t\t" + integer.format(station.getRoadUsersProcessed().get(Truck_RoadUser.class))
+					+ "\t\t" + integer.format(station.getRoadUsersRejected().get(Truck_RoadUser.class)) + "\t\t£"
+					+ money.format(station.getFuelProfit().get(Truck_RoadUser.class)) + "\t\t£"
+					+ money.format(station.getSalesProfit().get(Truck_RoadUser.class)) + "\t\t£"
+					+ money.format(station.getLostFuelProfit().get(Truck_RoadUser.class)) + "\t\t\t£"
+					+ money.format(station.getLostSalesProfit().get(Truck_RoadUser.class)));
+
 		} else {
 
 			// Display a normal tick details.

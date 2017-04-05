@@ -309,13 +309,23 @@ public class Station {
 
 	/**
 	 * Retrieves the number of {@link RoadUser}s are currently in the
-	 * {@link RoadUser}.
+	 * {@link Station}.
 	 * 
 	 * @return {@link Statistic} amount of {@link RoadUser}s in the
 	 *         {@link Station}.
 	 */
 	public Statistic getNumberOfRoadUsers() {
 		return numberOfRoadUsers;
+	}
+	
+	/**
+	 * Retrieves the number of {@link RoadUser}s processed by the
+	 * {@link Station}.
+	 * @return {@link Statistic} amount of {@link RoadUser}s processed by the
+	 *         {@link Station}.
+	 */
+	public Statistic getRoadUsersProcessed(){
+		return roadUsersProcessed;
 	}
 
 	/**
@@ -603,7 +613,6 @@ public class Station {
 			// The road user has no next location, There for it will leave
 			// the station.
 			numberOfRoadUsers.update(roadUser.getClass(), -1);
-			;
 			roadUsersProcessed.update(roadUser.getClass(), 1);
 			toMove.remove(roadUser);
 			return true;
