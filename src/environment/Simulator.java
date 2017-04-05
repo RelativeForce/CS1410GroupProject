@@ -13,7 +13,7 @@ import environment.model.roadusers.*;
  * This object runs the simulation that the user will interact with.
  * 
  * @author Joshua_Eddy
- * @version 04/04/2017
+ * @version 05/04/2017
  *
  */
 public final class Simulator {
@@ -169,6 +169,10 @@ public final class Simulator {
 			// SimulatorView do not effect the simulation.
 			view.show(tickIndex, station.clone());
 		}
+		
+		// Display the final tick of the simulations details.
+		view.setEnd();
+		view.show(tickCount, station);
 
 	}
 

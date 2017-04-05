@@ -22,7 +22,7 @@ import environment.model.roadusers.RoadUser;
  * {@link RoadUser}s between its locations.
  * 
  * @author Joshua_Eddy
- * @version 03/04/2017
+ * @version 05/04/2017
  * 
  * @see #enter(RoadUser)
  * @see #clone()
@@ -77,91 +77,58 @@ public class Station {
 	private Map<RoadUser, Location> toMove;
 
 	/**
-	 * The <code>int<code> amount of {@link RoadUser}s that <code>this</code>
-	 * {@link Station} could not accommodate and therefore must have been
-	 * rejected.
+	 * The {@link Statistic} that denotes the amount of {@link RoadUser}s that
+	 * <code>this</code> {@link Station} could not accommodate and therefore
+	 * must have been rejected.
 	 * 
 	 */
-	private int roadUsersRejected;
+	private Statistic roadUsersRejected;
 
 	/**
 	 * The amount of {@link RoadUser}s that are currently inside this station.
 	 */
-	private int numberOfRoadUsers;
+	private Statistic numberOfRoadUsers;
 
 	/**
-	 * The
-	 * <code>{@link Map}&lt;{@link Class}&lt;? extends {@link RoadUser}&gt;, {@link Double}&gt;</code>
-	 * which stores the {@link Double} value of fuels profit that was lost by
-	 * each {@link RoadUser} type being rejected by the station. The
-	 * {@link Class} of a sub-class of {@link RoadUser} is the key of this
-	 * {@link Map}. The {@link Double} value of this {@link Map} denotes
-	 * combined fuel profit lost of that type of the key {@link RoadUser} it is
-	 * assigned to.
+	 * Stores the {@link Double} value of fuels profit that was lost by each
+	 * {@link RoadUser} type being rejected by the station.
 	 * 
 	 * @see environment.model.roadusers.vehicles.Vehicle
 	 * @see environment.model.roadusers.RoadUser
-	 * @see #sum(Map)
-	 * @see #update(Map, Class, double)
-	 * @see #cloneStatistic(Map)
 	 */
-	private Map<Class<? extends RoadUser>, Double> lostFuelprofit;
+	private Statistic lostFuelprofit;
 
 	/**
-	 * The
-	 * <code>{@link Map}&lt;{@link Class}&lt;? extends {@link RoadUser}&gt;, {@link Double}&gt;</code>
-	 * which stores the {@link Double} value of sales profit that was lost by
-	 * each {@link RoadUser} type being rejected by the station. The
-	 * {@link Class} of a sub-class of {@link RoadUser} is the key of this
-	 * {@link Map}. The {@link Double} value of this {@link Map} denotes
-	 * combined sales profit lost of that type of the key {@link RoadUser} it is
-	 * assigned to.
+	 * Stores the {@link Double} value of sales profit that was lost by each
+	 * {@link RoadUser} type being rejected by the station.
 	 * 
 	 * @see environment.model.roadusers.RoadUser
-	 * @see #sum(Map)
-	 * @see #update(Map, Class, double)
-	 * @see #cloneStatistic(Map)
 	 */
-	private Map<Class<? extends RoadUser>, Double> lostSalesProfit;
+	private Statistic lostSalesProfit;
 
 	/**
-	 * The
-	 * <code>{@link Map}&lt;{@link Class}&lt;? extends {@link RoadUser}&gt;, {@link Double}&gt;</code>
-	 * which stores the {@link Double} number of each type of {@link RoadUser}s
-	 * that have been processed by the station. The {@link Class} of a sub-class
-	 * of {@link RoadUser} is the key of this {@link Map}. The {@link Double}
-	 * value of this {@link Map}.
+	 * Stores the {@link Double} number of each type of {@link RoadUser}s that
+	 * have been processed by the station.
 	 * 
 	 * @see environment.model.roadusers.vehicles.Vehicle
 	 * @see environment.model.roadusers.RoadUser
-	 * @see #sum(Map)
-	 * @see #update(Map, Class, double)
-	 * @see #cloneStatistic(Map)
 	 */
-	private Map<Class<? extends RoadUser>, Double> roadUsersProcessed;
+	private Statistic roadUsersProcessed;
 
 	/**
-	 * The
-	 * <code>{@link Map}&lt;{@link Class}&lt;? extends {@link RoadUser}&gt;, {@link Double}&gt;</code>
-	 * which stores the {@link Double} value of fuels profit that was gained by
-	 * each {@link RoadUser} type paying for their fuel. The {@link Class} of a
-	 * sub-class of {@link RoadUser} is the key of this {@link Map}. The
-	 * {@link Double} value of this {@link Map} denotes combined fuel profit
-	 * gained from that type of the key {@link RoadUser} it is assigned to.
+	 * Stores the {@link Double} value of fuels profit that was gained by each
+	 * {@link RoadUser} type paying for their fuel.
 	 * 
 	 * @see environment.model.roadusers.vehicles.Vehicle
 	 * @see environment.model.roadusers.RoadUser
-	 * @see #sum(Map)
-	 * @see #update(Map, Class, double)
-	 * @see #cloneStatistic(Map)
 	 */
-	private Map<Class<? extends RoadUser>, Double> fuelProfit;
+	private Statistic fuelProfit;
 
 	/**
 	 * The <code>double</code> sales profit that <code>this</code>
 	 * {@link Station} has made.
 	 */
-	private Map<Class<? extends RoadUser>, Double> salesProfit;
+	private Statistic salesProfit;
 
 	// Constructor ------------------------------------------------------------
 
@@ -187,13 +154,13 @@ public class Station {
 		this.startLoaction = startLocation;
 
 		// Initialise statistic instance fields
-		this.fuelProfit = new HashMap<Class<? extends RoadUser>, Double>();
-		this.salesProfit = new HashMap<Class<? extends RoadUser>, Double>();
-		this.roadUsersProcessed = new HashMap<Class<? extends RoadUser>, Double>();
-		this.lostSalesProfit = new HashMap<Class<? extends RoadUser>, Double>();
-		this.lostFuelprofit = new HashMap<Class<? extends RoadUser>, Double>();
-		this.roadUsersRejected = 0;
-		this.numberOfRoadUsers = 0;
+		this.fuelProfit = new Statistic();
+		this.salesProfit = new Statistic();
+		this.roadUsersProcessed = new Statistic();
+		this.lostSalesProfit = new Statistic();
+		this.lostFuelprofit = new Statistic();
+		this.roadUsersRejected = new Statistic();
+		this.numberOfRoadUsers = new Statistic();
 
 	}
 
@@ -247,20 +214,20 @@ public class Station {
 
 		DecimalFormat money = new DecimalFormat("#.##");
 		money.setRoundingMode(RoundingMode.CEILING);
-		DecimalFormat integer = new DecimalFormat("#");
+		DecimalFormat integer = new DecimalFormat("####");
 		integer.setRoundingMode(RoundingMode.CEILING);
 
 		String output = "";
 
-		output += "Vehicles in station:         " + numberOfRoadUsers + "\n";
-		output += "Vehicles rejected:           " + roadUsersRejected + "\n";
-		output += "Vehicles processed:          " + integer.format(sum(roadUsersProcessed)) + "\n";
-		output += "Petrol profit:              £" + money.format(sum(fuelProfit)) + "\n";
-		output += "Lost petrol profit:         £" + money.format(sum(lostFuelprofit)) + "\n";
-		output += "Shopping profit:            £" + money.format(sum(salesProfit)) + "\n";
-		output += "Lost Shopping profit:       £" + money.format(sum(lostSalesProfit)) + "\n";
-		output += "Total profit:               £" + money.format(sum(salesProfit) + sum(fuelProfit)) + "\n";
-		output += "Total lost profit:          £" + money.format(sum(lostFuelprofit) + sum(lostSalesProfit)) + "\n";
+		output += "Vehicles in station:         " + integer.format(numberOfRoadUsers.sum()) + "\n";
+		output += "Vehicles rejected:           " + integer.format(roadUsersRejected.sum()) + "\n";
+		output += "Vehicles processed:          " + integer.format(roadUsersProcessed.sum()) + "\n";
+		output += "Petrol profit:              £" + money.format(fuelProfit.sum()) + "\n";
+		output += "Lost petrol profit:         £" + money.format(lostFuelprofit.sum()) + "\n";
+		output += "Shopping profit:            £" + money.format(salesProfit.sum()) + "\n";
+		output += "Lost Shopping profit:       £" + money.format(lostSalesProfit.sum()) + "\n";
+		output += "Total profit:               £" + money.format(salesProfit.sum() + fuelProfit.sum()) + "\n";
+		output += "Total lost profit:          £" + money.format(lostFuelprofit.sum() + lostSalesProfit.sum()) + "\n";
 
 		return output;
 	}
@@ -301,7 +268,7 @@ public class Station {
 					// adding that road user to multiple locations.
 					currentLocation.enter(roadUser);
 					rejected = false;
-					numberOfRoadUsers++;
+					numberOfRoadUsers.update(roadUser.getClass(), 1);
 					break;
 				}
 			}
@@ -310,9 +277,10 @@ public class Station {
 				// If there is no space for the road user in the station then
 				// increment roadUserRejected to acknowledge a road user has
 				// been rejected.
-				update(lostFuelprofit, roadUser.getClass(), roadUser.getVehicle().getMaxWorth());
-				update(lostSalesProfit, roadUser.getClass(), roadUser.getWorth());
-				roadUsersRejected++;
+				lostFuelprofit.update(roadUser.getClass(), roadUser.getVehicle().getMaxWorth());
+				lostSalesProfit.update(roadUser.getClass(), roadUser.getWorth());
+				roadUsersRejected.update(roadUser.getClass(), 1);
+				;
 			}
 		}
 
@@ -324,7 +292,7 @@ public class Station {
 	 * @return The number of {@link RoadUser}s that this {@link Station} has
 	 *         rejected.
 	 */
-	public int getRoadUsersRejected() {
+	public Statistic getRoadUsersRejected() {
 		return roadUsersRejected;
 	}
 
@@ -332,24 +300,21 @@ public class Station {
 	 * Retrieves the amount of profit <code>this</code> {@link Station} has
 	 * generated from fuel sales.
 	 * 
-	 * @return <code>double</code> fuel profit.
+	 * @return {@link Statistic} fuel profit.
 	 * 
-	 * @see #
 	 */
-	public double getFuelProfit() {
-		return sum(fuelProfit);
+	public Statistic getFuelProfit() {
+		return fuelProfit;
 	}
 
 	/**
 	 * Retrieves the number of {@link RoadUser}s are currently in the
 	 * {@link RoadUser}.
 	 * 
-	 * @return <code>int</code> amount of {@link RoadUser}s in the
+	 * @return {@link Statistic} amount of {@link RoadUser}s in the
 	 *         {@link Station}.
-	 * 
-	 *
 	 */
-	public int getNumberOfRoadUsers() {
+	public Statistic getNumberOfRoadUsers() {
 		return numberOfRoadUsers;
 	}
 
@@ -370,14 +335,14 @@ public class Station {
 	 * Retrieves the sales profit <code>this</code> {@link Station} has
 	 * generated from {@link RoadUser}s spending money in {@link ShoppingArea}.
 	 * 
-	 * @return <code>double</code> profit.
+	 * @return {@link Statistic} sales profit.
 	 * 
 	 * @see #salesProfit
 	 * @see #locations
 	 * @see #fuelProfit
 	 */
-	public double getSalesProfit() {
-		return sum(salesProfit);
+	public Statistic getSalesProfit() {
+		return salesProfit;
 	}
 
 	/**
@@ -385,10 +350,10 @@ public class Station {
 	 * based on {@link RoadUser}s not being happy enough with their service to
 	 * spend any money in the {@link ShoppingArea}.
 	 * 
-	 * @return <code>double</code> lost profit.
+	 * @return {@link Statistic} lost profit.
 	 */
-	public double getLostSalesProfit() {
-		return sum(lostSalesProfit);
+	public Statistic getLostSalesProfit() {
+		return lostSalesProfit;
 	}
 
 	/**
@@ -396,10 +361,10 @@ public class Station {
 	 * based on {@link Station} not being able to accommodate the new
 	 * {@link RoadUser}.
 	 * 
-	 * @return <code>double</code> profit lost.
+	 * @return {@link Statistic} profit lost.
 	 */
-	public double getLostFuelProfit() {
-		return sum(lostFuelprofit);
+	public Statistic getLostFuelProfit() {
+		return lostFuelprofit;
 	}
 
 	@Override
@@ -484,11 +449,11 @@ public class Station {
 		cloneStation.numberOfRoadUsers = this.numberOfRoadUsers;
 		cloneStation.roadUsersRejected = this.roadUsersRejected;
 
-		cloneStation.lostFuelprofit = cloneStatistic(lostFuelprofit);
-		cloneStation.lostSalesProfit = cloneStatistic(this.lostSalesProfit);
-		cloneStation.roadUsersProcessed = cloneStatistic(this.roadUsersProcessed);
-		cloneStation.fuelProfit = cloneStatistic(this.fuelProfit);
-		cloneStation.salesProfit = cloneStatistic(this.salesProfit);
+		cloneStation.lostFuelprofit = this.lostFuelprofit.clone();
+		cloneStation.lostSalesProfit = this.lostSalesProfit.clone();
+		cloneStation.roadUsersProcessed = this.roadUsersProcessed.clone();
+		cloneStation.fuelProfit = this.fuelProfit.clone();
+		cloneStation.salesProfit = this.salesProfit.clone();
 
 		// Initialise the toMove Map in the clone.
 		cloneStation.toMove = cloneToMove();
@@ -500,25 +465,6 @@ public class Station {
 	}
 
 	// Private Methods -------------------------------------------------------
-
-	/**
-	 * Clones a specified statistic {@link Map}.
-	 * 
-	 * @param toClone
-	 *            <code>{@link Map}&lt;Class&lt;? extends {@link RoadUser}&gt;, {@link Double}&gt;</code>
-	 *            to be cloned.
-	 * @return <code>{@link Map}&lt;Class&lt;? extends {@link RoadUser}&gt;, {@link Double}&gt;</code>
-	 *         clone.
-	 */
-	private Map<Class<? extends RoadUser>, Double> cloneStatistic(Map<Class<? extends RoadUser>, Double> toClone) {
-
-		Map<Class<? extends RoadUser>, Double> clone = new HashMap<Class<? extends RoadUser>, Double>();
-
-		for (Class<? extends RoadUser> key : toClone.keySet()) {
-			clone.put(key, toClone.get(key).doubleValue());
-		}
-		return clone;
-	}
 
 	/**
 	 * Clones {@link #locations} in <code>this</code> {@link Station}.
@@ -586,12 +532,12 @@ public class Station {
 				// If the road user has left the till then add the vehicles
 				// value to the fuel profit of the vehicles of that type.
 				if (currentLocation instanceof Till) {
-					update(fuelProfit, roadUser.getClass(), roadUser.getVehicle().getMaxWorth());
+					fuelProfit.update(roadUser.getClass(), roadUser.getVehicle().getMaxWorth());
 				}
 				// If the road user has left the shopping area add its worth to
 				// the sales profit for road users of that type.
 				if (currentLocation instanceof ShoppingArea) {
-					update(salesProfit, roadUser.getClass(), roadUser.getWorth());
+					salesProfit.update(roadUser.getClass(), roadUser.getWorth());
 				}
 
 				if (currentLocation instanceof Pump) {
@@ -656,8 +602,9 @@ public class Station {
 
 			// The road user has no next location, There for it will leave
 			// the station.
-			numberOfRoadUsers--;
-			update(roadUsersProcessed, roadUser.getClass(), 1);
+			numberOfRoadUsers.update(roadUser.getClass(), -1);
+			;
+			roadUsersProcessed.update(roadUser.getClass(), 1);
 			toMove.remove(roadUser);
 			return true;
 		}
@@ -687,94 +634,6 @@ public class Station {
 			toMove.remove(roadUser);
 
 		}
-
-	}
-
-	/**
-	 * Changes the value (<code>double</code>) of a statistic assigned to a
-	 * specific {@link RoadUser} type
-	 * (<code>Class&lt;? extends {@link RoadUser}&gt;</code>) by a specified
-	 * amount in the the parameter statistic map (<code>{@link Map}</code>). If
-	 * the parameter {@link RoadUser} type and assigned value are not currently
-	 * stored in the statistic map then they will be added.
-	 * 
-	 * @param stat
-	 *            <code>{@link Map}&lt;Class&lt;? extends {@link RoadUser}&gt;, {@link Double}&gt;</code>
-	 *            that denotes some statistic about the {@link Station}. For
-	 *            example the amount of profit made from fuel sales grouped by
-	 *            {@link RoadUser} type. NOT NULL
-	 * @param type
-	 *            <code>Class&lt;? extends {@link RoadUser}&gt;</code> that
-	 *            denotes the type of {@link RoadUser} that is assigned to a to
-	 *            the value that is to be updated.
-	 * @param amount
-	 *            <code>double</code> that denotes the change in the value.
-	 */
-	private void update(Map<Class<? extends RoadUser>, Double> stat, Class<? extends RoadUser> type, double amount) {
-
-		// If the specified statistic map is not null.
-		if (stat != null) {
-
-			// If the specified statistic map has no statistics on road users of
-			// the specified type. Then initialise the statistic of the
-			// specified type.
-			if (!stat.keySet().contains(type)) {
-				stat.put(type, 0.0);
-			}
-
-			// Iterate through all the road user types in the specified
-			// statistic map
-			for (Class<? extends RoadUser> currentType : stat.keySet()) {
-
-				// If the current type is the same as that of the specified
-				// type.
-				if (currentType == type) {
-
-					// Initialise a Double variable to hold the current value of
-					// the statistic assigned to the specified road user type.
-					Double currentStat = stat.get(type);
-
-					// Add the specified amount to that value.
-					currentStat += amount;
-
-					// Update the value of the statistic in the specified
-					// statistic map.
-					stat.replace(currentType, currentStat);
-				}
-
-			}
-		}
-
-	}
-
-	/**
-	 * Sums all the values ({@link Double}) of the specified statistic
-	 * {@link Map} {@link RoadUser} type groups to yield one total value. For
-	 * example, total profit made from fuel sales by the {@link Station}.
-	 * 
-	 * @param stat
-	 *            <code>{@link Map}&lt;Class&lt;? extends {@link RoadUser}&gt;, {@link Double}&gt;</code>
-	 *            that denotes some statistic about the {@link Station}. For
-	 *            example the amount of profit made from fuel sales grouped by
-	 *            {@link RoadUser} type. NOT NULL
-	 * @return The <code>double</code> sum of all the values in the statistic
-	 *         map.
-	 */
-	private double sum(Map<Class<? extends RoadUser>, Double> stat) {
-
-		// Initialise an aggregation variable to store the sum of the statistic
-		// maps values.
-		Double total = 0.0;
-
-		// If the statistic map is not equal to null then iterate through all
-		// the values in the map and sum them.
-		if (stat != null) {
-			for (Class<? extends RoadUser> currentType : stat.keySet()) {
-				total += stat.get(currentType);
-
-			}
-		}
-		return total;
 
 	}
 
