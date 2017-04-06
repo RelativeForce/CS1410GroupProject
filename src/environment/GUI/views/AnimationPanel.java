@@ -1,12 +1,17 @@
 package environment.GUI.views;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.util.List;
 
 import javax.swing.JPanel;
 
 import environment.model.Station;
+import environment.model.locations.Location;
+import sun.font.FontScaler;
 
 public class AnimationPanel extends JPanel {
 	
@@ -14,12 +19,15 @@ public class AnimationPanel extends JPanel {
 	 * The scaling factor of the {@link JPanel} which determens the size
 	 * of the ...
 	 */
-	private static final int SCALING_FACTOR = 3;
+	private static final int SCALING_FACTOR = 4;
+	private final int width;
+	private final int height;
+	
 	/**
 	 * 
 	 */
-	private final Image img;
-	
+	private Image img;
+	private Graphics g;
 	/**
 	 * 
 	 * @param width
@@ -29,15 +37,19 @@ public class AnimationPanel extends JPanel {
 		
 		//Set the size of the JPanel.
 		super();
-		super.setMinimumSize(new Dimension(width*SCALING_FACTOR,
-				height*SCALING_FACTOR));
-		super.setPreferredSize(new Dimension(width*SCALING_FACTOR,
-				height*SCALING_FACTOR));
-		super.setMaximumSize(new Dimension(width*SCALING_FACTOR,
-				height*SCALING_FACTOR));
+		this.width = width;
+		this.height = height;
 		
+		//super.setBackground(Color.GREEN);
+	}
+	private void prepareDraw(){
 		
-		img = super.createImage(width*SCALING_FACTOR, height*SCALING_FACTOR);
+		if(img == null)
+			img = super.createImage(width, height);
+		
+		g = img.getGraphics();
+		g.setColor(Color.GREEN);
+		g.fillRect(0, 0, width, height);
 	}
 	/**
 	 * 
@@ -45,14 +57,29 @@ public class AnimationPanel extends JPanel {
 	 */
 	public void draw(final Station station){
 		
+		int x = 100;
 		
+		prepareDraw();
+		List<Location> locations = station.getLocations();
 		
-		//Incomplete
-		Graphics g = null;
+		locations.forEach(l -> {
+			
+			
+			g.setColor(Color.BLACK);
+			g.drawString(l.getClass().getSimpleName(), 10, 20);
+			g.setColor(Color.GRAY);
+			g.fillRect(10, 30, x, x);
+		});
+		
+		repaint();
+	}
+	@Override
+	public final void paintComponent(final Graphics g){
 		
 		if(img != null){
 			
 			g.drawImage(img, 0, 0, null);
+			g.dispose();
 		}
 	}
 }
