@@ -13,7 +13,7 @@ import environment.model.roadusers.RoadUser;
  * {@link #sum()}.
  * 
  * @author Joshua_Eddy
- * @version 05/04/2017
+ * @version 06/04/2017
  * 
  * @see environment.model.Station
  *
@@ -127,15 +127,14 @@ public class Statistic implements Cloneable {
 	@Override
 	public final Statistic clone() {
 
+		// Create a new Statistic that will act as a clone of this.
 		Statistic clone = new Statistic();
 
-		Map<Class<? extends RoadUser>, Double> cloneStatMap = new HashMap<Class<? extends RoadUser>, Double>();
-
+		// Iterate through all the elements in the statMap and put them into the
+		// statMap of the clone.
 		for (Class<? extends RoadUser> key : this.statMap.keySet()) {
-			cloneStatMap.put(key, this.statMap.get(key).doubleValue());
+			clone.statMap.put(key, this.statMap.get(key).doubleValue());
 		}
-
-		clone.statMap = cloneStatMap;
 
 		return clone;
 
