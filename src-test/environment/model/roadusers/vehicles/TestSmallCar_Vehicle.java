@@ -194,36 +194,6 @@ public final class TestSmallCar_Vehicle extends TestVehicle {
 		});
 	}
 	/**
-	 * Test the logical equality of the {@link SmallCar_Vehicle} objects.
-	 * 
-	 * <p>
-	 * Two cars are considered equal if they have an identical {@link Vehicle#size}
-	 * and {@link Vehicle#tankSize}.
-	 * <ol>
-	 * 		<li>Test if there exists at least two cars that equal</li>
-	 * 		<li>Cars that equal must also have equal size and tanks</li>
-	 * 		<li>Test if other {@link Vehicle} subclasses do not equal any car</li>
-	 * </ol>
-	 * </p>
-	 */
-	@Test
-	public void testEquals(){
-		
-		//Car for testing equality.
-		SmallCar_Vehicle testSc = new SmallCar_Vehicle();
-		
-		//At least one cat should equal.
-		assertTrue(vehicles.stream().anyMatch(sc -> sc.equals(testSc)
-				&& sc.size == testSc.size
-				&& sc.tankSize == testSc.tankSize));
-		
-		//Small cars cannot be equal to other Vehicles.
-		assertTrue(vehicles.stream()
-				.noneMatch(sc -> sc.equals(new Motorbike_Vehicle())));
-		assertTrue(vehicles.stream()
-				.noneMatch(sc -> sc.equals(new FamilySedan_Vehicle())));
-	}
-	/**
 	 * Test the {@link Vehicle#clone()} method from the {@link SmallCar_Vehicle}
 	 * class.
 	 * 

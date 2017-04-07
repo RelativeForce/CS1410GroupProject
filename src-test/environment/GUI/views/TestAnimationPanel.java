@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import environment.model.Station;
 import environment.model.locations.Pump;
+import environment.model.locations.ShoppingArea;
+import environment.model.locations.Till;
 
 public class TestAnimationPanel {
 	
@@ -32,12 +34,20 @@ public class TestAnimationPanel {
 	public void testDraw(){
 		
 		Station station = new Station(Pump.class);
-		station.addLocation(new Pump(null));
+		station.addLocation(new Pump(Till.class));
 		
 		try{
 			
 			ap.draw(station);
-			Thread.sleep(10000);
+			Thread.sleep(2000);
+			Station s = new Station(ShoppingArea.class);
+			s.addLocation(new ShoppingArea(null));
+			ap.draw(s);
+			Thread.sleep(2000);
+			station.addLocation(new Pump(Till.class));
+			station.addLocation(new Till(null));
+			ap.draw(station);
+			Thread.sleep(2000);
 		}
 		catch(InterruptedException e){
 			

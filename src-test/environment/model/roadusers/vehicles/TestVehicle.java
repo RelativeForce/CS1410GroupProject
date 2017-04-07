@@ -1,6 +1,6 @@
 package environment.model.roadusers.vehicles;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -86,9 +86,15 @@ public abstract class TestVehicle {
 		
 	}
 	@Test
-	public final void testToString(){
+	public final void testEquals(){
+			
+		
+	}
+	@Test
+	public void testToString(){
 		
 		
-		
+		assertTrue(vehicles.stream().allMatch(v -> v.toString().contains("Size: ")));
+		assertTrue(vehicles.stream().allMatch(v -> v.toString().contains("Tank (Gallons): ")));
 	}
 }
