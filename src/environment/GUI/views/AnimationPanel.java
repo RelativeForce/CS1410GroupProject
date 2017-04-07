@@ -5,13 +5,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JPanel;
 
 import environment.model.Station;
 import environment.model.locations.Location;
-import sun.font.FontScaler;
 
 public class AnimationPanel extends JPanel {
 	
@@ -61,15 +62,30 @@ public class AnimationPanel extends JPanel {
 		
 		prepareDraw();
 		List<Location> locations = station.getLocations();
+		Iterator<? extends Location> locIter = locations.iterator();
 		
-		locations.forEach(l -> {
+		while(locIter.hasNext()){
 			
+			//Class<? extends Location> nextLocation = locIter.next();
+			
+			while(locIter.hasNext()){
+				
+				
+			}
+		}
+		
+		int positionX = width/(locations.size() + 1) - x/2;
+		int positionY = height/(locations.size() + 1) - x/2;
+		
+		for(Location l: locations){
 			
 			g.setColor(Color.BLACK);
-			g.drawString(l.getClass().getSimpleName(), 10, 20);
+			g.drawString(l.getClass().getSimpleName(), positionX, positionY);
 			g.setColor(Color.GRAY);
-			g.fillRect(10, 30, x, x);
-		});
+			g.fillRect(positionX, positionY, x, x);
+			positionX += width/(locations.size() + 1);
+			positionY += height/(locations.size() + 1);
+		};
 		
 		repaint();
 	}

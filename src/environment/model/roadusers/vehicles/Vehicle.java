@@ -76,7 +76,14 @@ public abstract class Vehicle implements Cloneable {
 	public final int tankSize;
 	
 	/**
+	 * The type of fuel used by this {@link Vehicle}.
 	 * 
+	 * <p>
+	 * {@link FuelType} is used to determine the price of filling this
+	 * {@link Vehicle}.
+	 * </p>
+	 * 
+	 * @see FuelType
 	 */
 	public final FuelType fuelType;
 	
