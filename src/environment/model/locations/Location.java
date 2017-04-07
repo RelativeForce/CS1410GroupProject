@@ -12,10 +12,27 @@ import environment.model.roadusers.RoadUser;
  * the <code>Station</code>. This should be extended with concrete subclasses.
  * 
  * @author Joshua_Eddy
- * @version 03/04/2017
+ * @version 07/04/2017
  *
  */
 public abstract class Location implements Cloneable {
+
+	// Static Fields ---------------------------------------------------------
+
+	/**
+	 * The next <code>int</code> of the next {@link Location}s {@link #id}.
+	 * 
+	 * @see #id
+	 */
+	private static int nextID = 0;
+
+	// Private Fields --------------------------------------------------------
+
+	/**
+	 * The <code>int</code> that uniquely identifies <code>this</code>
+	 * {@link Location}.
+	 */
+	private int id;
 
 	// Protected Fields ------------------------------------------------------
 
@@ -87,6 +104,7 @@ public abstract class Location implements Cloneable {
 		this.profit = 0;
 		this.maxQueueSize = maxQueueSize;
 		this.queue = new LinkedList<RoadUser>();
+		this.id = nextID++;
 
 	}
 
@@ -266,29 +284,35 @@ public abstract class Location implements Cloneable {
 			// Cast to Location
 			Location location = (Location) o;
 
-			// If the Locations next location is the same and this locations
-			// next location.
-			if (this.nextLocation == location.nextLocation) {
+			// If the locations id is the same as this' location.
+			if (this.id == location.id) {
 
-				// If both locations have generated the same amount of profit
-				if (this.profit == location.profit) {
+				// If the Locations next location is the same and this locations
+				// next location.
+				if (this.nextLocation == location.nextLocation) {
 
-					// If both locations have the same maximum queue size.
-					if (this.maxQueueSize == location.maxQueueSize) {
+					// If both locations have generated the same amount of
+					// profit
+					if (this.profit == location.profit) {
 
-						// If both locations have processed the same number of
-						// road users.
-						if (this.roadUsersProcessed == location.roadUsersProcessed) {
+						// If both locations have the same maximum queue size.
+						if (this.maxQueueSize == location.maxQueueSize) {
 
-							// If both locations have the same queue of road
-							// users.
-							if (this.queue.equals(location.queue)) {
+							// If both locations have processed the same number
+							// of
+							// road users.
+							if (this.roadUsersProcessed == location.roadUsersProcessed) {
 
-								// If all the conditions are met the this
-								// location and the parameter location are
-								// identical.
-								return true;
+								// If both locations have the same queue of road
+								// users.
+								if (this.queue.equals(location.queue)) {
 
+									// If all the conditions are met the this
+									// location and the parameter location are
+									// identical.
+									return true;
+
+								}
 							}
 						}
 					}
