@@ -56,7 +56,7 @@ public class testStation {
 
 		// Assert that the number of road users in the station is initially
 		// zero.
-		assertTrue(station.getNumberOfRoadUsers() == 0);
+		assertTrue(station.getNumberOfRoadUsers().sum() == 0);
 
 		// Asses whether adding a null road user to the station is logged as a
 		// road user entering the station.
@@ -64,7 +64,7 @@ public class testStation {
 
 		// Assert that the number of road users has not changed and is still
 		// zero.
-		assertTrue(station.getNumberOfRoadUsers() == 0);
+		assertTrue(station.getNumberOfRoadUsers().sum() == 0);
 
 		// Asses whether adding a road user can be added to the station.
 		RoadUser testRoadUser = new SmallCar_RoadUser();
@@ -74,7 +74,7 @@ public class testStation {
 
 		// Assert that the road user has been added and the number of road users
 		// in the station has increased by one.
-		assertTrue(station.getNumberOfRoadUsers() == 1);
+		assertTrue(station.getNumberOfRoadUsers().sum() == 1);
 
 		// Asses whether the station will allow the same road user to the
 		// station.
@@ -83,7 +83,7 @@ public class testStation {
 		// Assert that the station will not allow the same road user to enter
 		// the station twice by ensuring that the amount of road users in the
 		// station has not incremented.
-		assertTrue(station.getNumberOfRoadUsers() == 1);
+		assertTrue(station.getNumberOfRoadUsers().sum() == 1);
 
 	}
 
@@ -113,31 +113,31 @@ public class testStation {
 	}
 
 	@Test
-	public void testEquals(){
-		
+	public void testEquals() {
+
 		assertTrue(station.equals(station));
-		
+
 		Station testStation1 = new Station(Pump.class);
-		
+
 		assertFalse(station.equals(testStation1));
-		
+
 		Station testStation2 = new Station(Pump.class);
 
 		assertTrue(testStation1.equals(testStation2));
-		
+
 		Station testStation3 = new Station(ShoppingArea.class);
-		
+
 		assertFalse(testStation2.equals(testStation3));
-		
+
 		RoadUser testRoadUser = new SmallCar_RoadUser();
 		testStation1.enter(testRoadUser);
-		
+
 		assertFalse(testStation1.equals(testStation2));
-		
+
 		Location testLocation = new Pump(ShoppingArea.class);
 		testStation1.addLocation(testLocation);
-		
+
 		assertFalse(testStation1.equals(testStation2));
-		
+
 	}
 }

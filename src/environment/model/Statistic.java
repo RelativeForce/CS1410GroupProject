@@ -13,7 +13,7 @@ import environment.model.roadusers.RoadUser;
  * {@link #sum()}.
  * 
  * @author Joshua_Eddy
- * @version 05/04/2017
+ * @version 07/04/2017
  * 
  * @see environment.model.Station
  *
@@ -110,14 +110,23 @@ public class Statistic implements Cloneable {
 	/**
 	 * Retrieves the value of <code>this</code> {@link Statistic} by
 	 * {@link RoadUser} type. If the {@link RoadUser} type does not have a value
-	 * stored in the {@link Statistic} return zero.
+	 * stored in the {@link Statistic} return zero. If the specified key is NULL
+	 * return the {@link #sum()}.
 	 * 
 	 * @param key
 	 *            <code>Class&lt;? extends {@link RoadUser}&gt;</code>
 	 * @return The <code>double</code> value assigned to that specified key.
 	 */
 	public final double get(Class<? extends RoadUser> key) {
-		if (statMap.containsKey(key)) {
+
+		// If the key is null assume that they want the sum of all the elements
+		// in the statMap.
+		// Otherwise, if the key is present in the statMap then retrieve its
+		// assigned value.
+		// Otherwise, return zero as that key is not present in the statMap.
+		if (key == null) {
+			return sum();
+		} else if (statMap.containsKey(key)) {
 			return statMap.get(key);
 		} else {
 			return 0.0;
@@ -127,15 +136,14 @@ public class Statistic implements Cloneable {
 	@Override
 	public final Statistic clone() {
 
+		// Create a new Statistic that will act as a clone of this.
 		Statistic clone = new Statistic();
 
-		Map<Class<? extends RoadUser>, Double> cloneStatMap = new HashMap<Class<? extends RoadUser>, Double>();
-
+		// Iterate through all the elements in the statMap and put them into the
+		// statMap of the clone.
 		for (Class<? extends RoadUser> key : this.statMap.keySet()) {
-			cloneStatMap.put(key, this.statMap.get(key).doubleValue());
+			clone.statMap.put(key, this.statMap.get(key).doubleValue());
 		}
-
-		clone.statMap = cloneStatMap;
 
 		return clone;
 
