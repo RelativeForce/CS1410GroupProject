@@ -27,46 +27,60 @@ import environment.model.roadusers.Truck_RoadUser;
 
 public class Graph implements SimulatorView {
 
-	private GraphHandler graphHandler;
+	public volatile boolean isClosed;
+
+	private GraphPanel graphPanel;
 	private JFrame window;
 	private JButton closeButton;
-	private JComboBox<String> statistics;
-	private JComboBox<String> types;
-	private int currentTick;
-	public volatile boolean isClosed;
+	private JComboBox<StatisticTypes> statisticTypes;
+	private JComboBox<VehicleTypes> vehicleTypes;
 	private Thread drawer;
 	private LinkedTransferQueue<Station> buffer;
-
+	private int currentTick;
 	private int height;
 	private int width;
 
-	private enum CarNames {
+	private enum VehicleTypes {
 
-		SMALLCAR("Small Car"), TRUCK("Truck"), FAMILYSEDAN("Family Sedan"), MOTORBIKE("Motorbike");
+		SMALLCAR("Small Car", SmallCar_RoadUser.class), TRUCK("Truck", FamilySedan_RoadUser.class), FAMILYSEDAN(
+				"Family Sedan",
+				Motorbike_RoadUser.class), MOTORBIKE("Motorbike", Truck_RoadUser.class), ALL("All", null);
 
-		public final String name;
+		private final String name;
+		public final Class<? extends RoadUser> type;
 
-		CarNames(String name) {
+		VehicleTypes(String name, Class<? extends RoadUser> typeClass) {
 			this.name = name;
+			this.type = typeClass;
+		}
+
+		@Override
+		public final String toString() {
+			return name;
 		}
 
 	}
 
-	private enum StatisticNames {
+	private enum StatisticTypes {
 
 		PROCESSED("Processed"), REJECTED("Rejected"), FUELPROFIT("Fuel Profit"), LOSTFUELPROFIT(
 				"Lost Fuel Profit"), SALESPROFIT("Sales Profit "), LOSTSALESPROFIT(
 						"Lost Sales Profit"), PROFIT("Total Profit"), LOSTPROFIT("Total Lost Profit");
 
-		public final String name;
+		private final String name;
 
-		StatisticNames(String name) {
+		StatisticTypes(String name) {
 			this.name = name;
+		}
+
+		@Override
+		public final String toString() {
+			return name;
 		}
 
 	}
 
-	private class GraphHandler extends JPanel {
+	private class GraphPanel extends JPanel {
 
 		/**
 		 * Unused.
@@ -75,12 +89,19 @@ public class Graph implements SimulatorView {
 
 		private volatile List<Station> stages;
 
-		public GraphHandler() {
+		private int canvasWidth;
+		private int canvasHeight;
+
+		public GraphPanel() {
 
 			super();
-			setSize(600, 400);
-			setPreferredSize(new Dimension(600, 400));
-			setMinimumSize(new Dimension(600, 400));
+
+			canvasWidth = width;
+			canvasHeight = height - 100;
+
+			setSize(canvasWidth, canvasHeight);
+			setPreferredSize(new Dimension(canvasWidth, canvasHeight));
+			setMinimumSize(new Dimension(canvasWidth, canvasHeight));
 			stages = new ArrayList<Station>();
 
 		}
@@ -88,47 +109,15 @@ public class Graph implements SimulatorView {
 		@Override
 		public synchronized void paint(Graphics g) {
 
-			Graphics2D g2 = (Graphics2D) g;
+			Graphics2D graphics2D = (Graphics2D) g;
 
-			g2.setColor(Color.WHITE);
+			graphics2D.setColor(Color.CYAN);
 
-			Rectangle background = new Rectangle();
-			background.setBounds(0, 0, width, height);
-			g2.fill(background);
+			drawCanvas(graphics2D);
 
-			Map<Integer, Double> values = new HashMap<Integer, Double>();
+			graphics2D.setColor(Color.BLACK);
 
-			double max = 0.0;
-
-			for (int currentTick = 0; currentTick < stages.size(); currentTick++) {
-
-				Station station = stages.get(currentTick);
-				double value = getStatisticValue(station, selectType());
-				max = (value > max) ? value : max;
-				values.put(currentTick, value);
-
-			}
-
-			g2.setColor(Color.BLACK);
-
-			int lastX = 0;
-			int lastY = height;
-
-			for (Integer tick : values.keySet()) {
-
-				double value = values.get(tick);
-
-				int x = (int) ((tick * width) / currentTick);
-				int y = (int) (height - ((value * height) / max));
-
-
-
-				g2.drawLine(lastX, lastY, x, y);
-				
-				lastX = x;
-				lastY = y;
-
-			}
+			drawLine(graphics2D);
 
 		}
 
@@ -137,42 +126,79 @@ public class Graph implements SimulatorView {
 
 		}
 
-		private Class<? extends RoadUser> selectType() {
+		private void drawCanvas(Graphics2D graphics2D){
+			
+			Rectangle background = new Rectangle();
+			background.setBounds(0, 0, canvasWidth, canvasHeight);
+			graphics2D.fill(background);
+			
+		}
+		
+		private void drawLine(Graphics2D graphics2D) {
 
-			Class<? extends RoadUser> currentType = null;
+			Map<Integer, Double> values = new HashMap<Integer, Double>();
 
-			if (types.getSelectedItem().equals(CarNames.SMALLCAR.name)) {
-				currentType = SmallCar_RoadUser.class;
-			} else if (types.getSelectedItem().equals(CarNames.FAMILYSEDAN.name)) {
-				currentType = FamilySedan_RoadUser.class;
-			} else if (types.getSelectedItem().equals(CarNames.MOTORBIKE.name)) {
-				currentType = Motorbike_RoadUser.class;
-			} else if (types.getSelectedItem().equals(CarNames.TRUCK.name)) {
-				currentType = Truck_RoadUser.class;
+			double max = 0.0;
+
+			for (int currentTick = 0; currentTick < stages.size(); currentTick++) {
+
+				Station station = stages.get(currentTick);
+				double value = getStatisticValue(station, selectedVehicleType());
+				max = (value > max) ? value : max;
+				values.put(currentTick, value);
+
 			}
-			return currentType;
+			
+			int lastX = 0;
+			int lastY = canvasHeight;
+
+			for (Integer tick : values.keySet()) {
+
+				double value = values.get(tick);
+
+				int x = (int) ((tick * canvasWidth) / currentTick);
+				int y = (int) (canvasHeight - ((value * canvasHeight) / max));
+
+				if (!(x < 0 || x > canvasWidth || y < 0 || y > canvasHeight)) {
+					graphics2D.drawLine(lastX, lastY, x, y);
+				}
+
+				lastX = x;
+				lastY = y;
+
+			}
+
+		}
+
+		private Class<? extends RoadUser> selectedVehicleType() {
+
+			return ((VehicleTypes) vehicleTypes.getSelectedItem()).type;
+
 		}
 
 		private double getStatisticValue(Station station, Class<? extends RoadUser> type) {
 
-			if (statistics.getSelectedItem().equals(StatisticNames.PROCESSED.name)) {
+			switch ((StatisticTypes) statisticTypes.getSelectedItem()) {
+			case PROCESSED:
 				return station.getRoadUsersProcessed().get(type);
-			} else if (statistics.getSelectedItem().equals(StatisticNames.REJECTED.name)) {
+			case REJECTED:
 				return station.getRoadUsersRejected().get(type);
-			} else if (statistics.getSelectedItem().equals(StatisticNames.PROFIT.name)) {
+			case PROFIT:
 				return (station.getFuelProfit().get(type) + station.getSalesProfit().get(type));
-			} else if (statistics.getSelectedItem().equals(StatisticNames.LOSTPROFIT.name)) {
+			case LOSTPROFIT:
 				return (station.getLostFuelProfit().get(type) + station.getLostSalesProfit().get(type));
-			} else if (statistics.getSelectedItem().equals(StatisticNames.FUELPROFIT.name)) {
+			case FUELPROFIT:
 				return station.getFuelProfit().get(type);
-			} else if (statistics.getSelectedItem().equals(StatisticNames.LOSTFUELPROFIT.name)) {
+			case LOSTFUELPROFIT:
 				return station.getLostFuelProfit().get(type);
-			} else if (statistics.getSelectedItem().equals(StatisticNames.SALESPROFIT.name)) {
+			case SALESPROFIT:
 				return station.getSalesProfit().get(type);
-			} else if (statistics.getSelectedItem().equals(StatisticNames.LOSTSALESPROFIT.name)) {
+			case LOSTSALESPROFIT:
 				return station.getLostSalesProfit().get(type);
+			default:
+				return 0.0;
+
 			}
-			return 0.0;
 		}
 	}
 
@@ -184,60 +210,9 @@ public class Graph implements SimulatorView {
 		width = 600;
 		height = 500;
 
-		graphHandler = new GraphHandler();
-		window = new JFrame("Graph View");
-		window.setSize(width, height);
-		window.setMaximumSize(new Dimension(width, height));
-		window.setLayout(new FlowLayout());
+		graphPanel = new GraphPanel();
 
-		closeButton = new JButton("Close");
-		closeButton.addActionListener(e -> {
-			window.dispose();
-			isClosed = true;
-			System.exit(0);
-		});
-
-		JPanel statisticPanel = new JPanel();
-		statisticPanel.setPreferredSize(new Dimension(200, 35));
-		statisticPanel.setLayout(new FlowLayout());
-		JLabel statisticLabel = new JLabel("Statistic:");
-
-		String[] statTypes = { StatisticNames.PROCESSED.name, StatisticNames.REJECTED.name, StatisticNames.PROFIT.name,
-				StatisticNames.LOSTPROFIT.name, StatisticNames.SALESPROFIT.name, StatisticNames.LOSTSALESPROFIT.name,
-				StatisticNames.FUELPROFIT.name, StatisticNames.LOSTFUELPROFIT.name };
-
-		statistics = new JComboBox<String>(statTypes);
-		statistics.addActionListener(e -> graphHandler.repaint());
-
-		statisticPanel.add(statisticLabel);
-		statisticPanel.add(statistics);
-
-		JPanel typePanel = new JPanel();
-		typePanel.setPreferredSize(new Dimension(200, 35));
-		typePanel.setLayout(new FlowLayout());
-		JLabel typeLabel = new JLabel("Vehicle Type:");
-
-		String[] vehicleTypes = { "All", CarNames.SMALLCAR.name, CarNames.FAMILYSEDAN.name, CarNames.MOTORBIKE.name,
-				CarNames.TRUCK.name };
-
-		types = new JComboBox<String>(vehicleTypes);
-		types.addActionListener(e -> graphHandler.repaint());
-
-		typePanel.add(typeLabel);
-		typePanel.add(types);
-
-		JPanel controlPanel = new JPanel();
-		controlPanel.setPreferredSize(new Dimension(width, 35));
-		controlPanel.setLayout(new FlowLayout());
-
-		controlPanel.add(typePanel);
-		controlPanel.add(statisticPanel);
-		controlPanel.add(closeButton);
-
-		window.add(graphHandler);
-		window.add(controlPanel);
-
-		window.setVisible(true);
+		buildWindow();
 
 		drawer = new Thread("Drawer") {
 
@@ -247,11 +222,11 @@ public class Graph implements SimulatorView {
 				while (!isClosed) {
 
 					while (buffer.isEmpty()) {
-
+						// Wait for a new item to be added to the buffer.
 					}
 
-					graphHandler.add(buffer.poll());
-					graphHandler.repaint();
+					graphPanel.add(buffer.poll());
+					graphPanel.repaint();
 
 				}
 			}
@@ -275,6 +250,73 @@ public class Graph implements SimulatorView {
 		// Does nothing as this method is used to tell the view that the
 		// simulation has ended. This view will operate primarily once the
 		// simulation has ended.
+	}
+
+	private void buildWindow() {
+
+		window = new JFrame("Graph View");
+
+		window.setSize(width, height);
+		window.setMaximumSize(new Dimension(width, height));
+		window.setLayout(new FlowLayout());
+
+		window.add(graphPanel);
+		window.add(newControlPanel());
+
+		window.setVisible(true);
+
+	}
+
+	private JPanel newControlPanel() {
+
+		closeButton = new JButton("Close");
+		closeButton.addActionListener(e -> {
+			window.dispose();
+			isClosed = true;
+			System.exit(0);
+		});
+
+		JPanel controlPanel = new JPanel();
+		controlPanel.setPreferredSize(new Dimension(width, 35));
+		controlPanel.setLayout(new FlowLayout());
+
+		controlPanel.add(newTypePanel());
+		controlPanel.add(newStatisticPanel());
+		controlPanel.add(closeButton);
+
+		return controlPanel;
+
+	}
+
+	private JPanel newTypePanel() {
+
+		JPanel typePanel = new JPanel();
+		typePanel.setPreferredSize(new Dimension(200, 35));
+		typePanel.setLayout(new FlowLayout());
+		JLabel typeLabel = new JLabel("Vehicle Type:");
+
+		vehicleTypes = new JComboBox<VehicleTypes>(VehicleTypes.values());
+		vehicleTypes.addActionListener(e -> graphPanel.repaint());
+
+		typePanel.add(typeLabel);
+		typePanel.add(vehicleTypes);
+		return typePanel;
+	}
+
+	private JPanel newStatisticPanel() {
+
+		JPanel statisticPanel = new JPanel();
+		statisticPanel.setPreferredSize(new Dimension(200, 35));
+		statisticPanel.setLayout(new FlowLayout());
+		JLabel statisticLabel = new JLabel("Statistic:");
+
+		statisticTypes = new JComboBox<StatisticTypes>(StatisticTypes.values());
+		statisticTypes.addActionListener(e -> graphPanel.repaint());
+
+		statisticPanel.add(statisticLabel);
+		statisticPanel.add(statisticTypes);
+
+		return statisticPanel;
 	}
 
 }
