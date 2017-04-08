@@ -456,9 +456,8 @@ public class Station {
 		Station cloneStation = new Station(this.startLoaction);
 
 		// Clone the instance fields of this into the clone.
-		cloneStation.numberOfRoadUsers = this.numberOfRoadUsers;
-		cloneStation.roadUsersRejected = this.roadUsersRejected;
-
+		cloneStation.numberOfRoadUsers = this.numberOfRoadUsers.clone();
+		cloneStation.roadUsersRejected = this.roadUsersRejected.clone();
 		cloneStation.lostFuelprofit = this.lostFuelprofit.clone();
 		cloneStation.lostSalesProfit = this.lostSalesProfit.clone();
 		cloneStation.roadUsersProcessed = this.roadUsersProcessed.clone();

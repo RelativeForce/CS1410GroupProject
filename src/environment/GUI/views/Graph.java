@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +29,11 @@ import environment.model.roadusers.Truck_RoadUser;
 
 public class Graph implements SimulatorView {
 
+	// Public Fields ----------------------------------------------------------
+
 	public volatile boolean isClosed;
+
+	// Private Fields --------------------------------------------------------
 
 	private GraphPanel graphPanel;
 	private JFrame window;
@@ -40,11 +46,13 @@ public class Graph implements SimulatorView {
 	private int height;
 	private int width;
 
+	// Member Class(es) -------------------------------------------------------
+
 	private enum VehicleTypes {
 
-		SMALLCAR("Small Car", SmallCar_RoadUser.class), TRUCK("Truck", FamilySedan_RoadUser.class), FAMILYSEDAN(
-				"Family Sedan",
-				Motorbike_RoadUser.class), MOTORBIKE("Motorbike", Truck_RoadUser.class), ALL("All", null);
+		ALL("All", null), SMALLCAR("Small Car", SmallCar_RoadUser.class), TRUCK("Truck",
+				FamilySedan_RoadUser.class), FAMILYSEDAN("Family Sedan",
+						Motorbike_RoadUser.class), MOTORBIKE("Motorbike", Truck_RoadUser.class);
 
 		private final String name;
 		public final Class<? extends RoadUser> type;
@@ -63,14 +71,16 @@ public class Graph implements SimulatorView {
 
 	private enum StatisticTypes {
 
-		PROCESSED("Processed"), REJECTED("Rejected"), FUELPROFIT("Fuel Profit"), LOSTFUELPROFIT(
-				"Lost Fuel Profit"), SALESPROFIT("Sales Profit "), LOSTSALESPROFIT(
-						"Lost Sales Profit"), PROFIT("Total Profit"), LOSTPROFIT("Total Lost Profit");
+		PROCESSED("Processed", false), REJECTED("Rejected", false), FUELPROFIT("Fuel Profit", true), LOSTFUELPROFIT(
+				"Lost Fuel Profit", true), SALESPROFIT("Sales Profit ", true), LOSTSALESPROFIT("Lost Sales Profit",
+						true), PROFIT("Total Profit", true), LOSTPROFIT("Total Lost Profit", true);
 
 		private final String name;
+		public final boolean isMoney;
 
-		StatisticTypes(String name) {
+		StatisticTypes(String name, boolean isMoney) {
 			this.name = name;
+			this.isMoney = isMoney;
 		}
 
 		@Override
@@ -80,6 +90,18 @@ public class Graph implements SimulatorView {
 
 	}
 
+	/**
+	 * 
+	 * This {@link GraphPanel} denotes a graph on screen. This is a member of
+	 * {@link Graph} and requires the elements of it to exist. 
+	 * 
+	 * @author Joshua_Eddy
+	 * @version 08/04/17
+	 * 
+	 * @see environment.GUI.views.Graph
+	 * @see javax.swing.JPanel
+	 *
+	 */
 	private class GraphPanel extends JPanel {
 
 		/**
@@ -87,54 +109,127 @@ public class Graph implements SimulatorView {
 		 */
 		private static final long serialVersionUID = -496349067427599752L;
 
-		private volatile List<Station> stages;
+		// Private Fields -----------------------------------------------------
 
+		private volatile List<Station> stages;
 		private int canvasWidth;
 		private int canvasHeight;
+		private int padding;
+		private int paddedCanvasWidth;
+		private int paddedCanvasHeight;
+		private int xOffset;
+		private int yOffset;
 
+		// Constructor --------------------------------------------------------
+
+		/**
+		 * Constructs a new {@link GraphPanel}.
+		 * 
+		 * @see environment.GUI.views.Graph
+		 */
 		public GraphPanel() {
 
 			super();
 
-			canvasWidth = width;
+			// Initialise the graph panel fields.
+			canvasWidth = width - 100;
 			canvasHeight = height - 100;
+			padding = 5;
+			paddedCanvasWidth = canvasWidth - ((canvasWidth * padding * 2) / 100);
+			paddedCanvasHeight = canvasHeight - ((canvasHeight * padding * 2) / 100);
+			stages = new ArrayList<Station>();
+			xOffset = (canvasWidth - paddedCanvasWidth) / 2;
+			yOffset = (canvasHeight - paddedCanvasHeight) / 2;
 
+			// Initialise the size of the panel.
 			setSize(canvasWidth, canvasHeight);
 			setPreferredSize(new Dimension(canvasWidth, canvasHeight));
 			setMinimumSize(new Dimension(canvasWidth, canvasHeight));
-			stages = new ArrayList<Station>();
 
 		}
 
+		// Public Methods -----------------------------------------------------
+
 		@Override
-		public synchronized void paint(Graphics g) {
+		public void paint(Graphics g) {
 
 			Graphics2D graphics2D = (Graphics2D) g;
 
-			graphics2D.setColor(Color.CYAN);
+			graphics2D.setColor(Color.WHITE);
 
-			drawCanvas(graphics2D);
+			drawBackground(graphics2D);
 
 			graphics2D.setColor(Color.BLACK);
 
-			drawLine(graphics2D);
+			constructGraph(graphics2D);
 
 		}
 
 		public void add(Station station) {
+
 			stages.add(station);
 
 		}
 
-		private void drawCanvas(Graphics2D graphics2D){
-			
+		// Private Methods ----------------------------------------------------
+
+		private void drawBackground(Graphics2D graphics2D) {
+
 			Rectangle background = new Rectangle();
 			background.setBounds(0, 0, canvasWidth, canvasHeight);
 			graphics2D.fill(background);
-			
+
 		}
-		
-		private void drawLine(Graphics2D graphics2D) {
+
+		private void drawAxis(double max, Graphics2D graphics2D) {
+
+			// Draw the Y axis
+			graphics2D.drawLine(xOffset, yOffset, xOffset, yOffset + paddedCanvasHeight);
+			graphics2D.drawLine(xOffset, yOffset, xOffset - 5, yOffset);
+
+			// Draw the X axis
+			graphics2D.drawLine(xOffset, yOffset + paddedCanvasHeight, xOffset + paddedCanvasWidth,
+					yOffset + paddedCanvasHeight);
+			graphics2D.drawLine(xOffset + paddedCanvasWidth, yOffset + paddedCanvasHeight, xOffset + paddedCanvasWidth,
+					yOffset + paddedCanvasHeight + 5);
+
+			if (max > 0) {
+
+				DecimalFormat money = new DecimalFormat("#.##");
+				money.setRoundingMode(RoundingMode.CEILING);
+
+				DecimalFormat integer = new DecimalFormat("#");
+				integer.setRoundingMode(RoundingMode.CEILING);
+
+				boolean isMoney = ((StatisticTypes) statisticTypes.getSelectedItem()).isMoney;
+
+				String maxString = "" + (isMoney ? "£" + money.format(max) : integer.format(max));
+
+				String tickString = "" + currentTick;
+
+				String zero = (isMoney ? "£0" : "0");
+
+				graphics2D.drawString(maxString, xOffset + 5, yOffset + 5);
+
+				graphics2D.drawString(tickString, xOffset + paddedCanvasWidth - (tickString.length() * 5),
+						yOffset + paddedCanvasHeight + 17);
+
+				graphics2D.drawString(zero, xOffset - 7, yOffset + paddedCanvasHeight + 12);
+
+			} else {
+
+				String type = ((VehicleTypes) vehicleTypes.getSelectedItem()).toString();
+				String stat = ((StatisticTypes) statisticTypes.getSelectedItem()).toString();
+
+				String alert = "No " + stat + " for " + type;
+
+				graphics2D.drawString(alert, (xOffset + paddedCanvasWidth) / 2, (yOffset + paddedCanvasHeight) / 2);
+
+			}
+
+		}
+
+		private void constructGraph(Graphics2D graphics2D) {
 
 			Map<Integer, Double> values = new HashMap<Integer, Double>();
 
@@ -143,30 +238,59 @@ public class Graph implements SimulatorView {
 			for (int currentTick = 0; currentTick < stages.size(); currentTick++) {
 
 				Station station = stages.get(currentTick);
-				double value = getStatisticValue(station, selectedVehicleType());
-				max = (value > max) ? value : max;
-				values.put(currentTick, value);
 
-			}
-			
-			int lastX = 0;
-			int lastY = canvasHeight;
+				if (station != null) {
 
-			for (Integer tick : values.keySet()) {
+					double value = getStatisticValue(station, selectedVehicleType());
+					max = (value > max) ? value : max;
+					values.put(currentTick, value);
 
-				double value = values.get(tick);
-
-				int x = (int) ((tick * canvasWidth) / currentTick);
-				int y = (int) (canvasHeight - ((value * canvasHeight) / max));
-
-				if (!(x < 0 || x > canvasWidth || y < 0 || y > canvasHeight)) {
-					graphics2D.drawLine(lastX, lastY, x, y);
 				}
 
-				lastX = x;
-				lastY = y;
-
 			}
+
+			drawLine(values, max, graphics2D);
+
+			drawAxis(max, graphics2D);
+
+		}
+
+		private void drawLine(Map<Integer, Double> values, double max, Graphics2D graphics2D) {
+
+			int x = xOffset;
+			int y = paddedCanvasHeight + yOffset;
+			int lastX = xOffset;
+			int lastY = paddedCanvasHeight + yOffset;
+
+			if (max > 0) {
+
+				for (Integer tick : values.keySet()) {
+
+					double value = values.get(tick);
+
+					x = (int) ((tick * paddedCanvasWidth) / currentTick) + xOffset;
+					y = (int) (paddedCanvasHeight - ((value * paddedCanvasHeight) / max)) + yOffset;
+
+					if (!(x < 0 || x > paddedCanvasWidth + xOffset)) {
+
+						if (!(y < 0 || y > paddedCanvasHeight + yOffset)) {
+
+							if (y != lastY && x != lastX) {
+
+								graphics2D.drawLine(lastX, lastY, x, y);
+
+								lastX = x;
+								lastY = y;
+
+							}
+						}
+					}
+				}
+			} else {
+				x = paddedCanvasWidth + xOffset;
+			}
+
+			graphics2D.drawLine(lastX, lastY, x, y);
 
 		}
 
@@ -201,6 +325,8 @@ public class Graph implements SimulatorView {
 			}
 		}
 	}
+
+	// Constructor ------------------------------------------------------------
 
 	public Graph() {
 
@@ -237,6 +363,8 @@ public class Graph implements SimulatorView {
 
 	}
 
+	// Public Methods ---------------------------------------------------------
+
 	@Override
 	public void show(int time, Station station) {
 
@@ -251,6 +379,8 @@ public class Graph implements SimulatorView {
 		// simulation has ended. This view will operate primarily once the
 		// simulation has ended.
 	}
+
+	// Private Methods --------------------------------------------------------
 
 	private void buildWindow() {
 
