@@ -11,6 +11,10 @@ import environment.model.Station;
 import environment.model.locations.Pump;
 import environment.model.locations.ShoppingArea;
 import environment.model.locations.Till;
+import environment.model.roadusers.FamilySedan_RoadUser;
+import environment.model.roadusers.Motorbike_RoadUser;
+import environment.model.roadusers.SmallCar_RoadUser;
+import environment.model.roadusers.Truck_RoadUser;
 
 public class TestAnimationPanel {
 	
@@ -34,7 +38,7 @@ public class TestAnimationPanel {
 	public void testDraw(){
 		
 		Station station = new Station(Pump.class);
-		station.addLocation(new Pump(Till.class));
+		station.addLocation(new Pump(ShoppingArea.class));
 		
 		try{
 			
@@ -44,10 +48,23 @@ public class TestAnimationPanel {
 			s.addLocation(new ShoppingArea(null));
 			ap.draw(s);
 			Thread.sleep(2000);
-			station.addLocation(new Pump(Till.class));
+			station.addLocation(new Pump(ShoppingArea.class));
+			station.addLocation(new ShoppingArea(Till.class));
 			station.addLocation(new Till(null));
-			ap.draw(station);
-			Thread.sleep(2000);
+			
+
+			station.enter(new Motorbike_RoadUser());
+			station.enter(new Motorbike_RoadUser());
+			station.enter(new Motorbike_RoadUser());
+			station.enter(new Motorbike_RoadUser());
+			
+			for(int i = 0; i < 100; ++i){
+				//station.
+				station.processLocations();
+				station.enter(new SmallCar_RoadUser());
+				ap.draw(station);
+				Thread.sleep(1000);
+			}
 		}
 		catch(InterruptedException e){
 			

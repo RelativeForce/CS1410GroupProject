@@ -21,6 +21,7 @@ public class AnimationPanel extends JPanel {
 	 * of the ...
 	 */
 	private static final int SCALING_FACTOR = 4;
+	public static final int BLOCK_SIZE = 100;
 	private final int width;
 	private final int height;
 	
@@ -40,17 +41,32 @@ public class AnimationPanel extends JPanel {
 		super();
 		this.width = width;
 		this.height = height;
-		
-		//super.setBackground(Color.GREEN);
 	}
+	/**
+	 * Prepare the {@link AnimationPanel} before drawing.
+	 * 
+	 * <p>
+	 * Preparations involve:
+	 * 
+	 * <ol>
+	 * 		<li>Initialise the {@link #img} if <code>null</code></li>
+	 * 		<li>Get the {@link Graphics} of the {@link #img}</li>
+	 * 		<li>Draw a green rectangle as a background</li>
+	 * </ol>
+	 * </p>
+	 * 
+	 */
 	private void prepareDraw(){
 		
-		if(img == null)
-			img = super.createImage(width, height);
+		//Check if the img is null.
+		if(img == null){
+			
+			img = super.createImage(width, height); //Initialise the img.
+			g = img.getGraphics(); //Get the graphics of the image.
+		}
 		
-		g = img.getGraphics();
-		g.setColor(Color.GREEN);
-		g.fillRect(0, 0, width, height);
+		g.setColor(Color.GREEN); //Set the background to green.
+		g.fillRect(0, 0, width, height); //Draw the rectangle as the background.
 	}
 	/**
 	 * 
@@ -58,34 +74,55 @@ public class AnimationPanel extends JPanel {
 	 */
 	public void draw(final Station station){
 		
-		int x = 100;
-		
-		prepareDraw();
+		prepareDraw(); //Prepare the img before drawing.
 		List<Location> locations = station.getLocations();
 		Iterator<? extends Location> locIter = locations.iterator();
+		LinkedList<List<Location>> locationGroups = new LinkedList<List<Location>>();
+		locationGroups.add(new LinkedList<Location>());
+		
+		Location next;
+		Class<? extends Location> nextLoc = null;
 		
 		while(locIter.hasNext()){
 			
-			//Class<? extends Location> nextLocation = locIter.next();
+			next = locIter.next();
 			
-			while(locIter.hasNext()){
+			if(locationGroups.peekLast().isEmpty()){
 				
+				nextLoc = next.getNextLocation();
+				locationGroups.peekLast().add(next);
+			}
+			else if(nextLoc == next.getNextLocation()){
 				
+				locationGroups.peekLast().add(next);
+			}
+			else{
+				
+				nextLoc = next.getNextLocation();
+				locationGroups.add(new LinkedList<Location>());
+				locationGroups.peekLast().add(next);
 			}
 		}
 		
-		int positionX = width/(locations.size() + 1) - x/2;
-		int positionY = height/(locations.size() + 1) - x/2;
+		final int startPositionX = width/(locationGroups.size() + 1) - BLOCK_SIZE/2;
+		int positionX = startPositionX;
 		
-		for(Location l: locations){
+		for(List<Location> group: locationGroups){
 			
-			g.setColor(Color.BLACK);
-			g.drawString(l.getClass().getSimpleName(), positionX, positionY);
-			g.setColor(Color.GRAY);
-			g.fillRect(positionX, positionY, x, x);
-			positionX += width/(locations.size() + 1);
-			positionY += height/(locations.size() + 1);
-		};
+			final int startPositionY = height/(group.size() + 1) - BLOCK_SIZE/2;
+			int positionY = startPositionY;
+			
+			for(Location loc: group){
+				
+				g.setColor(Color.BLACK);
+				g.drawString(loc.getClass().getSimpleName(), positionX, positionY);
+				LocationVisual.getVisual(loc.getClass()).visual
+					.visiulise(g, loc, positionX, positionY);
+				positionY += height/(group.size() + 1);
+			}
+			
+			positionX += width/(locationGroups.size() + 1);
+		}
 		
 		repaint();
 	}
