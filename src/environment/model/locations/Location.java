@@ -12,7 +12,7 @@ import environment.model.roadusers.RoadUser;
  * the <code>Station</code>. This should be extended with concrete subclasses.
  * 
  * @author Joshua_Eddy
- * @version 07/04/2017
+ * @version 09/04/2017
  *
  */
 public abstract class Location implements Cloneable {
@@ -205,7 +205,7 @@ public abstract class Location implements Cloneable {
 	public boolean canContain(RoadUser roadUser) {
 
 		// Holds the cumulative size of the queue.
-		int currentQueueSize = 0;
+		double currentQueueSize = 0;
 
 		// Add the size of each road users vehicle to the cumulative queue size.
 		for (RoadUser roadUserQueue : queue) {
@@ -215,10 +215,13 @@ public abstract class Location implements Cloneable {
 		// Returns true if the size of the queue including the parameter
 		// RoadUser is less than the defined maximum size of
 		// the queue or the maxQueueSize is zero meaning that there is no
-		// maximum size to the queue in this location. Otherwise return false.
+		// maximum size to the queue in this location.
+		// Otherwise return false.
 		// Also return false if the RoadUser is already present in this
 		// location.
-		return ((currentQueueSize + roadUser.getVehicle().size <= maxQueueSize) || (maxQueueSize == 0))
+		// + 0.01 is the margin of error that may arise from repeated
+		// double additions.
+		return ((currentQueueSize + roadUser.getVehicle().size <= maxQueueSize + 0.01) || (maxQueueSize == 0))
 				&& !queue.contains(roadUser);
 	}
 
