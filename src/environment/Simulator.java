@@ -137,7 +137,7 @@ public final class Simulator {
 		private static final long serialVersionUID = 89469236891365865L;
 
 		public SimulationDetailsException(String s) {
-			super(s);
+			super(s + " [Simulation Error]");
 		}
 
 	}
@@ -245,7 +245,7 @@ public final class Simulator {
 
 		// If the tick count is invalid, throw a runtime exception.
 		if (tickCount < 0) {
-			throw new SimulationDetailsException("The number of ticks must be non-negative [Simulation Error]");
+			throw new SimulationDetailsException("The number of ticks must be non-negative");
 		}
 
 		// Get p from user interface.
@@ -253,7 +253,7 @@ public final class Simulator {
 
 		// If the p is invalid, throw a runtime exception.
 		if (p < 0) {
-			throw new SimulationDetailsException("p must be non-negative [Simulation Error]");
+			throw new SimulationDetailsException("p must be non-negative");
 		}
 
 		// Get q from user interface.
@@ -261,7 +261,7 @@ public final class Simulator {
 
 		// If the q is invalid, throw a runtime exception.
 		if (q < 0) {
-			throw new SimulationDetailsException("q must be non-negative [Simulation Error]");
+			throw new SimulationDetailsException("q must be non-negative");
 		}
 
 		// Get number of pumps from user interface.
@@ -269,7 +269,7 @@ public final class Simulator {
 
 		// If the number of pumps is invalid, throw a runtime exception.
 		if (numberOfPumps < 0) {
-			throw new SimulationDetailsException("The number of pumps must be non-negative [Simulation Error]");
+			throw new SimulationDetailsException("The number of pumps must be non-negative");
 		}
 
 		// Get number of tills from user interface.
@@ -277,7 +277,7 @@ public final class Simulator {
 
 		// If the number of tills is invalid, throw a runtime exception.
 		if (numberOfTills < 0) {
-			throw new SimulationDetailsException("The number of tills must be non-negative [Simulation Error]");
+			throw new SimulationDetailsException("The number of tills must be non-negative");
 		}
 
 		// Get whether trucks are included in the simulation.
@@ -288,7 +288,7 @@ public final class Simulator {
 
 		// If the view is invalid, throw a runtime exception.
 		if (view == null) {
-			throw new SimulationDetailsException("No Simulator View is specified [Simulation Error]");
+			throw new SimulationDetailsException("No Simulator View is specified");
 		}
 
 		// Close the user interface.
