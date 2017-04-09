@@ -75,34 +75,7 @@ public class AnimationPanel extends JPanel {
 	public void draw(final Station station){
 		
 		prepareDraw(); //Prepare the img before drawing.
-		List<Location> locations = station.getLocations();
-		Iterator<? extends Location> locIter = locations.iterator();
-		LinkedList<List<Location>> locationGroups = new LinkedList<List<Location>>();
-		locationGroups.add(new LinkedList<Location>());
-		
-		Location next;
-		Class<? extends Location> nextLoc = null;
-		
-		while(locIter.hasNext()){
-			
-			next = locIter.next();
-			
-			if(locationGroups.peekLast().isEmpty()){
-				
-				nextLoc = next.getNextLocation();
-				locationGroups.peekLast().add(next);
-			}
-			else if(nextLoc == next.getNextLocation()){
-				
-				locationGroups.peekLast().add(next);
-			}
-			else{
-				
-				nextLoc = next.getNextLocation();
-				locationGroups.add(new LinkedList<Location>());
-				locationGroups.peekLast().add(next);
-			}
-		}
+		List<List<Location>> locationGroups = groupLocations(station.getLocations());
 		
 		final int startPositionX = width/(locationGroups.size() + 1) - BLOCK_SIZE/2;
 		int positionX = startPositionX;
@@ -126,13 +99,50 @@ public class AnimationPanel extends JPanel {
 		
 		repaint();
 	}
+	/**
+	 * 
+	 * 
+	 * @param locations A {@link List} of {@link Location} objects.
+	 * @return A {@link List} of {@link List} objects containing locations which exist
+	 * 		in parallel.
+	 */
+	private List<List<Location>> groupLocations(List<Location> locations){
+		
+		LinkedList<List<Location>> locationGroups = new LinkedList<List<Location>>();
+		locationGroups.add(new LinkedList<Location>());
+		
+		Location next;
+		Class<? extends Location> nextLoc = null;
+		
+		for(Location loc: locations){
+			
+			next = loc;
+			
+			if(locationGroups.peekLast().isEmpty()){
+				
+				nextLoc = next.getNextLocation();
+				locationGroups.peekLast().add(next);
+			}
+			else if(nextLoc == next.getNextLocation()){
+				
+				locationGroups.peekLast().add(next);
+			}
+			else{
+				
+				nextLoc = next.getNextLocation();
+				locationGroups.add(new LinkedList<Location>());
+				locationGroups.peekLast().add(next);
+			}
+		}
+		
+		return locationGroups;
+	}
 	@Override
-	public final void paintComponent(final Graphics g){
+	protected final void paintComponent(final Graphics g){
 		
 		if(img != null){
 			
 			g.drawImage(img, 0, 0, null);
-			g.dispose();
 		}
 	}
 }

@@ -49,16 +49,24 @@ public class TestAnimationPanel {
 			ap.draw(s);
 			Thread.sleep(2000);
 			station.addLocation(new Pump(ShoppingArea.class));
+			station.addLocation(new Pump(ShoppingArea.class));
+			station.addLocation(new Pump(ShoppingArea.class));
 			station.addLocation(new ShoppingArea(Till.class));
+			station.addLocation(new Till(null));
 			station.addLocation(new Till(null));
 			
 
 			station.enter(new Motorbike_RoadUser());
+			station.processLocations();
 			station.enter(new Motorbike_RoadUser());
+			station.processLocations();
 			station.enter(new Motorbike_RoadUser());
+			station.processLocations();
 			station.enter(new Motorbike_RoadUser());
+			station.processLocations();
 			
 			for(int i = 0; i < 100; ++i){
+				
 				//station.
 				station.processLocations();
 				station.enter(new SmallCar_RoadUser());
