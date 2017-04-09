@@ -109,8 +109,8 @@ public enum Visualisation {
 		for(RoadUser ru: l.getQueue()){
 			
 			g.setColor(getColorOf(ru.getClass()));
-			g.fillRect(position, y + AnimationPanel.BLOCK_SIZE/2, 4, 4);
-			position -= 4;
+			g.fillRect(position - 4, y + AnimationPanel.BLOCK_SIZE/2, 4, 4);
+			position -= 6;
 		}
 	}),
 	/**
