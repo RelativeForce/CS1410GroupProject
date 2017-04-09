@@ -50,7 +50,6 @@ public class TestAnimationPanel {
 		
 		try{
 			
-
 			station.enter(new Motorbike_RoadUser());
 			station.processLocations();
 			station.enter(new Motorbike_RoadUser());
@@ -59,8 +58,10 @@ public class TestAnimationPanel {
 			station.processLocations();
 			station.enter(new Truck_RoadUser());
 			station.processLocations();
+			station.enter(new FamilySedan_RoadUser());
+			station.processLocations();
 			
-			for(int i = 0; i < 100; ++i){
+			for(int i = 0; i < 10000; ++i){
 				
 				//station.
 				station.processLocations();
