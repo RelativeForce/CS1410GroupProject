@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import environment.Simulator;
 import environment.model.Station;
 import environment.model.Statistic;
+import environment.model.locations.ShoppingArea;
 import environment.model.roadusers.FamilySedan_RoadUser;
 import environment.model.roadusers.Motorbike_RoadUser;
 import environment.model.roadusers.RoadUser;
@@ -146,7 +147,7 @@ public class Graph implements SimulatorView {
 		 *            displayed in the form of money or not
 		 */
 		private StatisticType(String text, boolean isMoney) {
-			
+
 			// Initialise the instance fields.
 			this.text = text;
 			this.isMoney = isMoney;
@@ -187,7 +188,7 @@ public class Graph implements SimulatorView {
 		 * 
 		 * @see java.util.List
 		 */
-		private volatile List<Station> stages;
+		private volatile List<Entry> stages;
 
 		/**
 		 * The width of the {@link GraphPanel} inside the {@link Graph}.
@@ -251,7 +252,7 @@ public class Graph implements SimulatorView {
 			padding = 5;
 			paddedCanvasWidth = canvasWidth - ((canvasWidth * padding * 2) / 100);
 			paddedCanvasHeight = canvasHeight - ((canvasHeight * padding * 2) / 100);
-			stages = new ArrayList<Station>();
+			stages = new ArrayList<Entry>();
 			xOffset = (canvasWidth - paddedCanvasWidth) / 2;
 			yOffset = (canvasHeight - paddedCanvasHeight) / 2;
 
@@ -291,7 +292,7 @@ public class Graph implements SimulatorView {
 		 *            {@link Station} to be added.
 		 */
 		public void add(Station station) {
-			stages.add(station);
+			stages.add(new Entry(station));
 		}
 
 		// Private Methods ----------------------------------------------------
@@ -402,13 +403,13 @@ public class Graph implements SimulatorView {
 			// Iterate through every element in stages.
 			for (int currentTick = 0; currentTick < stages.size(); currentTick++) {
 
-				Station station = stages.get(currentTick);
+				Entry currentEntry = stages.get(currentTick);
 
-				if (station != null) {
+				if (currentEntry != null) {
 
 					// Retrieve the value of the selected statistic by vehicle
 					// type.
-					double value = getStatisticValue(station, ((VehicleType) vehicleTypes.getSelectedItem()).type);
+					double value = getStatisticValue(currentEntry, ((VehicleType) vehicleTypes.getSelectedItem()).type);
 
 					// If the value retrieved from the station is larger than
 					// the current max then assign it as the new max.
@@ -506,36 +507,177 @@ public class Graph implements SimulatorView {
 		 * <code>Class&lt;? extends {@link RoadUser}&gt;</code> that the user
 		 * specified in {@link Graph#vehicleTypes}.
 		 * 
-		 * @param station
+		 * @param entry
 		 *            {@link Station}
 		 * @param type
 		 *            <code>Class&lt;? extends {@link RoadUser}&gt;</code>
 		 * @return <code>double<code> value of that {@link Statistic}.
 		 */
-		private double getStatisticValue(Station station, Class<? extends RoadUser> type) {
+		private double getStatisticValue(Entry entry, Class<? extends RoadUser> type) {
 
 			switch ((StatisticType) statisticTypes.getSelectedItem()) {
 			case PROCESSED:
-				return station.getRoadUsersProcessed().get(type);
+				return entry.getRoadUsersProcessed().get(type);
 			case REJECTED:
-				return station.getRoadUsersRejected().get(type);
+				return entry.getRoadUsersRejected().get(type);
 			case PROFIT:
-				return (station.getFuelProfit().get(type) + station.getSalesProfit().get(type));
+				return (entry.getFuelProfit().get(type) + entry.getSalesProfit().get(type));
 			case LOSTPROFIT:
-				return (station.getLostFuelProfit().get(type) + station.getLostSalesProfit().get(type));
+				return (entry.getLostFuelProfit().get(type) + entry.getLostSalesProfit().get(type));
 			case FUELPROFIT:
-				return station.getFuelProfit().get(type);
+				return entry.getFuelProfit().get(type);
 			case LOSTFUELPROFIT:
-				return station.getLostFuelProfit().get(type);
+				return entry.getLostFuelProfit().get(type);
 			case SALESPROFIT:
-				return station.getSalesProfit().get(type);
+				return entry.getSalesProfit().get(type);
 			case LOSTSALESPROFIT:
-				return station.getLostSalesProfit().get(type);
+				return entry.getLostSalesProfit().get(type);
 			default:
 				return 0.0;
 
 			}
 		}
+	}
+
+	/**
+	 * Stores all the {@link Statistic}s from the {@link Station} that is passed
+	 * to the {@link Graph} each tick of the {@link Simulator}.
+	 * 
+	 * @author Joshua_Eddy
+	 * @version 09/04/17
+	 *
+	 */
+	private class Entry {
+
+		/**
+		 * The {@link Statistic} that denotes the amount of {@link RoadUser}s
+		 * that <code>this</code> {@link Station} could not accommodate and
+		 * therefore must have been rejected.
+		 * 
+		 */
+		private Statistic roadUsersRejected;
+
+		/**
+		 * Stores the {@link Double} value of fuels profit that was lost by each
+		 * {@link RoadUser} type being rejected by the station.
+		 * 
+		 * @see environment.model.roadusers.vehicles.Vehicle
+		 * @see environment.model.roadusers.RoadUser
+		 */
+		private Statistic lostFuelprofit;
+
+		/**
+		 * Stores the {@link Double} value of sales profit that was lost by each
+		 * {@link RoadUser} type being rejected by the station.
+		 * 
+		 * @see environment.model.roadusers.RoadUser
+		 */
+		private Statistic lostSalesProfit;
+
+		/**
+		 * Stores the {@link Double} number of each type of {@link RoadUser}s
+		 * that have been processed by the station.
+		 * 
+		 * @see environment.model.roadusers.vehicles.Vehicle
+		 * @see environment.model.roadusers.RoadUser
+		 */
+		private Statistic roadUsersProcessed;
+
+		/**
+		 * Stores the {@link Double} value of fuels profit that was gained by
+		 * each {@link RoadUser} type paying for their fuel.
+		 * 
+		 * @see environment.model.roadusers.vehicles.Vehicle
+		 * @see environment.model.roadusers.RoadUser
+		 */
+		private Statistic fuelProfit;
+
+		/**
+		 * The <code>double</code> sales profit that <code>this</code>
+		 * {@link Station} has made.
+		 */
+		private Statistic salesProfit;
+
+		public Entry(Station station) {
+
+			roadUsersRejected = station.getRoadUsersRejected();
+			roadUsersProcessed = station.getRoadUsersProcessed();
+			lostFuelprofit = station.getLostFuelProfit();
+			lostSalesProfit = station.getLostSalesProfit();
+			fuelProfit = station.getFuelProfit();
+			salesProfit = station.getSalesProfit();
+
+		}
+
+		/**
+		 * Retrieve the number of rejected {@link RoadUser}s.
+		 * 
+		 * @return The number of {@link RoadUser}s that this {@link Station} has
+		 *         rejected.
+		 */
+		public Statistic getRoadUsersRejected() {
+			return roadUsersRejected;
+		}
+
+		/**
+		 * Retrieves the amount of profit <code>this</code> {@link Station} has
+		 * generated from fuel sales.
+		 * 
+		 * @return {@link Statistic} fuel profit.
+		 * 
+		 */
+		public Statistic getFuelProfit() {
+			return fuelProfit;
+		}
+
+		/**
+		 * Retrieves the number of {@link RoadUser}s processed by the
+		 * {@link Station}.
+		 * 
+		 * @return {@link Statistic} amount of {@link RoadUser}s processed by
+		 *         the {@link Station}.
+		 */
+		public Statistic getRoadUsersProcessed() {
+			return roadUsersProcessed;
+		}
+
+		/**
+		 * Retrieves the sales profit <code>this</code> {@link Station} has
+		 * generated from {@link RoadUser}s spending money in
+		 * {@link ShoppingArea}.
+		 * 
+		 * @return {@link Statistic} sales profit.
+		 * 
+		 * @see #salesProfit
+		 * @see #locations
+		 * @see #fuelProfit
+		 */
+		public Statistic getSalesProfit() {
+			return salesProfit;
+		}
+
+		/**
+		 * The amount of profit that <code>this</code> {@link Station} has lost
+		 * based on {@link RoadUser}s not being happy enough with their service
+		 * to spend any money in the {@link ShoppingArea}.
+		 * 
+		 * @return {@link Statistic} lost profit.
+		 */
+		public Statistic getLostSalesProfit() {
+			return lostSalesProfit;
+		}
+
+		/**
+		 * The amount of profit that <code>this</code> {@link Station} has lost
+		 * based on {@link Station} not being able to accommodate the new
+		 * {@link RoadUser}.
+		 * 
+		 * @return {@link Statistic} profit lost.
+		 */
+		public Statistic getLostFuelProfit() {
+			return lostFuelprofit;
+		}
+
 	}
 
 	// Constructor ------------------------------------------------------------
