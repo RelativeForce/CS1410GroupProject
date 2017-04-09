@@ -21,7 +21,7 @@ public class AnimationPanel extends JPanel {
 	 * of the ...
 	 */
 	private static final int SCALING_FACTOR = 4;
-	public static final int BLOCK_SIZE = 100;
+	public static final int BLOCK_SIZE = 80;
 	private final int width;
 	private final int height;
 	
@@ -89,7 +89,7 @@ public class AnimationPanel extends JPanel {
 				
 				g.setColor(Color.BLACK);
 				g.drawString(loc.getClass().getSimpleName(), positionX, positionY);
-				LocationVisual.getVisual(loc.getClass()).visual
+				Visualisation.getVisual(loc.getClass()).visual
 					.visiulise(g, loc, positionX, positionY);
 				positionY += height/(group.size() + 1);
 			}

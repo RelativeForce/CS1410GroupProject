@@ -39,21 +39,16 @@ public class TestAnimationPanel {
 		
 		Station station = new Station(Pump.class);
 		station.addLocation(new Pump(ShoppingArea.class));
+		station.addLocation(new Pump(ShoppingArea.class));
+		station.addLocation(new Pump(ShoppingArea.class));
+		station.addLocation(new Pump(ShoppingArea.class));
+		station.addLocation(new ShoppingArea(Till.class));
+		station.addLocation(new Till(null));
+		station.addLocation(new Till(null));
+		station.addLocation(new Till(null));
+		station.addLocation(new Till(null));
 		
 		try{
-			
-			ap.draw(station);
-			Thread.sleep(2000);
-			Station s = new Station(ShoppingArea.class);
-			s.addLocation(new ShoppingArea(null));
-			ap.draw(s);
-			Thread.sleep(2000);
-			station.addLocation(new Pump(ShoppingArea.class));
-			station.addLocation(new Pump(ShoppingArea.class));
-			station.addLocation(new Pump(ShoppingArea.class));
-			station.addLocation(new ShoppingArea(Till.class));
-			station.addLocation(new Till(null));
-			station.addLocation(new Till(null));
 			
 
 			station.enter(new Motorbike_RoadUser());
@@ -69,9 +64,9 @@ public class TestAnimationPanel {
 				
 				//station.
 				station.processLocations();
-				//station.enter(new SmallCar_RoadUser());
+				station.enter(new SmallCar_RoadUser());
 				ap.draw(station);
-				Thread.sleep(500);
+				Thread.sleep(100);
 			}
 		}
 		catch(InterruptedException e){
