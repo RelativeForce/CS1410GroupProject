@@ -22,7 +22,7 @@ import environment.model.roadusers.RoadUser;
  * {@link RoadUser}s between its locations.
  * 
  * @author Joshua_Eddy
- * @version 05/04/2017
+ * @version 09/04/2017
  * 
  * @see #enter(RoadUser)
  * @see #clone()
@@ -130,6 +130,16 @@ public class Station {
 	 */
 	private Statistic salesProfit;
 
+	/**
+	 * Holds all the elements in toMove that are to be removed. This map exists
+	 * to overcome the <strong>ConcurrentModificationException</strong> thrown
+	 * when a {@link Map} is modified while being iterated through.
+	 * 
+	 * @see #toMove
+	 * @see java.util.Map
+	 */
+	private List<RoadUser> toRemoveFrom_toMove;
+
 	// Constructor ------------------------------------------------------------
 
 	/**
@@ -152,6 +162,7 @@ public class Station {
 		this.toMove = new HashMap<RoadUser, Location>();
 		this.locations = new LinkedList<Location>();
 		this.startLoaction = startLocation;
+		this.toRemoveFrom_toMove = new LinkedList<RoadUser>();
 
 		// Initialise statistic instance fields
 		this.fuelProfit = new Statistic();
@@ -317,14 +328,15 @@ public class Station {
 	public Statistic getNumberOfRoadUsers() {
 		return numberOfRoadUsers;
 	}
-	
+
 	/**
 	 * Retrieves the number of {@link RoadUser}s processed by the
 	 * {@link Station}.
+	 * 
 	 * @return {@link Statistic} amount of {@link RoadUser}s processed by the
 	 *         {@link Station}.
 	 */
-	public Statistic getRoadUsersProcessed(){
+	public Statistic getRoadUsersProcessed() {
 		return roadUsersProcessed;
 	}
 
@@ -456,9 +468,8 @@ public class Station {
 		Station cloneStation = new Station(this.startLoaction);
 
 		// Clone the instance fields of this into the clone.
-		cloneStation.numberOfRoadUsers = this.numberOfRoadUsers;
-		cloneStation.roadUsersRejected = this.roadUsersRejected;
-
+		cloneStation.numberOfRoadUsers = this.numberOfRoadUsers.clone();
+		cloneStation.roadUsersRejected = this.roadUsersRejected.clone();
 		cloneStation.lostFuelprofit = this.lostFuelprofit.clone();
 		cloneStation.lostSalesProfit = this.lostSalesProfit.clone();
 		cloneStation.roadUsersProcessed = this.roadUsersProcessed.clone();
@@ -529,6 +540,9 @@ public class Station {
 	 */
 	private void relocateRoadUsers() {
 
+		// Empty the list from the previous iteration.s
+		this.toRemoveFrom_toMove = new LinkedList<RoadUser>();
+
 		// Retrieve all the road users from toMove and iterate through them.
 		for (RoadUser roadUser : toMove.keySet()) {
 
@@ -564,6 +578,8 @@ public class Station {
 		if (!toMove.isEmpty()) {
 			returnToPriorLocation();
 		}
+
+		removeMoved();
 
 	}
 
@@ -601,7 +617,7 @@ public class Station {
 				if (location.getClass() == nextLocation && location.canContain(roadUser)) {
 
 					location.enter(roadUser);
-					toMove.remove(roadUser);
+					toRemoveFrom_toMove.add(roadUser);
 					return true;
 
 				}
@@ -614,7 +630,7 @@ public class Station {
 			// the station.
 			numberOfRoadUsers.update(roadUser.getClass(), -1);
 			roadUsersProcessed.update(roadUser.getClass(), 1);
-			toMove.remove(roadUser);
+			toRemoveFrom_toMove.add(roadUser);
 			return true;
 		}
 
@@ -634,14 +650,35 @@ public class Station {
 		// next location.
 		for (RoadUser roadUser : toMove.keySet()) {
 
-			// Get the previous location of the current road user.
-			Location pastLocation = toMove.get(roadUser);
+			// If the current road user is not in the queue to be removed from
+			// toMove
+			if (!toRemoveFrom_toMove.contains(roadUser)) {
 
-			// Return the road user to the its previous location. Then remove it
-			// from to move.
-			pastLocation.returnToQueue(roadUser);
+				// Get the previous location of the current road user.
+				Location pastLocation = toMove.get(roadUser);
+
+				// Return the road user to the its previous location. Then
+				// remove it
+				// from to move.
+				pastLocation.returnToQueue(roadUser);
+				toRemoveFrom_toMove.add(roadUser);
+			}
+		}
+	}
+
+	/**
+	 * Removes all the {@link RoadUser}s stored in {@link #toRemoveFrom_toMove}
+	 * and removes them from {@link #toMove}.
+	 * 
+	 * @see #toMove
+	 * @see #toRemoveFrom_toMove
+	 */
+	private void removeMoved() {
+
+		// Iterate through all the elements from toRemoveFrom_toMove and remove
+		// them from toMove.
+		for (RoadUser roadUser : toRemoveFrom_toMove) {
 			toMove.remove(roadUser);
-
 		}
 
 	}
