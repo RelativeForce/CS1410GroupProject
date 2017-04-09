@@ -40,54 +40,121 @@ public class Graph implements SimulatorView {
 	private GraphPanel graphPanel;
 	private JFrame window;
 	private JButton closeButton;
-	private JComboBox<StatisticTypes> statisticTypes;
-	private JComboBox<VehicleTypes> vehicleTypes;
+	private JComboBox<StatisticType> statisticTypes;
+	private JComboBox<VehicleType> vehicleTypes;
 	private Thread drawer;
 	private LinkedTransferQueue<Station> buffer;
 	private int currentTick;
 	private int height;
 	private int width;
 
-	// Member Class(es) -------------------------------------------------------
+	// Member Classes ---------------------------------------------------------
 
-	private enum VehicleTypes {
+	/**
+	 * All the values and encapsulated functionality of the elements that will
+	 * be added to the {@link Graph#vehicleTypes}.
+	 * 
+	 * @author Joshua_Eddy
+	 * @version 09/04/17
+	 * 
+	 * @see environment.GUI.views.Graph
+	 *
+	 */
+	private enum VehicleType {
 
+		// The values
 		ALL("All", null), SMALLCAR("Small Car", SmallCar_RoadUser.class), TRUCK("Truck",
 				FamilySedan_RoadUser.class), FAMILYSEDAN("Family Sedan",
 						Motorbike_RoadUser.class), MOTORBIKE("Motorbike", Truck_RoadUser.class);
 
-		private final String name;
+		/**
+		 * The text representation of <code>this</code> {@link VehicleType}.
+		 */
+		private final String text;
+
+		/**
+		 * The {@link RoadUser} type that <code>this<code> {@link VehicleType}
+		 * is assigned to.
+		 */
 		public final Class<? extends RoadUser> type;
 
-		VehicleTypes(String name, Class<? extends RoadUser> typeClass) {
-			this.name = name;
+		/**
+		 * Constructs a new {@link VehicleType}.
+		 * 
+		 * @param text
+		 *            The text representation of <code>this</code>
+		 *            {@link VehicleType}.
+		 * @param typeClass
+		 *            The {@link RoadUser} type that <code>this<code>
+		 *            {@link VehicleType} is assigned to.
+		 * @see environment.GUI.views.Graph
+		 */
+		private VehicleType(String text, Class<? extends RoadUser> typeClass) {
+
+			// Initialise instance fields.
+			this.text = text;
 			this.type = typeClass;
 		}
 
+		/**
+		 * Retrieve the text representation of <code>this</code>
+		 * {@link VehicleType}.
+		 */
 		@Override
 		public final String toString() {
-			return name;
+			return text;
 		}
 
 	}
 
-	private enum StatisticTypes {
+	/**
+	 * All the values and encapsulated functionality of the elements that will
+	 * be added to the {@link Graph#statisticTypes}.
+	 * 
+	 * @author Joshua_Eddy
+	 * @version 09/04/17
+	 * @see environment.GUI.views.Graph
+	 *
+	 */
 
+	private enum StatisticType {
+
+		// The values
 		PROCESSED("Processed", false), REJECTED("Rejected", false), FUELPROFIT("Fuel Profit", true), LOSTFUELPROFIT(
 				"Lost Fuel Profit", true), SALESPROFIT("Sales Profit ", true), LOSTSALESPROFIT("Lost Sales Profit",
 						true), PROFIT("Total Profit", true), LOSTPROFIT("Total Lost Profit", true);
 
-		private final String name;
+		/**
+		 * The text representation of <code>this</code> {@link VehicleType}.
+		 */
+		private final String text;
+
+		/**
+		 * Whether or not <code>this</code> {@link StatisticType} is displayed
+		 * in the form of money or not.
+		 */
 		public final boolean isMoney;
 
-		StatisticTypes(String name, boolean isMoney) {
-			this.name = name;
+		/**
+		 * Constructs a new {@link StatisticType}.
+		 * 
+		 * @param text
+		 *            The text representation of <code>this</code>
+		 *            {@link VehicleType}.
+		 * @param isMoney
+		 *            Whether or not <code>this</code> {@link StatisticType} is
+		 *            displayed in the form of money or not
+		 */
+		private StatisticType(String text, boolean isMoney) {
+			
+			// Initialise the instance fields.
+			this.text = text;
 			this.isMoney = isMoney;
 		}
 
 		@Override
 		public final String toString() {
-			return name;
+			return text;
 		}
 
 	}
@@ -276,7 +343,7 @@ public class Graph implements SimulatorView {
 
 				// If the statistic type that is currently selected is displayed
 				// as money of not.
-				boolean isMoney = ((StatisticTypes) statisticTypes.getSelectedItem()).isMoney;
+				boolean isMoney = ((StatisticType) statisticTypes.getSelectedItem()).isMoney;
 
 				// Initialise the number string formatter. If the selected
 				// statistic is money then the formatter will format the strings
@@ -306,8 +373,8 @@ public class Graph implements SimulatorView {
 			} else {
 
 				// Initialise an alert message.
-				String type = ((VehicleTypes) vehicleTypes.getSelectedItem()).toString();
-				String stat = ((StatisticTypes) statisticTypes.getSelectedItem()).toString();
+				String type = ((VehicleType) vehicleTypes.getSelectedItem()).toString();
+				String stat = ((StatisticType) statisticTypes.getSelectedItem()).toString();
 				String alert = "No " + stat + " for " + type;
 
 				// Display that alert message in the centre of the graph.
@@ -341,7 +408,7 @@ public class Graph implements SimulatorView {
 
 					// Retrieve the value of the selected statistic by vehicle
 					// type.
-					double value = getStatisticValue(station, ((VehicleTypes) vehicleTypes.getSelectedItem()).type);
+					double value = getStatisticValue(station, ((VehicleType) vehicleTypes.getSelectedItem()).type);
 
 					// If the value retrieved from the station is larger than
 					// the current max then assign it as the new max.
@@ -434,7 +501,7 @@ public class Graph implements SimulatorView {
 
 		/**
 		 * Retrieves the value of a {@link Statistic} filed in the specified
-		 * {@link Station} based on the {@link StatisticTypes} from
+		 * {@link Station} based on the {@link StatisticType} from
 		 * {@link Graph#statisticTypes} and the
 		 * <code>Class&lt;? extends {@link RoadUser}&gt;</code> that the user
 		 * specified in {@link Graph#vehicleTypes}.
@@ -447,7 +514,7 @@ public class Graph implements SimulatorView {
 		 */
 		private double getStatisticValue(Station station, Class<? extends RoadUser> type) {
 
-			switch ((StatisticTypes) statisticTypes.getSelectedItem()) {
+			switch ((StatisticType) statisticTypes.getSelectedItem()) {
 			case PROCESSED:
 				return station.getRoadUsersProcessed().get(type);
 			case REJECTED:
@@ -570,7 +637,7 @@ public class Graph implements SimulatorView {
 		typePanel.setLayout(new FlowLayout());
 		JLabel typeLabel = new JLabel("Vehicle Type:");
 
-		vehicleTypes = new JComboBox<VehicleTypes>(VehicleTypes.values());
+		vehicleTypes = new JComboBox<VehicleType>(VehicleType.values());
 		vehicleTypes.addActionListener(e -> graphPanel.repaint());
 
 		typePanel.add(typeLabel);
@@ -585,7 +652,7 @@ public class Graph implements SimulatorView {
 		statisticPanel.setLayout(new FlowLayout());
 		JLabel statisticLabel = new JLabel("Statistic:");
 
-		statisticTypes = new JComboBox<StatisticTypes>(StatisticTypes.values());
+		statisticTypes = new JComboBox<StatisticType>(StatisticType.values());
 		statisticTypes.addActionListener(e -> graphPanel.repaint());
 
 		statisticPanel.add(statisticLabel);
