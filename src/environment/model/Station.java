@@ -22,7 +22,7 @@ import environment.model.roadusers.RoadUser;
  * {@link RoadUser}s between its locations.
  * 
  * @author Joshua_Eddy
- * @version 09/04/2017
+ * @version 10/04/2017
  * 
  * @see #enter(RoadUser)
  * @see #clone()
@@ -616,7 +616,13 @@ public class Station {
 				// add it to said location and remove it from toMove.
 				if (location.getClass() == nextLocation && location.canContain(roadUser)) {
 
-					location.enter(roadUser);
+					// If the next location is a Shopping Area and the current
+					// road user is already shopping then don't add it to that
+					// location.
+					if (!(nextLocation == ShoppingArea.class && roadUser.isShopping())) {
+						location.enter(roadUser);
+					}
+
 					toRemoveFrom_toMove.add(roadUser);
 					return true;
 
