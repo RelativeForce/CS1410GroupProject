@@ -69,9 +69,9 @@ public class TestAnimationPanel {
 				
 				//station.
 				station.processLocations();
-				station.enter(new SmallCar_RoadUser());
+				//station.enter(new SmallCar_RoadUser());
 				ap.draw(station);
-				Thread.sleep(1000);
+				Thread.sleep(500);
 			}
 		}
 		catch(InterruptedException e){

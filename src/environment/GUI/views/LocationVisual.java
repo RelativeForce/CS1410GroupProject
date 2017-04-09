@@ -77,6 +77,15 @@ public enum LocationVisual {
 		g.setColor(Color.GRAY);
 		g.fillRect(x + AnimationPanel.BLOCK_SIZE/2, y,
 				AnimationPanel.BLOCK_SIZE/2, AnimationPanel.BLOCK_SIZE);
+		
+		int position = x + AnimationPanel.BLOCK_SIZE - 4;
+		
+		for(RoadUser ru: l.getQueue()){
+			
+			g.setColor(getColorOf(ru.getClass()));
+			g.fillRect(position, y + AnimationPanel.BLOCK_SIZE/2, 4, 4);
+			position -= 4;
+		}
 	}),
 	/**
 	 * The visual representation of any {@link Location} not included in the list.
@@ -102,7 +111,7 @@ public enum LocationVisual {
 				if(grid[position%AnimationPanel.BLOCK_SIZE][position/AnimationPanel.BLOCK_SIZE]
 						== null){
 					
-					g.setColor(Color.RED);
+					g.setColor(getColorOf(ru.getClass()));
 					g.fillRect(x + (position%AnimationPanel.BLOCK_SIZE),
 							y + (position/AnimationPanel.BLOCK_SIZE), 4, 4);
 					break;
