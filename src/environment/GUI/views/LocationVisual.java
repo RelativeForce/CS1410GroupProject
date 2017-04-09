@@ -153,14 +153,22 @@ public enum LocationVisual {
 		this.locationClass = locationClass;
 		this.visual = visual;
 	}
+	/**
+	 * 
+	 * @param roadUserClass
+	 * @return
+	 */
 	private static final Color getColorOf(final Class<? extends RoadUser> roadUserClass){ 
 		
+		//Check if the roudUser has a color.
 		if(!ROAD_USER_COLOR_MAP.containsKey(roadUserClass)){
 			
+			//Select the next color from the USABLE_COLORS.
 			ROAD_USER_COLOR_MAP.put(roadUserClass,
 					USABLE_COLORS[COLOR_INDEX++%USABLE_COLORS.length]);
 		}
 		
+		//Return the Color of the roadUser.
 		return ROAD_USER_COLOR_MAP.get(roadUserClass);
 	}
 	/**
@@ -213,8 +221,13 @@ public enum LocationVisual {
 	public interface Visual {
 		
 		/**
-		 * Create the visual representation of the {@link Location}
+		 * Create the visual representation of the {@link Location}.
 		 * 
+		 * <p>
+		 * Provide a {@link Graphics} and {@link Location} object which are the graphics to draw
+		 * to and the {@link Location} to be drawn, along with an <code>int</code> x and y
+		 * coordinate which specify the target location of where to draw. 
+		 * </p>
 		 * 
 		 * @param g The {@link Graphics} add the visual representation to.
 		 * @param loc The {@link Location} to be visually represented.

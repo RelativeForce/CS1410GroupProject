@@ -62,7 +62,7 @@ public class TestAnimationPanel {
 			station.processLocations();
 			station.enter(new Motorbike_RoadUser());
 			station.processLocations();
-			station.enter(new Motorbike_RoadUser());
+			station.enter(new Truck_RoadUser());
 			station.processLocations();
 			
 			for(int i = 0; i < 100; ++i){
