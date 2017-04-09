@@ -1,5 +1,7 @@
 package environment.model.locations;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import environment.model.roadusers.RoadUser;
@@ -33,6 +35,11 @@ public class ShoppingArea extends Location implements Cloneable {
 	@Override
 	public void processQueue(Map<RoadUser, Location> toMove) {
 
+		// Holds all the elements in toMove that are to be removed. This map
+		// exists to overcome the ConcurrentModificationException thrown when a
+		// Map is modified while being iterated through.
+		List<RoadUser> toRemoveFrom_queue = new LinkedList<RoadUser>();
+
 		// Iterates through the queue.
 		for (RoadUser tempRoadUser : queue) {
 
@@ -50,7 +57,7 @@ public class ShoppingArea extends Location implements Cloneable {
 					toMove.put(tempRoadUser, this);
 
 					// The Road User is then removed from the queue.
-					queue.remove(tempRoadUser);
+					toRemoveFrom_queue.remove(tempRoadUser);
 
 					// Otherwise
 				} else {
@@ -67,10 +74,16 @@ public class ShoppingArea extends Location implements Cloneable {
 				toMove.put(tempRoadUser, this);
 
 				// The Road User is removed from the queue.
-				queue.remove(tempRoadUser);
+				toRemoveFrom_queue.remove(tempRoadUser);
 
 			}
 
+		}
+
+		// Iterate through all the elements from toRemoveFrom_queue and remove
+		// them from toMove.
+		for (RoadUser roadUser : toRemoveFrom_queue) {
+			queue.remove(roadUser);
 		}
 
 	}
@@ -99,7 +112,7 @@ public class ShoppingArea extends Location implements Cloneable {
 
 	@Override
 	public ShoppingArea clone() {
-		
+
 		ShoppingArea clone = new ShoppingArea(this.getNextLocation());
 		clone.maxQueueSize = this.maxQueueSize;
 		clone.profit = this.profit;
