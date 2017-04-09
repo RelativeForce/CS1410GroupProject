@@ -540,6 +540,9 @@ public class Station {
 	 */
 	private void relocateRoadUsers() {
 
+		// Empty the list from the previous iteration.s
+		this.toRemoveFrom_toMove = new LinkedList<RoadUser>();
+
 		// Retrieve all the road users from toMove and iterate through them.
 		for (RoadUser roadUser : toMove.keySet()) {
 
@@ -650,7 +653,7 @@ public class Station {
 			// If the current road user is not in the queue to be removed from
 			// toMove
 			if (!toRemoveFrom_toMove.contains(roadUser)) {
-				
+
 				// Get the previous location of the current road user.
 				Location pastLocation = toMove.get(roadUser);
 
