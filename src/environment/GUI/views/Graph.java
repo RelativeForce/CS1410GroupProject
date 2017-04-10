@@ -166,7 +166,7 @@ public class Graph implements SimulatorView {
 	 * {@link Graph} and requires the elements of it to exist.
 	 * 
 	 * @author Joshua_Eddy
-	 * @version 09/04/17
+	 * @version 10/04/17
 	 * 
 	 * @see environment.GUI.views.Graph
 	 * @see javax.swing.JPanel
@@ -328,6 +328,13 @@ public class Graph implements SimulatorView {
 		 */
 		private void drawAxis(double max, Graphics2D graphics2D) {
 
+			// Holds the centre x and y coordinates of the paddedCanvas
+			int xCentre = xOffset + (paddedCanvasWidth / 2);
+			int yCentre = yOffset + (paddedCanvasHeight / 2);
+			
+			// Holds the string of the currently selected statistic.
+			String statistic = ((StatisticType) statisticTypes.getSelectedItem()).toString();
+
 			// Draw the Y axis
 			graphics2D.drawLine(xOffset, yOffset, xOffset, yOffset + paddedCanvasHeight);
 			graphics2D.drawLine(xOffset, yOffset, xOffset - 5, yOffset);
@@ -362,7 +369,7 @@ public class Graph implements SimulatorView {
 				String zero = (isMoney ? "£0" : "0");
 
 				// Display the maxString label at the top of the Y axis.
-				graphics2D.drawString(maxString, xOffset + 5, yOffset + 5);
+				displayRotatedText(graphics2D, maxString, xOffset - 17, yOffset - 5, Math.PI / 2);
 
 				// Display the tickString label at the end of the X axis.
 				graphics2D.drawString(tickString, xOffset + paddedCanvasWidth - (tickString.length() * 5),
@@ -375,13 +382,39 @@ public class Graph implements SimulatorView {
 
 				// Initialise an alert message.
 				String type = ((VehicleType) vehicleTypes.getSelectedItem()).toString();
-				String stat = ((StatisticType) statisticTypes.getSelectedItem()).toString();
-				String alert = "No " + stat + " for " + type;
+				
+				String alert = "No " + statistic + " for " + type;
 
 				// Display that alert message in the centre of the graph.
-				graphics2D.drawString(alert, (xOffset + paddedCanvasWidth) / 2, (yOffset + paddedCanvasHeight) / 2);
+				graphics2D.drawString(alert, xCentre, yCentre);
 
 			}
+
+			// Display the axis labels
+			graphics2D.drawString("Tick", xCentre, (yOffset * 2) + paddedCanvasHeight - 5);
+			displayRotatedText(graphics2D, statistic, xOffset - 17, yCentre - (statistic.length() * 5), Math.PI / 2);
+		}
+
+		/**
+		 * Displays rotated text on the {@link GraphPanel}.
+		 * @param graphics2D {@link Graphics2D} that is used in the {@link GraphPanel}.
+		 * @param text <code>String</code> to be displayed.
+		 * @param x <code>int</code> x coordinates of the text.
+		 * @param y <code>int</code> y coordinate of the text.
+		 * @param theta <code>double<code> angle in radians that the text will be rotated.
+		 */
+		private void displayRotatedText(Graphics2D graphics2D, String text, int x, int y, double theta) {
+
+			// Translate and rotate the graphics2D by the specified amount. 
+			graphics2D.translate(x, y);
+			graphics2D.rotate(theta);
+
+			// Display the text.
+			graphics2D.drawString(text, 0, 0);
+
+			// Return the graphics to its prior state.
+			graphics2D.rotate(-theta);
+			graphics2D.translate(-x, -y);
 
 		}
 
