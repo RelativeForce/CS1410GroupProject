@@ -74,11 +74,11 @@ public class UserInterface {
 	/**
 	 * Text field to allow users to enter a tills number
 	 */
-	private JTextField tillsEntry;
+	private JComboBox<pointType> tillsEntry;
 	/**
 	 * Text field to allow users to enter a pumps number
 	 */
-	private JTextField pumpsEntry;
+	private JComboBox<pointType> pumpsEntry;
 	/**
 	 * Text field to allow users to enter a tick count
 	 */
@@ -92,11 +92,11 @@ public class UserInterface {
 	/**
 	 * Drop down box containing options for Q
 	 */
-	private JComboBox<String> pDropDown;
+	private JComboBox<variableType> pDropDown;
 	/**
 	 * Drop down box containing options for Q
 	 */
-	private JComboBox<String> qDropDown;
+	private JComboBox<variableType> qDropDown;
 	/**
 	 * Drop down box containing options for selectable views
 	 */
@@ -142,19 +142,18 @@ public class UserInterface {
 		display = new JFrame();
 		// create string arrays for the options in the previously initialised
 		// Drop down boxes
-		String[] pOptions = { "0.01", "0.02", "0.03", "0.04", "0.05" };
-		String[] qOptions = { "0.01", "0.02", "0.03", "0.04", "0.05" };
+
 		String[] viewOptions = { "Command Line", "Graph", "Animated View" };
 
 		// create new JComboBox<string> objects for the initialised ComboBoxes
 		// and assign them the String arrays.
-		pDropDown = new JComboBox<String>(pOptions);
-		qDropDown = new JComboBox<String>(qOptions);
+		pDropDown = new JComboBox<variableType>(variableType.values());
+		qDropDown = new JComboBox<variableType>(variableType.values());
 		viewDropDown = new JComboBox<String>(viewOptions);
-
+		tillsEntry = new JComboBox<pointType>(pointType.values());
+		pumpsEntry = new JComboBox<pointType>(pointType.values());
 		// Initialise the JTextField with the set sizes for entry.
-		tillsEntry = new JTextField(3);
-		pumpsEntry = new JTextField(3);
+
 		tickCount = new JTextField(8);
 
 		// Initialise the Jbuttons and set the text that will appear on them
@@ -231,7 +230,9 @@ public class UserInterface {
 
 		// Create an action listener for each button and link it to a function
 		submit.addActionListener(e -> submit());
-		cancel.addActionListener(e -> dispose());
+		cancel.addActionListener(e -> {dispose();
+		System.exit(0);
+		});
 
 		// Create an action listener for the window and link it to a function
 		display.addWindowListener(new WindowAdapter() {
@@ -239,6 +240,39 @@ public class UserInterface {
 				dispose();
 			}
 		});
+
+	}
+
+	private enum pointType {
+		TILL(1), TWOTILL(2), FOURTILL(4);
+
+		public final int num;
+
+		private pointType(int num) {
+			this.num = num;
+		}
+
+		@Override
+		public final String toString() {
+			return "" + num;
+		}
+
+	}
+
+	private enum variableType {
+		POINT1(0.01), POINT2(0.02), POINT3(0.03), POINT4(0.04), POINT5(0.05);
+
+		public final double doub;
+
+		private variableType(double doub) {
+			this.doub = doub;
+		}
+
+		@Override
+		public final String toString() {
+			return "" + doub;
+		}
+
 	}
 
 	/**
@@ -252,32 +286,40 @@ public class UserInterface {
 		try {
 			// Takes values from the user entry fields and assign them to
 			// respective variables
-			pumps = Integer.parseInt(tillsEntry.getText());
-			tills = Integer.parseInt(pumpsEntry.getText());
-			p = Double.parseDouble((String) pDropDown.getSelectedItem());
-			q = Double.parseDouble((String) qDropDown.getSelectedItem());
+			pumps = ((pointType) tillsEntry.getSelectedItem()).num;
+			tills = ((pointType) pumpsEntry.getSelectedItem()).num;
+			p = ((variableType) pDropDown.getSelectedItem()).doub;
+			q = ((variableType) qDropDown.getSelectedItem()).doub;
 			trucks = Trucks.isSelected();
 			ticks = Integer.parseInt(tickCount.getText());
 			// catch any exception thrown by the recovered values and do nothing
 		} catch (Exception e) {
-
+			System.out.println("Made it to the catch");
 		}
 		// Test if all of the values are positive to ensure feasibility of the
 		// simulation
-		if (pumps > 0 && tills > 0 && p > 0.00 && q > 0.00 && ticks > 0) {
-			// if ths if statement is met set isReady to true
-			isReady = true;
-		}
-		// if conditions are not met
-		else {
-			// Create an alert message warning the user and provide a button to
-			// close the alert.
+		if (ticks < 100000) {
+			if (ticks > 0) {
+				// if ths if statement is met set isReady to true
+				isReady = true;
+			}
+			// if conditions are not met
+			else {
+				// Create an alert message warning the user and provide a button
+				// to
+				// close the alert.
+				Object[] options = { "OK" };
+				JOptionPane.showOptionDialog(null, "Please make sure all the values enterred are positive and feasible",
+						"Warning: Inputted value error", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
+						options, options[0]);
+			}
+		} else {
 			Object[] options = { "OK" };
-			JOptionPane.showOptionDialog(null, "Please make sure all the values enterred are positive and feasible",
-					"Warning: Inputted value error", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
+			JOptionPane.showOptionDialog(null,
+					"Running the simulation for this long will max the CPU and cause other unforseen issues please choose a value below 100,000 ticks",
+					"Warning:Excessvie value error", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
 					options, options[0]);
 		}
-
 	}
 
 	/**
@@ -285,6 +327,7 @@ public class UserInterface {
 	 */
 	public void dispose() {
 		display.dispose();
+		
 	}
 
 	/**
@@ -372,7 +415,7 @@ public class UserInterface {
 			// if the string matches graph then set the view to graphical view
 		} else if (((String) viewDropDown.getSelectedItem()).equals("Graph")) {
 			view = new Graph();
-		} else if (((String) viewDropDown.getSelectedItem()).equals("animated view")) {
+		} else if (((String) viewDropDown.getSelectedItem()).equals("Animated View")) {
 			view = new Animated();
 		}
 
