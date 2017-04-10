@@ -12,7 +12,8 @@ import environment.model.roadusers.RoadUser;
  * for different {@link RoadUser}s.
  *
  * @author Karandeep_Saini
- * @version 27/03/2017
+ * @author Joshua_Eddy
+ * @version 10/04/2017
  * @see environment.model.locations.Locations
  * @see environment.model.roadusers.RoadUser
  */
@@ -27,6 +28,14 @@ public class ShoppingArea extends Location implements Cloneable {
 	 */
 	private static final int MAX_QUEUE_SIZE = 0;
 
+	/**
+	 * Constructs a new {@link ShoppingArea}.
+	 * 
+	 * @param nextLocation
+	 *            <code>Class&lt;? extends {@link Location}&gt;</code> of the
+	 *            next location type. Set to null if this is the last location
+	 *            in the location chain.
+	 */
 	public ShoppingArea(Class<? extends Location> nextLocation) {
 		super(nextLocation, MAX_QUEUE_SIZE);
 
@@ -56,8 +65,9 @@ public class ShoppingArea extends Location implements Cloneable {
 					// The Road User is then moved to the next location.
 					toMove.put(tempRoadUser, this);
 
-					// The Road User is then removed from the queue.
-					toRemoveFrom_queue.remove(tempRoadUser);
+					// Add the Road User to the list of road users to be removed
+					// from the queue.
+					toRemoveFrom_queue.add(tempRoadUser);
 
 					// Otherwise
 				} else {
@@ -73,8 +83,9 @@ public class ShoppingArea extends Location implements Cloneable {
 				// The Road User is moved to the next location.
 				toMove.put(tempRoadUser, this);
 
-				// The Road User is removed from the queue.
-				toRemoveFrom_queue.remove(tempRoadUser);
+				// Add the Road User to the list of road users to be removed
+				// from the queue.
+				toRemoveFrom_queue.add(tempRoadUser);
 
 			}
 
