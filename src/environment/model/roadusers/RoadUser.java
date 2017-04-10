@@ -30,15 +30,15 @@ import environment.model.roadusers.vehicles.Vehicle;
  * <li>Have boolean for has it paid or not</li>
  * <li>Have a vehicle type</li>
  * <li>Have a shopping time</li>
- * <li>Have the amount spent</li> 
+ * <li>Have the amount spent</li>
  * </ul>
  * 
  * @author Adrian_Wong
- * @version 04/04/2017
+ * @author Joshua_Eddy
+ * @version 10/04/2017
  * @since 20/03/2017
  *
  */
-
 public abstract class RoadUser implements Cloneable {
 
 	// Fields --------------------------------------------------------------
@@ -62,7 +62,7 @@ public abstract class RoadUser implements Cloneable {
 	private Vehicle vehicle;
 
 	/**
-	 * The value of this Boolean object as a boolean primitivee.
+	 * The value of this Boolean object as a boolean primitive.
 	 */
 	protected boolean finishedShopping;
 
@@ -81,6 +81,11 @@ public abstract class RoadUser implements Cloneable {
 	 */
 	private int timeSpentShopping;
 
+	/**
+	 * Whether <code>this</code> {@link RoadUser} is currently shopping or not.
+	 */
+	private boolean isShopping;
+
 	// Public Methods ------------------------------------------------------
 
 	/**
@@ -98,6 +103,7 @@ public abstract class RoadUser implements Cloneable {
 		this.timeSpent = 0;
 		this.hasPaid = false;
 		this.willShop = true;
+		this.isShopping = false;
 		this.vehicle = vehicle;
 		this.shoppingTime = shoppingTime;
 		this.worth = worth;
@@ -131,10 +137,12 @@ public abstract class RoadUser implements Cloneable {
 	public void shop() {
 
 		timeSpentShopping++;
+		isShopping = true;
 
 		if (timeSpentShopping > shoppingTime) {
 
 			finishedShopping = true;
+			isShopping = false;
 
 		}
 
@@ -199,4 +207,12 @@ public abstract class RoadUser implements Cloneable {
 	@Override
 	public abstract RoadUser clone();
 
+	/**
+	 * Retrieves whether <code>this</code> is currently shopping or not.
+	 * 
+	 * @return <code>boolean</code>
+	 */
+	public boolean isShopping() {
+		return isShopping;
+	}
 }
