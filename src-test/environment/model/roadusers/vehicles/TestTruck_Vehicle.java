@@ -1,7 +1,5 @@
 package environment.model.roadusers.vehicles;
 
-import org.junit.Test;
-
 import environment.model.roadusers.vehicles.Truck_Vehicle;
 
 /**
