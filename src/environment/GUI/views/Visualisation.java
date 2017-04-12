@@ -156,7 +156,7 @@ public enum Visualisation {
 	 */
 	private static final Color[] USABLE_COLORS = new Color[]{
 			
-			Color.RED, Color.BLUE, Color.YELLOW, Color.ORANGE
+			Color.RED, Color.BLUE, Color.YELLOW, Color.MAGENTA
 	};
 	
 	/**
