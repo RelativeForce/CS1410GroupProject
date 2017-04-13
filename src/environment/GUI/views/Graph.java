@@ -24,29 +24,121 @@ import environment.Simulator;
 import environment.model.Station;
 import environment.model.Statistic;
 import environment.model.locations.ShoppingArea;
-import environment.model.roadusers.FamilySedan_RoadUser;
-import environment.model.roadusers.Motorbike_RoadUser;
-import environment.model.roadusers.RoadUser;
-import environment.model.roadusers.SmallCar_RoadUser;
-import environment.model.roadusers.Truck_RoadUser;
+import environment.model.roadusers.*;
 
+/**
+ * A graphical view of the simulation. This class uses a singleton pattern and
+ * the instance of this class is returned by {@link #getInstance()}.
+ * 
+ * @author Joshua_Eddy
+ * 
+ * @version 13/04/17
+ * 
+ * @see javax.swing.JFrame
+ * @see javax.swing.JPanel
+ * @see environment.GUI.views.SimulatorView
+ *
+ */
 public class Graph implements SimulatorView {
+
+	// Singleton --------------------------------------------------------------
+
+	/**
+	 * The single instance of {@link Graph}.
+	 * 
+	 * @see environment.GUI.views.Graph
+	 */
+	private static Graph GRAPH = new Graph();
 
 	// Public Fields ----------------------------------------------------------
 
+	/**
+	 * Holds whether the <code>this</code> {@link Graph}.
+	 */
 	public volatile boolean isClosed;
 
-	// Private Fields --------------------------------------------------------
+	// Private Fields ---------------------------------------------------------
 
+	/**
+	 * The {@link JPanel} that denotes the drawn graph on screen. It is a member
+	 * class of {@link Graph} and extends {@link JPanel}.
+	 * 
+	 * @see environment.GUI.views.Graph
+	 * @see javax.swing.JPanel
+	 */
 	private GraphPanel graphPanel;
+
+	/**
+	 * The {@link JFrame} that house the {@link Graph} view on the Screen.
+	 * 
+	 * @see javax.swing.JFrame
+	 */
 	private JFrame window;
+
+	/**
+	 * The button that closes the window and, if the simulation is still
+	 * running, the simulation also.
+	 * 
+	 * @see javax.swing.JButton
+	 */
 	private JButton closeButton;
+
+	/**
+	 * This combo box holds the options for which {@link Statistic} is displayed
+	 * on graph.
+	 * 
+	 * @see javax.swing.JComboBox
+	 * @see StatisticType
+	 */
 	private JComboBox<StatisticType> statisticTypes;
+
+	/**
+	 * This combo box holds the options for which {@link Statistic} is displayed
+	 * on graph.
+	 * 
+	 * @see javax.swing.JComboBox
+	 * @see VehicleType
+	 */
 	private JComboBox<VehicleType> vehicleTypes;
+
+	/**
+	 * This {@link Thread} waits for a snapshot of the {@link Station} to be
+	 * added to the {@link #buffer} and then once there is a element in
+	 * {@link #buffer} it removes it and uses the snapshot to update the graph
+	 * on screen.
+	 * 
+	 * @see java.util.concurrent.LinkedTransferQueue
+	 * @see Thread
+	 * 
+	 */
 	private Thread drawer;
+
+	/**
+	 * Acts as a buffer between the main thread and the {@link #drawer}.
+	 * 
+	 * @see java.util.concurrent.LinkedTransferQueue
+	 * @see Thread
+	 */
 	private LinkedTransferQueue<Station> buffer;
+
+	/**
+	 * The most recent tick number that the simulation has passed to
+	 * {@link Graph} using {@link #show(int, Station)}
+	 * 
+	 * @see environment.GUI.views.SimulatorView
+	 */
 	private int currentTick;
+
+	/**
+	 * The height of the {@link Graph} {@link JFrame}. All the elements of this
+	 * {@link Graph} are scales to {@link #width} and {@link #height} value.
+	 */
 	private int height;
+
+	/**
+	 * The width of the {@link Graph} {@link JFrame}. All the elements of this
+	 * {@link Graph} are scales to {@link #width} and {@link #height} value.
+	 */
 	private int width;
 
 	// Member Classes ---------------------------------------------------------
@@ -331,7 +423,7 @@ public class Graph implements SimulatorView {
 			// Holds the centre x and y coordinates of the paddedCanvas
 			int xCentre = xOffset + (paddedCanvasWidth / 2);
 			int yCentre = yOffset + (paddedCanvasHeight / 2);
-			
+
 			// Holds the string of the currently selected statistic.
 			String statistic = ((StatisticType) statisticTypes.getSelectedItem()).toString();
 
@@ -382,7 +474,7 @@ public class Graph implements SimulatorView {
 
 				// Initialise an alert message.
 				String type = ((VehicleType) vehicleTypes.getSelectedItem()).toString();
-				
+
 				String alert = "No " + statistic + " for " + type;
 
 				// Display that alert message in the centre of the graph.
@@ -397,15 +489,22 @@ public class Graph implements SimulatorView {
 
 		/**
 		 * Displays rotated text on the {@link GraphPanel}.
-		 * @param graphics2D {@link Graphics2D} that is used in the {@link GraphPanel}.
-		 * @param text <code>String</code> to be displayed.
-		 * @param x <code>int</code> x coordinates of the text.
-		 * @param y <code>int</code> y coordinate of the text.
-		 * @param theta <code>double<code> angle in radians that the text will be rotated.
+		 * 
+		 * @param graphics2D
+		 *            {@link Graphics2D} that is used in the {@link GraphPanel}.
+		 * @param text
+		 *            <code>String</code> to be displayed.
+		 * @param x
+		 *            <code>int</code> x coordinates of the text.
+		 * @param y
+		 *            <code>int</code> y coordinate of the text.
+		 * @param theta
+		 *            <code>double<code> angle in radians that the text will be
+		 *            rotated.
 		 */
 		private void displayRotatedText(Graphics2D graphics2D, String text, int x, int y, double theta) {
 
-			// Translate and rotate the graphics2D by the specified amount. 
+			// Translate and rotate the graphics2D by the specified amount.
 			graphics2D.translate(x, y);
 			graphics2D.rotate(theta);
 
@@ -715,7 +814,7 @@ public class Graph implements SimulatorView {
 
 	// Constructor ------------------------------------------------------------
 
-	public Graph() {
+	private Graph() {
 
 		buffer = new LinkedTransferQueue<Station>();
 		isClosed = false;
@@ -769,23 +868,38 @@ public class Graph implements SimulatorView {
 
 	// Private Methods --------------------------------------------------------
 
+	/**
+	 * Constructs the {@link JFrame} and makes it visible on screen.
+	 * 
+	 * @see javax.swing.JFrame
+	 */
 	private void buildWindow() {
 
+		// Initialise the window state.
 		window = new JFrame("Graph View");
-
 		window.setSize(width, height);
 		window.setMaximumSize(new Dimension(width, height));
 		window.setLayout(new FlowLayout());
 
+		// Add the panels to the window
 		window.add(graphPanel);
 		window.add(newControlPanel());
 
+		// Make the panel visible to the user.
 		window.setVisible(true);
 
 	}
 
+	/**
+	 * Constructs a {@link JPanel} that contains all the control inputs.
+	 * 
+	 * @return {@link JPanel} control panel.
+	 * 
+	 * @see javax.swing.JPanel
+	 */
 	private JPanel newControlPanel() {
 
+		// Initialise the close button
 		closeButton = new JButton("Close");
 		closeButton.addActionListener(e -> {
 			window.dispose();
@@ -793,10 +907,13 @@ public class Graph implements SimulatorView {
 			System.exit(0);
 		});
 
+		// Initialises the control panel that will be displayed on screen under
+		// the graph.
 		JPanel controlPanel = new JPanel();
 		controlPanel.setPreferredSize(new Dimension(width, 35));
 		controlPanel.setLayout(new FlowLayout());
 
+		// Add all the components to the panel
 		controlPanel.add(newTypePanel());
 		controlPanel.add(newStatisticPanel());
 		controlPanel.add(closeButton);
@@ -805,35 +922,72 @@ public class Graph implements SimulatorView {
 
 	}
 
+	/**
+	 * Constructs the panel that holds the {@link #vehicleTypes} and a label
+	 * that denotes it to the user.
+	 * 
+	 * @return {@link JPanel} vehicle type panel.
+	 * 
+	 * @see javax.swing.JPanel
+	 */
 	private JPanel newTypePanel() {
 
+		// Initialise the panel.
 		JPanel typePanel = new JPanel();
 		typePanel.setPreferredSize(new Dimension(200, 35));
 		typePanel.setLayout(new FlowLayout());
+		
+		// Initialise the lane for the combo box.
 		JLabel typeLabel = new JLabel("Vehicle Type:");
 
+		// Initialise the combo box values and action listener
 		vehicleTypes = new JComboBox<VehicleType>(VehicleType.values());
 		vehicleTypes.addActionListener(e -> graphPanel.repaint());
 
+		// Add the elements to the panel.
 		typePanel.add(typeLabel);
 		typePanel.add(vehicleTypes);
+		
 		return typePanel;
 	}
 
+	/**
+	 * Constructs the panel that holds the {@link #statisticTypes} and a label
+	 * that denotes it to the user.
+	 * 
+	 * @return {@link JPanel} statistic type panel.
+	 * 
+	 * @see javax.swing.JPanel
+	 */
 	private JPanel newStatisticPanel() {
 
+		// Initialise the panel.
 		JPanel statisticPanel = new JPanel();
 		statisticPanel.setPreferredSize(new Dimension(200, 35));
 		statisticPanel.setLayout(new FlowLayout());
+		
+		// Initialise the lane for the combo box.
 		JLabel statisticLabel = new JLabel("Statistic:");
 
+		// Initialise the combo box values and action listener
 		statisticTypes = new JComboBox<StatisticType>(StatisticType.values());
 		statisticTypes.addActionListener(e -> graphPanel.repaint());
 
+		// Add the elements to the panel.
 		statisticPanel.add(statisticLabel);
 		statisticPanel.add(statisticTypes);
 
 		return statisticPanel;
 	}
 
+	// Static Methods
+
+	/**
+	 * Retrieves the singular instance of this class.
+	 * 
+	 * @return {@link Graph}
+	 */
+	public static Graph getInstance() {
+		return GRAPH;
+	}
 }
