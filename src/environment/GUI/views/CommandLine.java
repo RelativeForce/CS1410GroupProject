@@ -26,15 +26,17 @@ import environment.model.roadusers.Truck_RoadUser;
  * @author John_Berg
  * @author Joshua_Eddy
  * 
- * @version 05/04/2017
+ * @version 13/04/2017
  * @since 08/03/2017
  */
 public final class CommandLine implements SimulatorView {
 
-	/*
-	 * Every simulation will print to the same console, so maybe make the
-	 * CommandLine a singleton?
+	/**
+	 * The single instance of {@link CommandLine}.
+	 * 
+	 * @see environment.GUI.views.CommandLine
 	 */
+	private static CommandLine COMMANDLINE = new CommandLine();
 
 	/**
 	 * Represents whether the {@link CommandLine} should display the final more
@@ -56,7 +58,7 @@ public final class CommandLine implements SimulatorView {
 	 * allows for the status of a simulation to be displayed via the console.
 	 * </p>
 	 */
-	public CommandLine() {
+	private CommandLine() {
 
 		this.end = false;
 
@@ -138,5 +140,14 @@ public final class CommandLine implements SimulatorView {
 	@Override
 	public final void setEnd() {
 		this.end = true;
+	}
+	
+	/**
+	 * Retrieves the singular instance of this class.
+	 * 
+	 * @return {@link CommandLine}
+	 */
+	public static CommandLine getInstance(){
+		return COMMANDLINE;
 	}
 }
