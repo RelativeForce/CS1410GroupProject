@@ -13,7 +13,7 @@ import environment.model.roadusers.*;
  * This object runs the simulation that the user will interact with.
  * 
  * @author Joshua_Eddy
- * @version 09/04/2017
+ * @version 13/04/2017
  *
  */
 public final class Simulator {
@@ -142,6 +142,27 @@ public final class Simulator {
 
 	}
 
+	/**
+	 * Starts the simulation.
+	 * 
+	 * @see environment.Simulator
+	 */
+	public void start(){
+		
+		// Displays the user interface.
+		displayUserInterface();
+
+		// Retrieve all the inputs from the
+		getSimulationDetails();
+
+		// Generates the Locations that will make up the station.
+		generateSimulation();
+
+		// Starts the actual simulation.
+		simulate();
+		
+	}
+	
 	// Private Methods -------------------------------------------------------
 
 	/**
@@ -331,20 +352,9 @@ public final class Simulator {
 		// Creates a new Simulation.
 		Simulator simulation = new Simulator();
 
-		// Displays the user interface.
-		simulation.displayUserInterface();
-
-		// Retrieve all the inputs from the
-		simulation.getSimulationDetails();
-
-		// Generates the Locations that will make up the station.
-		simulation.generateSimulation();
-
 		// Starts the simulation.
-		simulation.simulate();
+		simulation.start();
 
-		// Exit the application.
-		//System.exit(0);
 	}
 
 }
