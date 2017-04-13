@@ -9,7 +9,9 @@ import environment.model.roadusers.RoadUser;
  * 
  * 
  * @author Karandeep_Saini
- * @version 27/03/2017
+ * @author Joshua_Eddy
+ * 
+ * @version 13/04/2017
  * 
  * @see environment.model.locations.Location
  * @see environment.model.roadusers.RoadUser
@@ -81,14 +83,10 @@ public final class Pump extends Location implements Cloneable {
 	 */
 	@Override
 	public Pump clone() {
+		
+		// Return a clone of this location as a Pump.
+		return (Pump) super.cloneLocation(new Pump(this.getNextLocation()));
 
-		Pump clone = new Pump(this.getNextLocation());
-		clone.maxQueueSize = this.maxQueueSize;
-		clone.profit = this.profit;
-		clone.queue = super.cloneQueue();
-		clone.roadUsersProcessed = this.roadUsersProcessed;
-
-		return clone;
 	}
 
 }

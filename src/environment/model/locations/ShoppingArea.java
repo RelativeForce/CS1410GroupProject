@@ -13,7 +13,9 @@ import environment.model.roadusers.RoadUser;
  *
  * @author Karandeep_Saini
  * @author Joshua_Eddy
- * @version 10/04/2017
+ * 
+ * @version 13/04/2017
+ * 
  * @see environment.model.locations.Locations
  * @see environment.model.roadusers.RoadUser
  */
@@ -124,13 +126,8 @@ public class ShoppingArea extends Location implements Cloneable {
 	@Override
 	public ShoppingArea clone() {
 
-		ShoppingArea clone = new ShoppingArea(this.getNextLocation());
-		clone.maxQueueSize = this.maxQueueSize;
-		clone.profit = this.profit;
-		clone.queue = super.cloneQueue();
-		clone.roadUsersProcessed = this.roadUsersProcessed;
-
-		return clone;
+		// Return a clone of this location as a ShoppingArea
+		return (ShoppingArea) super.cloneLocation(new ShoppingArea(this.getNextLocation()));
 
 	}
 
