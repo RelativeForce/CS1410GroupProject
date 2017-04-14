@@ -3,9 +3,10 @@ package environment.GUI.views;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 import environment.model.locations.Location;
 import environment.model.locations.Pump;
@@ -20,12 +21,18 @@ import environment.model.roadusers.vehicles.Vehicle;
  * <p>
  * The {@link Visualisation} enum has the responsibility of having details
  * regarding how to produce visual representations of the {@link Location}
- * classes.
+ * classes. Since the {@link Visualisation} enum is responsible for representing
+ * the {@link Location} classes, it must also be responsible for {@link RoadUser}
+ * classes, as the {@link Location} objects contain the {@link RoadUser} objects.
  * </p>
  * 
  * @author 	John Berg
  * @version 09/04/2017
  * @since	08/04/2017
+ * @see Location
+ * @see RoadUser
+ * @see Graphics
+ * @see Color
  */
 public enum Visualisation {
 	
@@ -83,7 +90,7 @@ public enum Visualisation {
 			 * Get the road user's vehicle, then get the size of the vehicle and scale it
 			 * by 3 x 4.
 			 * 
-			 * Set the color to ...
+			 * Set the color to the roaduser's color.
 			 * then draw a rectangle representing the vehicle.
 			 */
 			Vehicle v = ru.getVehicle();
@@ -101,8 +108,14 @@ public enum Visualisation {
 		//INCOMPLETE
 		
 		g.setColor(Color.GRAY);
-		g.fillRect(x + AnimationPanel.BLOCK_SIZE/2, y,
-				AnimationPanel.BLOCK_SIZE/2, AnimationPanel.BLOCK_SIZE);
+		g.fillRect(x + AnimationPanel.BLOCK_SIZE/2, y + AnimationPanel.BLOCK_SIZE/4,
+				AnimationPanel.BLOCK_SIZE/2, AnimationPanel.BLOCK_SIZE/2);
+		
+		g.setColor(Color.BLACK);
+		g.fillRect(x + AnimationPanel.BLOCK_SIZE - 22, y + AnimationPanel.BLOCK_SIZE/2 - 5, 20, 4);
+		
+		g.setColor(Color.PINK);
+		g.fillRect(x + AnimationPanel.BLOCK_SIZE - 6, y + AnimationPanel.BLOCK_SIZE/2 - 5 - 5, 4, 4);
 		
 		int position = x + AnimationPanel.BLOCK_SIZE - 4;
 		
@@ -120,21 +133,31 @@ public enum Visualisation {
 	 * This {@link LocationVisual} is used for the {@link Location} classes which do
 	 * not have a specific representation.
 	 * </p>
+	 * 
+	 * <p>
+	 * The {@link #DEFAULT} {@link Visualisation} will draw a square and then place all the
+	 * {@link RoadUsers} at a random position inside the square to simulate movement.
+	 * </p>
 	 */
 	DEFAULT(null, (g, l, x, y) -> {
 		
+		//Draw a gray square representing the Location.
 		g.setColor(Color.GRAY);
 		g.fillRect(x, y, AnimationPanel.BLOCK_SIZE, AnimationPanel.BLOCK_SIZE);
-		List<? extends RoadUser> roadUsers = l.getQueue();
+		
+		//rng for placing RoadUsers.
 		Random rng = new Random();
 		
-		roadUsers.forEach(ru -> {
+		//Loop through the queue of RoadUsers at the Location.
+		l.getQueue().forEach(ru -> {
 			
-			int position = rng.nextInt(AnimationPanel.BLOCK_SIZE*AnimationPanel.BLOCK_SIZE);
-			
+			/*
+			 * Set the color the the color of the RoadUser, then draw the roaduser
+			 * at a random position inside the square.
+			 */
 			g.setColor(getColorOf(ru.getClass()));
-			g.fillRect(x + (position%AnimationPanel.BLOCK_SIZE),
-				y + (position/AnimationPanel.BLOCK_SIZE), 4, 4);
+			g.fillRect(x + 4 + rng.nextInt(AnimationPanel.BLOCK_SIZE - 8),
+				y + 4 + rng.nextInt(AnimationPanel.BLOCK_SIZE - 8), 4, 4);
 		});
 	});
 	
@@ -167,7 +190,6 @@ public enum Visualisation {
 	 * @see HashMap
 	 * @see Color
 	 * @see RoadUser
-	 * 
 	 */
 	private static final Map<Class<? extends RoadUser>, Color> ROAD_USER_COLOR_MAP =
 			new HashMap<>();
@@ -289,10 +311,23 @@ public enum Visualisation {
 	 * @see #COLOR_INDEX
 	 * @see #ROAD_USER_COLOR_MAP
 	 */
-	public final void resetColors(){
+	public static final void resetColors(){
 		
 		ROAD_USER_COLOR_MAP.clear(); //Clear all existing entries.
 		COLOR_INDEX = 0; //Reset the COLOR_INDEX.
+	}
+	/**
+	 * Get the {@link RoadUser} and the {@link Color} used in the {@link Visualisation}.
+	 * 
+	 * @return The {@link RoadUser} and {@link Color} association.
+	 * @see Color
+	 * @see Entry
+	 * @see Set
+	 * @see RoadUser
+	 */
+	public static final Set<Entry<Class<? extends RoadUser>, Color>> getRoadUserColors(){
+		
+		return ROAD_USER_COLOR_MAP.entrySet();
 	}
 	/**
 	 * Get the {@link Visualisation} for a specified {@link Location} class.
