@@ -61,7 +61,7 @@ public class TestAnimationPanel {
 			station.enter(new FamilySedan_RoadUser());
 			station.processLocations();
 			
-			for(int i = 0; i < 1000; ++i){
+			for(int i = 0; i < 100; ++i){
 				
 				//station.
 				station.processLocations();

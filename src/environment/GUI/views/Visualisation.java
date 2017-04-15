@@ -61,24 +61,31 @@ public enum Visualisation {
 	 */
 	PUMP(Pump.class, (g, l, x, y) -> {
 		
-		//The size of the pump representation.
-		final int pumpSize = 8;
+		//Pump dimensions.
+		final int pumpWidth = AnimationPanel.BLOCK_SIZE;
+		final int pumpHeight = AnimationPanel.BLOCK_SIZE/2;
+		
+		//Pump representation location.
+		final int pumpLocationX = x + AnimationPanel.BLOCK_SIZE - 10;
+		final int pumpLocationY = y + AnimationPanel.BLOCK_SIZE/2 - 10;
+		final int pumpSize = 8; //The size of the pump representation.
+		
+		final int vehicleHeight = 4; //The width of all vehicles.
+		final int vehicleQueuSize = 3; //The scaling factor of the vehicles.
 		
 		/*
 		 * Set the background color to gray, then draw a rectangle with dimensions
-		 * BLOCK_SIZE x BLOCK_SIZE/2.
+		 * pumpWidth x pumpHeight.
 		 */
 		g.setColor(Color.GRAY);
-		g.fillRect(x, y + AnimationPanel.BLOCK_SIZE/4, AnimationPanel.BLOCK_SIZE,
-				AnimationPanel.BLOCK_SIZE/2);
+		g.fillRect(x, y + AnimationPanel.BLOCK_SIZE/4, pumpWidth, pumpHeight);
 		
 		/* 
 		 * Draw an pumpSize x pumpSize black rectangle at the end of the to represent
 		 * the pump.
 		 */
 		g.setColor(Color.BLACK);
-		g.fillRect(x + AnimationPanel.BLOCK_SIZE - 10,
-				y + AnimationPanel.BLOCK_SIZE/2 - 10, pumpSize, pumpSize);
+		g.fillRect(pumpLocationX, pumpLocationY, pumpSize, pumpSize);
 		
 		//The x starting position for vehicles queueing for the pump.
 		int position = x + AnimationPanel.BLOCK_SIZE;
@@ -88,16 +95,17 @@ public enum Visualisation {
 			
 			/*
 			 * Get the road user's vehicle, then get the size of the vehicle and scale it
-			 * by 3 x 4.
+			 * by vehicleQueueSize x 4.
 			 * 
 			 * Set the color to the roaduser's color.
 			 * then draw a rectangle representing the vehicle.
 			 */
 			Vehicle v = ru.getVehicle();
-			int vehicleSize = (int) Math.floor(v.size*3*4);
+			int vehicleSize = (int) Math.floor(v.size*vehicleQueuSize*4);
 			g.setColor(getColorOf(ru.getClass()));
-			g.fillRect(position - vehicleSize, y + AnimationPanel.BLOCK_SIZE/2, vehicleSize, 4);
-			position -= vehicleSize + 4; //Move to the position of the next vehicle.
+			g.fillRect(position - vehicleSize, y + pumpHeight,
+					vehicleSize, vehicleHeight);
+			position -= vehicleSize + vehicleHeight; //Move to the position of the next vehicle.
 		}
 	}),
 	/**
@@ -105,19 +113,32 @@ public enum Visualisation {
 	 */
 	TILL(Till.class, (g, l, x, y) -> {
 		
-		//INCOMPLETE
+		final int tillWidth = AnimationPanel.BLOCK_SIZE/2;
+		final int tillHeight = AnimationPanel.BLOCK_SIZE/2;
 		
+		final int tillLocationX = x + AnimationPanel.BLOCK_SIZE - 22;
+		final int tillLocationY = y + AnimationPanel.BLOCK_SIZE/2 - 5;
+		final int tillSizeX = 20;
+		final int tillSizeY = 4;
+		final int shopkeeperLocationX = x + AnimationPanel.BLOCK_SIZE - 6;
+		final int shopkeeperLocationY = y + AnimationPanel.BLOCK_SIZE/2 - 10;
+		
+		final int roadUserSize = 4;
+		
+		/*
+		 * Set the color to gray and then draw a square which represents the Till area.
+		 */
 		g.setColor(Color.GRAY);
 		g.fillRect(x + AnimationPanel.BLOCK_SIZE/2, y + AnimationPanel.BLOCK_SIZE/4,
-				AnimationPanel.BLOCK_SIZE/2, AnimationPanel.BLOCK_SIZE/2);
+				tillWidth, tillHeight);
 		
 		g.setColor(Color.BLACK);
-		g.fillRect(x + AnimationPanel.BLOCK_SIZE - 22, y + AnimationPanel.BLOCK_SIZE/2 - 5, 20, 4);
+		g.fillRect(tillLocationX, tillLocationY, tillSizeX, tillSizeY);
 		
 		g.setColor(Color.PINK);
-		g.fillRect(x + AnimationPanel.BLOCK_SIZE - 6, y + AnimationPanel.BLOCK_SIZE/2 - 5 - 5, 4, 4);
+		g.fillRect(shopkeeperLocationX, shopkeeperLocationY, roadUserSize, roadUserSize);
 		
-		int position = x + AnimationPanel.BLOCK_SIZE - 4;
+		int position = x + AnimationPanel.BLOCK_SIZE - roadUserSize;
 		
 		for(RoadUser ru: l.getQueue()){
 			
