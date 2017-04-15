@@ -109,42 +109,69 @@ public enum Visualisation {
 		}
 	}),
 	/**
+	 * The visual representation of the {@link Till} class.
 	 * 
+	 * <p>
+	 * The procedure to produce the visual representation of th {@link Till} class.
+	 * </p>
+	 * 
+	 * <p>
+	 * Drawing the {@link Till} involves:
+	 * <ol>
+	 * 		<li>Drawing a small square to represent the {@link Till} area</li>
+	 * 		<li>Drawing a black rectangle to represent the till</li>
+	 * 		<li>Drawing an orange square to represent a shopkeeper</li>
+	 * 		<li>Drawing the {@link RoadUser} objects currently queueing to check out</li>
+	 * </ol>
+	 * </p>
+	 * 
+	 * @see Visual
+	 * @see #visual
+	 * @see Till
 	 */
 	TILL(Till.class, (g, l, x, y) -> {
 		
+		//Till dimensions.
 		final int tillWidth = AnimationPanel.BLOCK_SIZE/2;
 		final int tillHeight = AnimationPanel.BLOCK_SIZE/2;
 		
+		//Till representation location.
 		final int tillLocationX = x + AnimationPanel.BLOCK_SIZE - 22;
 		final int tillLocationY = y + AnimationPanel.BLOCK_SIZE/2 - 5;
-		final int tillSizeX = 20;
-		final int tillSizeY = 4;
+		final int tillSizeX = 20; //Width
+		final int tillSizeY = 4; //Height
+		
+		//Shopkeeper representation location.
 		final int shopkeeperLocationX = x + AnimationPanel.BLOCK_SIZE - 6;
 		final int shopkeeperLocationY = y + AnimationPanel.BLOCK_SIZE/2 - 10;
 		
+		//The size of all roadusers.
 		final int roadUserSize = 4;
 		
-		/*
-		 * Set the color to gray and then draw a square which represents the Till area.
-		 */
+		//Set the color to gray and then draw a square which represents the Till area.
 		g.setColor(Color.GRAY);
 		g.fillRect(x + AnimationPanel.BLOCK_SIZE/2, y + AnimationPanel.BLOCK_SIZE/4,
 				tillWidth, tillHeight);
 		
+		//Set the color to black and draw the till representation.
 		g.setColor(Color.BLACK);
 		g.fillRect(tillLocationX, tillLocationY, tillSizeX, tillSizeY);
 		
-		g.setColor(Color.PINK);
+		//Set the color to orange and draw a square to represent a shopkeeper.
+		g.setColor(Color.ORANGE);
 		g.fillRect(shopkeeperLocationX, shopkeeperLocationY, roadUserSize, roadUserSize);
 		
+		//Queue starting position.
 		int position = x + AnimationPanel.BLOCK_SIZE - roadUserSize;
 		
+		//Loop through the queue of roadusers at the location.
 		for(RoadUser ru: l.getQueue()){
 			
+			//Get the color of the roaduser and draw a square to represent the roaduser.
 			g.setColor(getColorOf(ru.getClass()));
-			g.fillRect(position - 4, y + AnimationPanel.BLOCK_SIZE/2, 4, 4);
-			position -= 6;
+			g.fillRect(position - roadUserSize, y + AnimationPanel.BLOCK_SIZE/2,
+					roadUserSize, roadUserSize);
+			position -= roadUserSize + 2; //Move to the next position and add a margin of 2.
 		}
 	}),
 	/**
@@ -159,6 +186,10 @@ public enum Visualisation {
 	 * The {@link #DEFAULT} {@link Visualisation} will draw a square and then place all the
 	 * {@link RoadUsers} at a random position inside the square to simulate movement.
 	 * </p>
+	 * 
+	 * @see Visual
+	 * @see #visual
+	 * @see Location
 	 */
 	DEFAULT(null, (g, l, x, y) -> {
 		
@@ -213,7 +244,7 @@ public enum Visualisation {
 	 * @see RoadUser
 	 */
 	private static final Map<Class<? extends RoadUser>, Color> ROAD_USER_COLOR_MAP =
-			new HashMap<>();
+			new HashMap<Class<? extends RoadUser>, Color>();
 	/**
 	 * The {@link Location} subclass for which the visual representation
 	 * is intended for.
@@ -315,7 +346,13 @@ public enum Visualisation {
 			
 			//Select the next color from the USABLE_COLORS.
 			ROAD_USER_COLOR_MAP.put(roadUserClass,
-					USABLE_COLORS[COLOR_INDEX++%USABLE_COLORS.length]);
+					USABLE_COLORS[COLOR_INDEX++]);
+			
+			/*
+			 * If the COLOR_INDEX is out of bounds of the USABLE_COLORS the reset it
+			 * to 0.
+			 */
+			if(!(COLOR_INDEX < USABLE_COLORS.length)) COLOR_INDEX = 0;
 		}
 		
 		//Return the Color of the roadUser.

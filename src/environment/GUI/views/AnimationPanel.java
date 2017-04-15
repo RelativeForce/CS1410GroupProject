@@ -78,7 +78,7 @@ public class AnimationPanel extends JPanel {
 		g.setFont(TEXT_FONT);
 	}
 	/**
-	 * 
+	 * Draw a table of ...
 	 */
 	private void drawColorTable(final int positionY){
 		
