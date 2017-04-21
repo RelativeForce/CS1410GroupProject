@@ -16,6 +16,8 @@ import environment.model.roadusers.Truck_RoadUser;
  * Tests for all the aspects of the {@link Station}.
  * 
  * @author Joshua_Eddy
+ * 
+ * @version 21/04/17
  *
  * @see environment.model.Station
  */
