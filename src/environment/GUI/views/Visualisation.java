@@ -3,9 +3,10 @@ package environment.GUI.views;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 import environment.model.locations.Location;
 import environment.model.locations.Pump;
@@ -20,12 +21,18 @@ import environment.model.roadusers.vehicles.Vehicle;
  * <p>
  * The {@link Visualisation} enum has the responsibility of having details
  * regarding how to produce visual representations of the {@link Location}
- * classes.
+ * classes. Since the {@link Visualisation} enum is responsible for representing
+ * the {@link Location} classes, it must also be responsible for {@link RoadUser}
+ * classes, as the {@link Location} objects contain the {@link RoadUser} objects.
  * </p>
  * 
  * @author 	John Berg
- * @version 09/04/2017
+ * @version 13/04/2017
  * @since	08/04/2017
+ * @see Location
+ * @see RoadUser
+ * @see Graphics
+ * @see Color
  */
 public enum Visualisation {
 	
@@ -54,24 +61,31 @@ public enum Visualisation {
 	 */
 	PUMP(Pump.class, (g, l, x, y) -> {
 		
-		//The size of the pump representation.
-		final int pumpSize = 8;
+		//Pump dimensions.
+		final int pumpWidth = AnimationPanel.BLOCK_SIZE;
+		final int pumpHeight = AnimationPanel.BLOCK_SIZE/2;
+		
+		//Pump representation location.
+		final int pumpLocationX = x + AnimationPanel.BLOCK_SIZE - 10;
+		final int pumpLocationY = y + AnimationPanel.BLOCK_SIZE/2 - 10;
+		final int pumpSize = 8; //The size of the pump representation.
+		
+		final int vehicleHeight = 4; //The width of all vehicles.
+		final int vehicleQueuSize = 3; //The scaling factor of the vehicles.
 		
 		/*
 		 * Set the background color to gray, then draw a rectangle with dimensions
-		 * BLOCK_SIZE x BLOCK_SIZE/2.
+		 * pumpWidth x pumpHeight.
 		 */
 		g.setColor(Color.GRAY);
-		g.fillRect(x, y + AnimationPanel.BLOCK_SIZE/4, AnimationPanel.BLOCK_SIZE,
-				AnimationPanel.BLOCK_SIZE/2);
+		g.fillRect(x, y + AnimationPanel.BLOCK_SIZE/4, pumpWidth, pumpHeight);
 		
 		/* 
 		 * Draw an pumpSize x pumpSize black rectangle at the end of the to represent
 		 * the pump.
 		 */
 		g.setColor(Color.BLACK);
-		g.fillRect(x + AnimationPanel.BLOCK_SIZE - 10,
-				y + AnimationPanel.BLOCK_SIZE/2 - 10, pumpSize, pumpSize);
+		g.fillRect(pumpLocationX, pumpLocationY, pumpSize, pumpSize);
 		
 		//The x starting position for vehicles queueing for the pump.
 		int position = x + AnimationPanel.BLOCK_SIZE;
@@ -81,36 +95,83 @@ public enum Visualisation {
 			
 			/*
 			 * Get the road user's vehicle, then get the size of the vehicle and scale it
-			 * by 3 x 4.
+			 * by vehicleQueueSize x 4.
 			 * 
-			 * Set the color to ...
+			 * Set the color to the roaduser's color.
 			 * then draw a rectangle representing the vehicle.
 			 */
 			Vehicle v = ru.getVehicle();
-			int vehicleSize = (int) Math.floor(v.size*3*4);
+			int vehicleSize = (int) Math.floor(v.size*vehicleQueuSize*4);
 			g.setColor(getColorOf(ru.getClass()));
-			g.fillRect(position - vehicleSize, y + AnimationPanel.BLOCK_SIZE/2, vehicleSize, 4);
-			position -= vehicleSize + 4; //Move to the position of the next vehicle.
+			g.fillRect(position - vehicleSize, y + pumpHeight,
+					vehicleSize, vehicleHeight);
+			position -= vehicleSize + vehicleHeight; //Move to the position of the next vehicle.
 		}
 	}),
 	/**
+	 * The visual representation of the {@link Till} class.
 	 * 
+	 * <p>
+	 * The procedure to produce the visual representation of th {@link Till} class.
+	 * </p>
+	 * 
+	 * <p>
+	 * Drawing the {@link Till} involves:
+	 * <ol>
+	 * 		<li>Drawing a small square to represent the {@link Till} area</li>
+	 * 		<li>Drawing a black rectangle to represent the till</li>
+	 * 		<li>Drawing an orange square to represent a shopkeeper</li>
+	 * 		<li>Drawing the {@link RoadUser} objects currently queueing to check out</li>
+	 * </ol>
+	 * </p>
+	 * 
+	 * @see Visual
+	 * @see #visual
+	 * @see Till
 	 */
 	TILL(Till.class, (g, l, x, y) -> {
 		
-		//INCOMPLETE
+		//Till dimensions.
+		final int tillWidth = AnimationPanel.BLOCK_SIZE/2;
+		final int tillHeight = AnimationPanel.BLOCK_SIZE/2;
 		
+		//Till representation location.
+		final int tillLocationX = x + AnimationPanel.BLOCK_SIZE - 22;
+		final int tillLocationY = y + AnimationPanel.BLOCK_SIZE/2 - 5;
+		final int tillSizeX = 20; //Width
+		final int tillSizeY = 4; //Height
+		
+		//Shopkeeper representation location.
+		final int shopkeeperLocationX = x + AnimationPanel.BLOCK_SIZE - 6;
+		final int shopkeeperLocationY = y + AnimationPanel.BLOCK_SIZE/2 - 10;
+		
+		//The size of all roadusers.
+		final int roadUserSize = 4;
+		
+		//Set the color to gray and then draw a square which represents the Till area.
 		g.setColor(Color.GRAY);
-		g.fillRect(x + AnimationPanel.BLOCK_SIZE/2, y,
-				AnimationPanel.BLOCK_SIZE/2, AnimationPanel.BLOCK_SIZE);
+		g.fillRect(x + AnimationPanel.BLOCK_SIZE/2, y + AnimationPanel.BLOCK_SIZE/4,
+				tillWidth, tillHeight);
 		
-		int position = x + AnimationPanel.BLOCK_SIZE - 4;
+		//Set the color to black and draw the till representation.
+		g.setColor(Color.BLACK);
+		g.fillRect(tillLocationX, tillLocationY, tillSizeX, tillSizeY);
 		
+		//Set the color to orange and draw a square to represent a shopkeeper.
+		g.setColor(Color.ORANGE);
+		g.fillRect(shopkeeperLocationX, shopkeeperLocationY, roadUserSize, roadUserSize);
+		
+		//Queue starting position.
+		int position = x + AnimationPanel.BLOCK_SIZE - roadUserSize;
+		
+		//Loop through the queue of roadusers at the location.
 		for(RoadUser ru: l.getQueue()){
 			
+			//Get the color of the roaduser and draw a square to represent the roaduser.
 			g.setColor(getColorOf(ru.getClass()));
-			g.fillRect(position - 4, y + AnimationPanel.BLOCK_SIZE/2, 4, 4);
-			position -= 6;
+			g.fillRect(position - roadUserSize, y + AnimationPanel.BLOCK_SIZE/2,
+					roadUserSize, roadUserSize);
+			position -= roadUserSize + 2; //Move to the next position and add a margin of 2.
 		}
 	}),
 	/**
@@ -120,21 +181,39 @@ public enum Visualisation {
 	 * This {@link LocationVisual} is used for the {@link Location} classes which do
 	 * not have a specific representation.
 	 * </p>
+	 * 
+	 * <p>
+	 * The {@link #DEFAULT} {@link Visualisation} will draw a square and then place all the
+	 * {@link RoadUsers} at a random position inside the square to simulate movement.
+	 * </p>
+	 * 
+	 * @see Visual
+	 * @see #visual
+	 * @see Location
 	 */
 	DEFAULT(null, (g, l, x, y) -> {
 		
+		//The size of all roadusers.
+		final int roadUserSize = 4;
+		
+		//Draw a gray square representing the Location.
 		g.setColor(Color.GRAY);
 		g.fillRect(x, y, AnimationPanel.BLOCK_SIZE, AnimationPanel.BLOCK_SIZE);
-		List<? extends RoadUser> roadUsers = l.getQueue();
+		
+		//rng for placing RoadUsers.
 		Random rng = new Random();
 		
-		roadUsers.forEach(ru -> {
+		//Loop through the queue of RoadUsers at the Location.
+		l.getQueue().forEach(ru -> {
 			
-			int position = rng.nextInt(AnimationPanel.BLOCK_SIZE*AnimationPanel.BLOCK_SIZE);
-			
+			/*
+			 * Set the color the the color of the RoadUser, then draw the roaduser
+			 * at a random position inside the square.
+			 */
 			g.setColor(getColorOf(ru.getClass()));
-			g.fillRect(x + (position%AnimationPanel.BLOCK_SIZE),
-				y + (position/AnimationPanel.BLOCK_SIZE), 4, 4);
+			g.fillRect(x + roadUserSize + rng.nextInt(AnimationPanel.BLOCK_SIZE - 2*roadUserSize),
+				y + roadUserSize + rng.nextInt(AnimationPanel.BLOCK_SIZE - 2*roadUserSize),
+				roadUserSize, roadUserSize);
 		});
 	});
 	
@@ -167,10 +246,9 @@ public enum Visualisation {
 	 * @see HashMap
 	 * @see Color
 	 * @see RoadUser
-	 * 
 	 */
 	private static final Map<Class<? extends RoadUser>, Color> ROAD_USER_COLOR_MAP =
-			new HashMap<>();
+			new HashMap<Class<? extends RoadUser>, Color>();
 	/**
 	 * The {@link Location} subclass for which the visual representation
 	 * is intended for.
@@ -272,7 +350,13 @@ public enum Visualisation {
 			
 			//Select the next color from the USABLE_COLORS.
 			ROAD_USER_COLOR_MAP.put(roadUserClass,
-					USABLE_COLORS[COLOR_INDEX++%USABLE_COLORS.length]);
+					USABLE_COLORS[COLOR_INDEX++]);
+			
+			/*
+			 * If the COLOR_INDEX is out of bounds of the USABLE_COLORS the reset it
+			 * to 0.
+			 */
+			if(!(COLOR_INDEX < USABLE_COLORS.length)) COLOR_INDEX = 0;
 		}
 		
 		//Return the Color of the roadUser.
@@ -289,10 +373,23 @@ public enum Visualisation {
 	 * @see #COLOR_INDEX
 	 * @see #ROAD_USER_COLOR_MAP
 	 */
-	public final void resetColors(){
+	public static final void resetColors(){
 		
 		ROAD_USER_COLOR_MAP.clear(); //Clear all existing entries.
 		COLOR_INDEX = 0; //Reset the COLOR_INDEX.
+	}
+	/**
+	 * Get the {@link RoadUser} and the {@link Color} used in the {@link Visualisation}.
+	 * 
+	 * @return The {@link RoadUser} and {@link Color} association.
+	 * @see Color
+	 * @see Entry
+	 * @see Set
+	 * @see RoadUser
+	 */
+	public static final Set<Entry<Class<? extends RoadUser>, Color>> getRoadUserColors(){
+		
+		return ROAD_USER_COLOR_MAP.entrySet();
 	}
 	/**
 	 * Get the {@link Visualisation} for a specified {@link Location} class.
