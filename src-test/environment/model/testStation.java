@@ -2,7 +2,6 @@ package environment.model;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import environment.model.Station;
@@ -28,14 +27,21 @@ public class testStation {
 	 */
 	private Station station;
 
-	@Before
-	public void setUp() throws Exception {
+	/**
+	 * Initialises {@link #station}.
+	 */
+	private void setUp(){
 		station = new Station(Pump.class);
 	}
 
+	/**
+	 * Tests {@link Station#addLocation(Location)}.
+	 */
 	@Test
 	public void testAddLocation() {
 
+		setUp();
+		
 		// Assert that the number of location in the station is initially zero.
 		assertTrue(station.getNumberOfLoactions() == 0);
 
@@ -65,9 +71,12 @@ public class testStation {
 
 	}
 
+	/**
+	 * Test {@link Station#enter(RoadUser)}.
+	 */
 	@Test
 	public void testEnter() {
-
+		
 		// Assert that the number of road users in the station is initially
 		// zero.
 		assertTrue(station.getNumberOfRoadUsers().sum() == 0);
@@ -101,10 +110,13 @@ public class testStation {
 
 	}
 
+	/**
+	 * Test {@link Station#toString()}
+	 */
 	@Test
 	public void testToString() {
 
-		station = new Station(Pump.class);
+		setUp();
 
 		// The correct format of the String that the toString() of Station.java
 		// should return.
@@ -126,6 +138,9 @@ public class testStation {
 
 	}
 
+	/**
+	 * Test {@link Station#equals(Object)}.
+	 */
 	@Test
 	public void testEquals() {
 
@@ -202,7 +217,7 @@ public class testStation {
 	private void newBasicStation() {
 
 		// Initialise the station
-		station = new Station(Pump.class);
+		setUp();
 
 		// Add the locations
 		station.addLocation(new Pump(ShoppingArea.class));
