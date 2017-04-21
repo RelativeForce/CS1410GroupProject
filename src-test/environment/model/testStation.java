@@ -9,10 +9,22 @@ import environment.model.Station;
 import environment.model.locations.*;
 import environment.model.roadusers.RoadUser;
 import environment.model.roadusers.SmallCar_RoadUser;
+import environment.model.roadusers.Truck_RoadUser;
 
+/**
+ * 
+ * Tests for all the aspects of the {@link Station}.
+ * 
+ * @author Joshua_Eddy
+ *
+ * @see environment.model.Station
+ */
 public class testStation {
 
-	Station station;
+	/**
+	 * A global {@link Station} for use and reassignment by multiple tests.
+	 */
+	private Station station;
 
 	@Before
 	public void setUp() throws Exception {
@@ -138,6 +150,62 @@ public class testStation {
 		testStation1.addLocation(testLocation);
 
 		assertFalse(testStation1.equals(testStation2));
+
+	}
+
+	/**
+	 * Test {@link Station#getNumberOfRoadUsers()}.
+	 * 
+	 * @see environment.model.Station
+	 */
+	@Test
+	public void testGetNumberOfRoadUsers() {
+
+		newBasicStation();
+
+		assertTrue(station.getNumberOfRoadUsers().sum() == 0.0);
+
+		assertTrue(station.getNumberOfRoadUsers().get(SmallCar_RoadUser.class) == 0.0);
+
+		station.enter(new SmallCar_RoadUser());
+
+		assertTrue(station.getNumberOfRoadUsers().get(SmallCar_RoadUser.class) == 1.0);
+
+		for (int index = 0; index < 300; index++) {
+			station.processLocations();
+		}
+
+		assertTrue(station.getNumberOfRoadUsers().get(SmallCar_RoadUser.class) == 0.0);
+
+		station.enter(new Truck_RoadUser());
+
+		assertTrue(station.getNumberOfRoadUsers().get(Truck_RoadUser.class) == 1.0);
+
+		for (int index = 0; index < 300; index++) {
+			station.processLocations();
+		}
+
+		assertTrue(station.getNumberOfRoadUsers().get(Truck_RoadUser.class) == 0.0);
+		
+		
+
+	}
+
+	/**
+	 * Initialises and constructs a {@link Station} with 1 {@link Pump}, 1
+	 * {@link ShoppingArea} and 1 {@link Till}.
+	 * 
+	 * @see environment.model.locations
+	 */
+	private void newBasicStation() {
+
+		// Initialise the station
+		station = new Station(Pump.class);
+
+		// Add the locations
+		station.addLocation(new Pump(ShoppingArea.class));
+		station.addLocation(new ShoppingArea(Till.class));
+		station.addLocation(new Till(null));
 
 	}
 }
