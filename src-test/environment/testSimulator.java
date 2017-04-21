@@ -7,13 +7,24 @@ import org.junit.Test;
 
 public class testSimulator {
 
+	Simulator testSim;
+
 	@Before
 	public void setUp() throws Exception {
+
+		testSim = new Simulator();
+
 	}
 
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testRun() {
+		try{
+			testSim.start();
+		}catch(Exception e){
+			fail("Simulation Exception.");
+		}
+		
 	}
 
 }
+

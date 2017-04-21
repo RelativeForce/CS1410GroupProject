@@ -219,9 +219,9 @@ public abstract class Location implements Cloneable {
 		// Otherwise return false.
 		// Also return false if the RoadUser is already present in this
 		// location.
-		// + 0.01 is the margin of error that may arise from repeated
+		// + 0.05 is the margin of error that may arise from repeated
 		// double additions.
-		return ((currentQueueSize + roadUser.getVehicle().size <= maxQueueSize + 0.01) || (maxQueueSize == 0))
+		return ((currentQueueSize + roadUser.getVehicle().size <= maxQueueSize + 0.05) || (maxQueueSize == 0))
 				&& !queue.contains(roadUser);
 	}
 
@@ -254,25 +254,39 @@ public abstract class Location implements Cloneable {
 	public abstract Location clone();
 
 	/**
-	 * Clones the queue in <code>this</code> {@link Location}.
+	 * Clones <code>this</code> {@link Location}'s details onto the parameter
+	 * {@link Location}. This method should be called by the subclasses of
+	 * {@link Location} passing an new instance of them selves as a parameter.
 	 * 
-	 * @return <code>LinkedList&lt;RoadUser&gt;</code> identical to the
-	 *         {@link #queue} at <code>this</code> {@link Location}.
+	 * The <code>Class&lt;? extends {@link Location}&gt;&gt;</code>
+	 * {@link #nextLocation} is assumed to be correct as it will be initialised
+	 * in the constructor of the new instance of {@link Location} that is passed
+	 * as a parameter.
+	 * 
+	 * @return A {@link Location} identical to <code>this</code>
+	 *         {@link Location}.
 	 */
-	protected LinkedList<RoadUser> cloneQueue() {
+	protected Location cloneLocation(Location clone) {
 
 		// Initialise the LinkedList that will be used as the cloned
 		// LinkedList
-		LinkedList<RoadUser> clone = new LinkedList<RoadUser>();
+		LinkedList<RoadUser> cloneQueue = new LinkedList<RoadUser>();
 
 		// Iterate through all the elements in the LinkedList
 		for (RoadUser roadUser : this.queue) {
 
 			// Add the clone of the current element to the clone
 			// LinkedList.
-			clone.add(roadUser.clone());
+			cloneQueue.add(roadUser.clone());
 
 		}
+
+		// Clone the instance fields.
+		clone.queue = cloneQueue;
+		clone.id = this.id;
+		clone.maxQueueSize = this.maxQueueSize;
+		clone.profit = this.profit;
+		clone.roadUsersProcessed = this.roadUsersProcessed;
 
 		return clone;
 
