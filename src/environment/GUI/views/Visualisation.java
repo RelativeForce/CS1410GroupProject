@@ -27,7 +27,7 @@ import environment.model.roadusers.vehicles.Vehicle;
  * </p>
  * 
  * @author 	John Berg
- * @version 09/04/2017
+ * @version 13/04/2017
  * @since	08/04/2017
  * @see Location
  * @see RoadUser
@@ -193,6 +193,9 @@ public enum Visualisation {
 	 */
 	DEFAULT(null, (g, l, x, y) -> {
 		
+		//The size of all roadusers.
+		final int roadUserSize = 4;
+		
 		//Draw a gray square representing the Location.
 		g.setColor(Color.GRAY);
 		g.fillRect(x, y, AnimationPanel.BLOCK_SIZE, AnimationPanel.BLOCK_SIZE);
@@ -208,8 +211,9 @@ public enum Visualisation {
 			 * at a random position inside the square.
 			 */
 			g.setColor(getColorOf(ru.getClass()));
-			g.fillRect(x + 4 + rng.nextInt(AnimationPanel.BLOCK_SIZE - 8),
-				y + 4 + rng.nextInt(AnimationPanel.BLOCK_SIZE - 8), 4, 4);
+			g.fillRect(x + roadUserSize + rng.nextInt(AnimationPanel.BLOCK_SIZE - 2*roadUserSize),
+				y + roadUserSize + rng.nextInt(AnimationPanel.BLOCK_SIZE - 2*roadUserSize),
+				roadUserSize, roadUserSize);
 		});
 	});
 	
