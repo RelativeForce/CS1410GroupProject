@@ -411,10 +411,10 @@ public class UserInterface {
 		SimulatorView view = null;
 		// If The string matches command line then set view to command line
 		if (((String) viewDropDown.getSelectedItem()).equals("Command Line")) {
-			view = new CommandLine();
+			view = CommandLine.getInstance();
 			// if the string matches graph then set the view to graphical view
 		} else if (((String) viewDropDown.getSelectedItem()).equals("Graph")) {
-			view = new Graph();
+			view = Graph.getInstance();
 		} else if (((String) viewDropDown.getSelectedItem()).equals("Animated View")) {
 			view = new Animated();
 		}
