@@ -17,12 +17,15 @@ import environment.model.Station;
 /**
  * 
  * @author John Berg
+ * @author David Wightman
  * @version 20/03/2017
  * @since 20/03/2017
  * @See JFrame
  * @see SimulatorView
  */
 public final class Animated extends JFrame implements SimulatorView {
+	
+	private static final long TEN_SECOND = 10_000_000_000L;
 
 	/**
 	 * As of right now, accessing the entries in the queue will cause an error.
@@ -32,13 +35,13 @@ public final class Animated extends JFrame implements SimulatorView {
 	 * </p>
 	 * 
 	 */
-	private final LinkedTransferQueue<Entry> buffer;
+	private final LinkedTransferQueue<TimeStamp> buffer;
 	private final Thread animator;
 	private AnimationPanel MainPanel;
 	private boolean paused;
 	private JButton ControlButton;
 	private int CurrentSpeed;
-	private JSlider SpeedSlider;
+	private volatile JSlider SpeedSlider;
 
 	/**
 	 * 
@@ -64,7 +67,7 @@ public final class Animated extends JFrame implements SimulatorView {
 		JPanel ButtonPanel = new JPanel();
 		JPanel SliderPanel = new JPanel();
 		JPanel ControlPanel = new JPanel();
-		SpeedSlider = new JSlider(0, 20);
+		SpeedSlider = new JSlider(1, 100);
 		JLabel SpeedLabel = new JLabel("Speed of simulation");
 	
 
@@ -92,7 +95,6 @@ public final class Animated extends JFrame implements SimulatorView {
 		super.add(ControlPanel);
 		super.pack();
 		super.setVisible(true);
-		MainPanel.draw(new Station(null));
 		ControlButton.addActionListener(e -> {
 			try {
 				Control();
@@ -100,16 +102,36 @@ public final class Animated extends JFrame implements SimulatorView {
 				
 			}
 		});
-		KillSwitch.addActionListener(e -> dispose());
+		KillSwitch.addActionListener(e -> {
+				dispose();
+				System.exit(0);
+			});
 		SpeedSlider.addChangeListener(e -> UpdateSpeed());
 		
-		buffer = new LinkedTransferQueue<Entry>();
+		buffer = new LinkedTransferQueue<TimeStamp>();
 
 		animator = new Thread(() -> {
-
-			if (buffer.isEmpty()) {
-
-				Thread.currentThread().suspend();
+			
+			long previousTime = System.nanoTime();
+			long updateRate;
+			
+			while(true){
+				
+				updateRate = TEN_SECOND/SpeedSlider.getValue();
+				
+				for(long delta = System.nanoTime() - previousTime;
+						updateRate < delta; delta -= updateRate){
+					
+					if (!buffer.isEmpty()){
+						
+						TimeStamp t = buffer.poll();
+						MainPanel.draw(t.time, t.station);
+					}
+					else
+						break;
+					
+					previousTime = System.nanoTime();
+				}
 			}
 		});
 
@@ -120,12 +142,12 @@ public final class Animated extends JFrame implements SimulatorView {
 		if (paused == true){
 			ControlButton.setText("Continue");
 			paused = false;
-			Thread.currentThread().suspend();
+			animator.suspend();
 		}
 		else {
 			ControlButton.setText("Pause");
 			paused = true;
-			Thread.currentThread().resume();
+			animator.resume();
 		}
 	}
 	private void UpdateSpeed(){
@@ -137,7 +159,7 @@ public final class Animated extends JFrame implements SimulatorView {
 	@Override
 	public final synchronized void show(int time, Station station) {
 
-		buffer.add(new Entry(time, null));
+		buffer.add(new TimeStamp(time, station));
 	}
 
 	/**
@@ -145,12 +167,12 @@ public final class Animated extends JFrame implements SimulatorView {
 	 * @author John
 	 *
 	 */
-	private final class Entry {
+	private final class TimeStamp {
 
 		public final int time;
 		public final Station station;
 
-		public Entry(final int time, final Station station) {
+		public TimeStamp(final int time, final Station station) {
 
 			this.time = time;
 			this.station = station;

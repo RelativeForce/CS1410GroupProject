@@ -260,7 +260,7 @@ public class AnimationPanel extends JPanel {
 	 * @see Visualisation
 	 * @see Visualisation#getVisual(Class)
 	 */
-	public void draw(final Station station){
+	public void draw(final int time,final Station station){
 		
 		prepareDraw(); //Prepare the img before drawing.
 		
@@ -298,7 +298,11 @@ public class AnimationPanel extends JPanel {
 			positionX += spacingX + BLOCK_SIZE;
 		}
 		
-		drawInfo(station.toString().split("\n"));
+		drawInfo(new StringBuilder().append("Time:   ")
+				.append(time)
+				.append("\n")
+				.append(station)
+				.toString().split("\n"));
 		repaint();
 	}
 	/**
