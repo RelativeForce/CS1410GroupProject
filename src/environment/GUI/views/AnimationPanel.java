@@ -16,6 +16,15 @@ import environment.model.locations.Location;
 import environment.model.roadusers.RoadUser;
 
 /**
+ * The {@link AnimationaPanel} class is a subclass of the {@link JPanel} class
+ * which is designed for drawing visual representations of the {@link Station}
+ * objects.
+ * 
+ * <p>
+ * The {@link AnimationPanel} has an {@link Image} which is used to draw the
+ * {@link Station}, and is responsible for mainly structuring and organising
+ * the visual representation of the {@link Station} visual representation.
+ * </p>
  * 
  * @author 	John Berg
  * @version	21/04/2017
@@ -31,11 +40,15 @@ public class AnimationPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = -1209329463678441603L;
 	/**
-	 * The spacing between the bottom of the {@link AnimationPanel}
-	 * which is not considered to be usable by the animation of the
-	 * simulation.
+	 * The amount of space between the main area of the {@link AnimationPanel}
+	 * and the left side of {@link AnimationPanel}.
+	 * 
+	 * <p>
+	 * The {@link #LEFT_MARGIN} reserves space for information about the simulation
+	 * to be displayed.
+	 * </p>
 	 */
-	private static final int BOTTOM_MARGIN = 50;
+	private static final int LEFT_MARGIN = 170;
 	/**
 	 * The size of the area which is usable when drawing the {@link Location}
 	 * objects.
@@ -51,7 +64,7 @@ public class AnimationPanel extends JPanel {
 	 * <code>{@value #BLOCK_SIZE}*{@value #BLOCK_SIZE}</code>
 	 * </p>
 	 */
-	public static final int BLOCK_SIZE = 75;
+	public static final int BLOCK_SIZE = 80;
 	/**
 	 * The {@link Font} used by the {@link AnimationPanel}.
 	 * 
@@ -169,16 +182,25 @@ public class AnimationPanel extends JPanel {
 	 * @see Color
 	 * @see RoadUser
 	 */
-	private void drawColorTable(final int positionY){
-		
-		//Set the color to black, then draw a tag to indicate where colors will be displayed.
-		g.setColor(Color.BLACK);
-		g.drawString("Colors:", 0, positionY);
+	private final void drawInfo(final String[] lines){
 		
 		final int colorNameMargin = 10; //Spacing between the color and the name.
-		final int entryMargin = 20; //Spacing between entries.
-		int positionX = 0; //x draw position.
-		int offsetY = 20; //y draw offset.
+		int position = 20; //The starting y-position to draw at.
+		
+		//Set the color to black and draw the statistics header.
+		g.setColor(Color.BLACK);
+		g.drawString("Statistics:", getEffectiveWidth(), position);
+		
+		//Loop through each String.
+		for(String line: lines){
+			
+			//Draw the String, and move to the next position.
+			g.drawString(line, getEffectiveWidth(),
+					position += g.getFontMetrics().getHeight());
+		}
+		
+		//Draw The colors header and move to the next location.
+		g.drawString("Colors:", getEffectiveWidth(), position += g.getFontMetrics().getHeight());
 		
 		//Loop through all the defined colors to add them to the table.
 		for(Entry<Class<? extends RoadUser>, Color> ruc:
@@ -187,46 +209,31 @@ public class AnimationPanel extends JPanel {
 			//Remove the "_RoadUser" part of the name.
 			final String text = ruc.getKey().getSimpleName().replaceAll("_RoadUser", "");
 			
-			/*
-			 * If the x position exceeds the width of the image, or if the string will
-			 * be drawn outside the image, then reset x to 0 and go to the next y.
-			 */
-			if(size.width <= positionX 
-					|| size.width <= positionX + g.getFontMetrics().stringWidth(text)){
-				
-				positionX = 0; //Reset x.
-				offsetY += g.getFontMetrics().getHeight(); //Move down.
-			}
+			 position += g.getFontMetrics().getHeight();
 			
 			//Set the color to the color of the roaduser, then draw an 8 x 8 rectangle.
 			g.setColor(ruc.getValue());
-			g.fillRect(positionX, positionY + offsetY - 8, 8, colorNameMargin);
+			g.fillRect(getEffectiveWidth(),  position,8, 8);
 			
 			/*
 			 * Set the color to black and then draw the name of the roaduser next to the
 			 * color.
 			 */
 			g.setColor(Color.black);
-			g.drawString(text, positionX += colorNameMargin, positionY + offsetY);
-			
-			//Move to the next x location.
-			positionX += g.getFontMetrics().stringWidth(text) + entryMargin;
-			
+			g.drawString(text, getEffectiveWidth() + colorNameMargin,
+					position += g.getFontMetrics().getHeight()/2);
 		}
 	}
 	/**
-	 * Get the height of the {@link AnimationPanel} where the {@link #BOTTOM_MARGIN}
-	 * is excluded.
+	 * Get the width which the {@link AnimationPanel} can use to draw the visual
+	 * representation of the simulation.
 	 * 
-	 * <p>
-	 * Get the usable height of the {@link AnimationPanel} for visualising the animation.
-	 * </p>
-	 * 
-	 * @return The height of the {@link AnimationPanel} excluding the {@link #BOTTOM_MARGIN}.
+	 * @return The usable width of the {@link AnimationPanel} for visualising the
+	 * 		simulation.
 	 */
-	private int getEffectiveHeight(){
+	private int getEffectiveWidth(){
 		
-		return size.height - BOTTOM_MARGIN;
+		return size.width - LEFT_MARGIN;
 	}
 	/**
 	 * Draw a {@link Station} object to this {@link AnimationPanel}.
@@ -261,7 +268,7 @@ public class AnimationPanel extends JPanel {
 		List<List<Location>> locationGroups = groupLocations(station.getLocations());
 		
 		//Calculate the horizontal spacing between locations. 
-		final int spacingX = (size.width - BLOCK_SIZE*locationGroups.size())
+		final int spacingX = (getEffectiveWidth() - BLOCK_SIZE*locationGroups.size())
 				/(locationGroups.size() + 1);
 		int positionX = spacingX; // x start position.
 		
@@ -269,7 +276,7 @@ public class AnimationPanel extends JPanel {
 		for(List<Location> group: locationGroups){
 			
 			//Calculate the vertical spacing between locations.
-			final int spacingY = (getEffectiveHeight() - BLOCK_SIZE*group.size())/(group.size() + 1);
+			final int spacingY = (size.height - BLOCK_SIZE*group.size())/(group.size() + 1);
 			int positionY = spacingY; //y start position.
 			
 			//Loop through the parallel locations.
@@ -291,7 +298,7 @@ public class AnimationPanel extends JPanel {
 			positionX += spacingX + BLOCK_SIZE;
 		}
 		
-		drawColorTable(getEffectiveHeight());
+		drawInfo(station.toString().split("\n"));
 		repaint();
 	}
 	/**
