@@ -54,15 +54,16 @@ public final class Pump extends Location implements Cloneable {
 			// Checks if the Vehicle has finished filling.
 			if (roadUserAtPump.getVehicle().isFull()) {
 
-				// Checks if the Road User has completed the shopping.
+				// Checks if the Road User has paid for the fuel.
 				if (roadUserAtPump.hasPaid()) {
 
 					// The Road User is removed from the queue.
 					queue.removeFirst();
-				} else {
-
+				} else if (!roadUserAtPump.isShopping()) {
+					
 					// The road user is moved to the next location.
 					toMove.put(roadUserAtPump, this);
+
 				}
 			} else {
 
@@ -83,7 +84,7 @@ public final class Pump extends Location implements Cloneable {
 	 */
 	@Override
 	public Pump clone() {
-		
+
 		// Return a clone of this location as a Pump.
 		return (Pump) super.cloneLocation(new Pump(this.getNextLocation()));
 
