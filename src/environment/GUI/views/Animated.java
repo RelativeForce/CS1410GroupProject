@@ -13,6 +13,7 @@ import javax.swing.JSlider;
 
 
 import environment.model.Station;
+import sun.util.resources.th.CurrencyNames_th_TH;
 
 /**
  * 
@@ -37,11 +38,10 @@ public final class Animated extends JFrame implements SimulatorView {
 	 */
 	private final LinkedTransferQueue<TimeStamp> buffer;
 	private final Thread animator;
-	private AnimationPanel MainPanel;
-	private boolean paused;
-	private JButton ControlButton;
-	private int CurrentSpeed;
-	private volatile JSlider SpeedSlider;
+	private final AnimationPanel mainPanel;
+	private final JButton controlButton;
+	private final JButton killSwitch;;
+	private volatile JSlider speedSlider;
 
 	/**
 	 * 
@@ -57,101 +57,136 @@ public final class Animated extends JFrame implements SimulatorView {
 		super.setPreferredSize(new Dimension(500, 600));
 		super.setMaximumSize(new Dimension(500, 500));
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		super.setLayout(new FlowLayout());
+		super.setLayout(new BorderLayout());
 
-		paused = false;
-		MainPanel = new AnimationPanel(500, 500);
-		ControlButton = new JButton("Pause");
-		JButton KillSwitch = new JButton("Exit");
+		mainPanel = new AnimationPanel(500, 500);
+		controlButton = new JButton("Pause");
+		killSwitch = new JButton("Exit");
 
-		JPanel ButtonPanel = new JPanel();
-		JPanel SliderPanel = new JPanel();
-		JPanel ControlPanel = new JPanel();
-		SpeedSlider = new JSlider(1, 100);
+		JPanel buttonPanel = new JPanel();
+		JPanel sliderPanel = new JPanel();
+		JPanel controlPanel = new JPanel();
+		speedSlider = new JSlider(0, 1000);
 		JLabel SpeedLabel = new JLabel("Speed of simulation");
 	
 
-		SpeedSlider.setMajorTickSpacing(4);
-		SpeedSlider.setPaintTicks(true);
+		speedSlider.setMajorTickSpacing(speedSlider.getMaximum()/5);
+		speedSlider.setMinorTickSpacing(1);
+		speedSlider.setPaintTicks(true);
+		speedSlider.setPaintLabels(true);
 
-		ButtonPanel.setLayout(new FlowLayout());
-		SliderPanel.setLayout(new FlowLayout());
-		ControlPanel.setLayout(new BorderLayout());
+		buttonPanel.setLayout(new FlowLayout());
+		sliderPanel.setLayout(new FlowLayout());
+		controlPanel.setLayout(new BorderLayout());
 
-		ButtonPanel.setPreferredSize(new Dimension(200, 100));
-		SliderPanel.setPreferredSize(new Dimension(300, 100));
-		MainPanel.setPreferredSize(new Dimension(500,500));
+		buttonPanel.setPreferredSize(new Dimension(200, 100));
+		sliderPanel.setPreferredSize(new Dimension(300, 100));
+		mainPanel.setPreferredSize(new Dimension(500,500));
 
 		
-		ButtonPanel.add(ControlButton);
-		ButtonPanel.add(KillSwitch);
-		SliderPanel.add(SpeedLabel);
-		SliderPanel.add(SpeedSlider);
-		ControlPanel.add(SliderPanel,BorderLayout.WEST);
-		ControlPanel.add(ButtonPanel,BorderLayout.EAST);
+		buttonPanel.add(controlButton);
+		buttonPanel.add(killSwitch);
+		sliderPanel.add(SpeedLabel);
+		sliderPanel.add(speedSlider);
+		controlPanel.add(sliderPanel,BorderLayout.WEST);
+		controlPanel.add(buttonPanel,BorderLayout.EAST);
 		
 		
-		super.add(MainPanel);
-		super.add(ControlPanel);
+		super.add(mainPanel, BorderLayout.CENTER);
+		super.add(controlPanel, BorderLayout.SOUTH);
 		super.pack();
 		super.setVisible(true);
-		ControlButton.addActionListener(e -> {
-			try {
-				Control();
-			} catch (InterruptedException e1) {
-				
-			}
+		controlButton.addActionListener(e -> control());
+		killSwitch.addActionListener(e -> {
+			
+			dispose();
+			System.exit(0);
 		});
-		KillSwitch.addActionListener(e -> {
-				dispose();
-				System.exit(0);
-			});
-		SpeedSlider.addChangeListener(e -> UpdateSpeed());
 		
 		buffer = new LinkedTransferQueue<TimeStamp>();
-
+		
 		animator = new Thread(() -> {
 			
-			long previousTime = System.nanoTime();
-			long updateRate;
+			long previousTime = System.nanoTime(); //Starting time.
+			long updateRate; //The number of updates per ten seconds.
 			
+			//Loop endlessly.
 			while(true){
 				
-				updateRate = TEN_SECOND/SpeedSlider.getValue();
-				
-				for(long delta = System.nanoTime() - previousTime;
-						updateRate < delta; delta -= updateRate){
+				//Check if the thread's interupt flag is active.
+				if(!Thread.currentThread().isInterrupted()){
 					
-					if (!buffer.isEmpty()){
+					try{
 						
-						TimeStamp t = buffer.poll();
-						MainPanel.draw(t.time, t.station);
+						//Get the value of the speedSlider and calculate the update rate.
+						updateRate = TEN_SECOND/speedSlider.getValue();
 					}
-					else
-						break;
+					catch(ArithmeticException e){
+						
+						/*
+						 * If calculating the updateRate results in division by 0, then
+						 * set the updateRate to TEN_SECOND.
+						 */
+						updateRate = TEN_SECOND;
+					}
 					
+					/*
+					 * Calculate the difference (delta) in time between the current time and the
+					 * previousTime, while the delta is greater than or equal to the updateRate
+					 * then enter the loop; upon loop completion, subtract the updtateRate from
+					 * delta and then repeat if the condition is still true.
+					 * 
+					 * This loop allows the thread to update the AnimationPanel a set number of times
+					 * per second, where if the thread completed the task quickly, the thread must
+					 * wait until enough time has elapsed to update again; and if the thread is not
+					 * keeping up with the number of updates per second, then the thread will catch up
+					 * update the amount of times possible, since the number of times the thread will
+					 * repeat the loop increases.
+					 */
+					for(long delta = System.nanoTime() - previousTime;
+							updateRate < delta; delta -= updateRate){
+						
+						//Check if there are any TimeStamps to draw.
+						if (!buffer.isEmpty()){
+							
+							//Get the timestamp and draw it.
+							TimeStamp t = buffer.poll();
+							mainPanel.draw(t.time, t.station);
+						}
+						else
+							//No point in looping whilst the buffer is empty.
+							break;
+						
+						previousTime = System.nanoTime(); //Update the previous time.
+					}
+				}
+				else{
+					
+					/*
+					 * Suspend the thread, then when the thread is resumed, remove the interrupt
+					 * flag and set the previousTime to the current nanoTime.
+					 */
+					Thread.currentThread().suspend();
+					Thread.currentThread().interrupted();
 					previousTime = System.nanoTime();
 				}
 			}
 		});
-
+		animator.setPriority(Thread.MIN_PRIORITY);
 		animator.start();
 	}
-
-	private void Control() throws InterruptedException{
-		if (paused == true){
-			ControlButton.setText("Continue");
-			paused = false;
-			animator.suspend();
+	private void control(){
+		
+		if (!animator.isInterrupted()){
+			
+			controlButton.setText("Continue");
+			animator.interrupt(); //Set the interrupt flat of the animator.
 		}
 		else {
-			ControlButton.setText("Pause");
-			paused = true;
+			
+			controlButton.setText("Pause");
 			animator.resume();
 		}
-	}
-	private void UpdateSpeed(){
-		CurrentSpeed = SpeedSlider.getValue();
 	}
 	/**
 	 * 
@@ -162,6 +197,11 @@ public final class Animated extends JFrame implements SimulatorView {
 		buffer.add(new TimeStamp(time, station));
 	}
 
+	@Override
+	public void setEnd() {
+		
+		killSwitch.setText("Results");
+	}
 	/**
 	 * 
 	 * @author John
@@ -177,11 +217,5 @@ public final class Animated extends JFrame implements SimulatorView {
 			this.time = time;
 			this.station = station;
 		}
-	}
-
-	@Override
-	public void setEnd() {
-		// TODO Auto-generated method stub
-
 	}
 }
