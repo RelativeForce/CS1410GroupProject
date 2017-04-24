@@ -36,15 +36,33 @@ public final class Animated extends JFrame implements SimulatorView {
 	 * </p>
 	 * 
 	 */
+	
+	
 	private final LinkedTransferQueue<TimeStamp> buffer;
+	
 	private final Thread animator;
+	/*
+	 * AnimationPanel representing the mainPanel of the frame.
+	 */
 	private final AnimationPanel mainPanel;
+	/*
+	 * JButton responsible for controlling the Thread state
+	 */
 	private final JButton controlButton;
+	/*
+	 * JButton responsible for controlling the frame Dispose.
+	 */
 	private final JButton killSwitch;;
+	/*
+	 * JSlider used to represent animation speed
+	 */
 	private volatile JSlider speedSlider;
 
 	/**
-	 * 
+	 * Constructs a {@link JFrame} that holds a newly constructed {@link AnimationPanel} 
+	 * and provides a panel underneath with buttons and sliders to control the speed and 
+	 * state of the animation,It then uses methods from {@link SimulatorView} to allow 
+	 * the simulation to be represented with the user chosen values from {@link UserInterface}
 	 */
 	public Animated() {
 
@@ -58,32 +76,36 @@ public final class Animated extends JFrame implements SimulatorView {
 		super.setMaximumSize(new Dimension(500, 500));
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		super.setLayout(new BorderLayout());
-
+		//set values for the mainPanel JPanel
 		mainPanel = new AnimationPanel(500, 500);
+		//Creates a new button and sets the aprpriate text for both Control and Kill buttons.
 		controlButton = new JButton("Pause");
 		killSwitch = new JButton("Exit");
-
+		//Creates 3 new JPanels to store the Previously created swing elements
 		JPanel buttonPanel = new JPanel();
 		JPanel sliderPanel = new JPanel();
 		JPanel controlPanel = new JPanel();
+		//Creates a new Jslider in Speedslider and sets the min and max values
 		speedSlider = new JSlider(0, 1000);
+		//creates a new label and assigns its starting text
 		JLabel SpeedLabel = new JLabel("Speed of simulation");
 	
-
+		//format tyhe speed sliders tick spacing and then paints the ticks and labels.
 		speedSlider.setMajorTickSpacing(speedSlider.getMaximum()/5);
 		speedSlider.setMinorTickSpacing(1);
 		speedSlider.setPaintTicks(true);
 		speedSlider.setPaintLabels(true);
 
+		//Set the layout for the three previously created panels
 		buttonPanel.setLayout(new FlowLayout());
 		sliderPanel.setLayout(new FlowLayout());
 		controlPanel.setLayout(new BorderLayout());
-
+		//Set the preferred size for the panels 
 		buttonPanel.setPreferredSize(new Dimension(200, 100));
 		sliderPanel.setPreferredSize(new Dimension(300, 100));
 		mainPanel.setPreferredSize(new Dimension(500,500));
 
-		
+		//Add the buttons and labels to the corresponding JPanels.
 		buttonPanel.add(controlButton);
 		buttonPanel.add(killSwitch);
 		sliderPanel.add(SpeedLabel);
@@ -91,14 +113,16 @@ public final class Animated extends JFrame implements SimulatorView {
 		controlPanel.add(sliderPanel,BorderLayout.WEST);
 		controlPanel.add(buttonPanel,BorderLayout.EAST);
 		
-		
+		//Add the panels to the Jframe in the order they are needed to appear.
 		super.add(mainPanel, BorderLayout.CENTER);
 		super.add(controlPanel, BorderLayout.SOUTH);
+		//Construct the JFrame and then make it visible to the user.
 		super.pack();
 		super.setVisible(true);
+		//Create two action listeners and then set them to the two buttons.
 		controlButton.addActionListener(e -> control());
 		killSwitch.addActionListener(e -> {
-			
+			//When this action listener is called call the dispose function and then system exit.
 			dispose();
 			System.exit(0);
 		});
@@ -175,15 +199,19 @@ public final class Animated extends JFrame implements SimulatorView {
 		animator.setPriority(Thread.MIN_PRIORITY);
 		animator.start();
 	}
+	/*
+	 * Activated when the ControlButton is clicked checks against the paused boolean to see if the current thread
+	 *  is paused or running and then will perform the opposite action.
+	 */
 	private void control(){
-		
+		//check if the animator thread is currently interrupted
 		if (!animator.isInterrupted()){
-			
+			//if the animator thread is not interrupted change the text on the control button and interrupt the thread. 
 			controlButton.setText("Continue");
 			animator.interrupt(); //Set the interrupt flat of the animator.
 		}
 		else {
-			
+			//else set the control button text to pause and resume the interrupted thread.
 			controlButton.setText("Pause");
 			animator.resume();
 		}

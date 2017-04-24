@@ -286,8 +286,8 @@ public class UserInterface {
 		try {
 			// Takes values from the user entry fields and assign them to
 			// respective variables
-			pumps = ((pointType) tillsEntry.getSelectedItem()).num;
-			tills = ((pointType) pumpsEntry.getSelectedItem()).num;
+			pumps = ((pointType) pumpsEntry.getSelectedItem()).num; 
+			tills = ((pointType) tillsEntry.getSelectedItem()).num;
 			p = ((variableType) pDropDown.getSelectedItem()).doub;
 			q = ((variableType) qDropDown.getSelectedItem()).doub;
 			trucks = Trucks.isSelected();
