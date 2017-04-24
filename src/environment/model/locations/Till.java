@@ -104,9 +104,6 @@ public class Till extends Location implements Cloneable {
 				// Accepts the Road User's payment for fuel.
 				tempRoadUser.pay();
 
-				// The time spent by the Road User is then incremented.
-				tempRoadUser.spendTime();
-
 				// The number of Road Users passing through the queue is then
 				// incremented.
 				roadUsersProcessed++;
@@ -131,4 +128,5 @@ public class Till extends Location implements Cloneable {
 		return (Till) super.cloneLocation(new Till(this.getNextLocation()));
 
 	}
+
 }

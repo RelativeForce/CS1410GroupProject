@@ -58,9 +58,10 @@ public final class Pump extends Location implements Cloneable {
 				if (roadUserAtPump.hasPaid()) {
 
 					// The Road User is removed from the queue.
-					queue.removeFirst();
-				} else if (!roadUserAtPump.isShopping()) {
+					queue.poll();
 					
+				} else if (!(roadUserAtPump.isShopping() || roadUserAtPump.doneShopping())) {
+
 					// The road user is moved to the next location.
 					toMove.put(roadUserAtPump, this);
 
@@ -70,12 +71,14 @@ public final class Pump extends Location implements Cloneable {
 				// The Road User is required to fill the vehicle.
 				roadUserAtPump.getVehicle().fill();
 
-				// The time spent by each Road User is then incremented.
-				queue.forEach(RoadUser::spendTime);
 			}
+			
+			// The time spent by each Road User is then incremented.
+			queue.forEach(RoadUser::spendTime);
 		}
 	}
 
+	
 	/**
 	 * Create an exact copy of this {@link Pump} which is a subclass of
 	 * {@link Location}.

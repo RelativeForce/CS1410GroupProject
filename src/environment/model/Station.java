@@ -616,14 +616,13 @@ public class Station {
 				// add it to said location and remove it from toMove.
 				if (location.getClass() == nextLocation && location.canContain(roadUser)) {
 
-					// If the next location is a Shopping Area and the current
-					// road user is already shopping then don't add it to that
-					// location.
-					if (!(nextLocation == ShoppingArea.class && roadUser.isShopping())) {
-						location.enter(roadUser);
+					if(nextLocation == Till.class){
+						System.out.println("Death");
 					}
-
+					location.enter(roadUser);
+					
 					toRemoveFrom_toMove.add(roadUser);
+					
 					return true;
 
 				}
@@ -636,7 +635,9 @@ public class Station {
 			// the station.
 			numberOfRoadUsers.update(roadUser.getClass(), -1);
 			roadUsersProcessed.update(roadUser.getClass(), 1);
+			
 			toRemoveFrom_toMove.add(roadUser);
+			
 			return true;
 		}
 

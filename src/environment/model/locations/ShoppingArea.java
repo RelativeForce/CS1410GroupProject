@@ -52,42 +52,42 @@ public class ShoppingArea extends Location implements Cloneable {
 		List<RoadUser> toRemoveFrom_queue = new LinkedList<RoadUser>();
 
 		// Iterates through the queue.
-		for (RoadUser tempRoadUser : queue) {
+		for (RoadUser roadUser : queue) {
 
 			// Checks if the Road User carries out shopping.
-			if (tempRoadUser.willShop()) {
+			if (roadUser.willShop() || roadUser.isShopping()) {
 
 				// Checks if the Road User has completed shopping.
-				if (tempRoadUser.doneShopping()) {
+				if (roadUser.doneShopping()) {
 
 					// Retrieves the value of the vehicle's tank and adds it to
 					// the profit.
-					profit += tempRoadUser.getWorth();
+					profit += roadUser.getWorth();
 
 					// The Road User is then moved to the next location.
-					toMove.put(tempRoadUser, this);
+					toMove.put(roadUser, this);
 
 					// Add the Road User to the list of road users to be removed
 					// from the queue.
-					toRemoveFrom_queue.add(tempRoadUser);
+					toRemoveFrom_queue.add(roadUser);
 
 					// Otherwise
 				} else {
 
 					// The Road User's time spent in the shopping is
 					// incremented.
-					tempRoadUser.shop();
+					roadUser.shop();
 				}
 
 				// Otherwise
 			} else {
 
 				// The Road User is moved to the next location.
-				toMove.put(tempRoadUser, this);
+				toMove.put(roadUser, this);
 
 				// Add the Road User to the list of road users to be removed
 				// from the queue.
-				toRemoveFrom_queue.add(tempRoadUser);
+				toRemoveFrom_queue.add(roadUser);
 
 			}
 
@@ -122,7 +122,7 @@ public class ShoppingArea extends Location implements Cloneable {
 		}
 
 	}
-
+	
 	@Override
 	public ShoppingArea clone() {
 
@@ -131,4 +131,20 @@ public class ShoppingArea extends Location implements Cloneable {
 
 	}
 
+	@Override
+	public boolean canContain(RoadUser roadUser){
+		
+		if(super.canContain(roadUser)){
+			
+			// If the next location is a Shopping Area and the current
+			// road user is already shopping then don't add it to that
+			// location.
+			if(!(roadUser.isShopping() || roadUser.doneShopping())){
+				
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

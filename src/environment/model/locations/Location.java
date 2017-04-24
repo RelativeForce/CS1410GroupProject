@@ -135,7 +135,7 @@ public abstract class Location implements Cloneable {
 	 * <code>RoadUser</code>s inside <code>this</code> {@link Location} will be
 	 * moved to once they have been processed.
 	 * 
-	 * @return <code>Class&lt;? extends {@link Location}&gt;&gt;</code>
+	 * @return <code>Class&lt;? extends {@link Location}&gt;</code>
 	 * 
 	 * @see #processQueue(HashMap)
 	 * @see environment.model.Station
@@ -239,7 +239,6 @@ public abstract class Location implements Cloneable {
 		// the start of the queue.
 		if (!queue.contains(roadUser)) {
 			queue.addFirst(roadUser);
-			roadUsersProcessed--;
 		}
 	}
 
@@ -290,54 +289,6 @@ public abstract class Location implements Cloneable {
 
 		return clone;
 
-	}
-
-	@Override
-	public boolean equals(Object o) {
-
-		// If the parameter object is a Location
-		if (o instanceof Location) {
-
-			// Cast to Location
-			Location location = (Location) o;
-
-			// If the locations id is the same as this' location.
-			if (this.id == location.id) {
-
-				// If the Locations next location is the same and this locations
-				// next location.
-				if (this.nextLocation == location.nextLocation) {
-
-					// If both locations have generated the same amount of
-					// profit
-					if (this.profit == location.profit) {
-
-						// If both locations have the same maximum queue size.
-						if (this.maxQueueSize == location.maxQueueSize) {
-
-							// If both locations have processed the same number
-							// of
-							// road users.
-							if (this.roadUsersProcessed == location.roadUsersProcessed) {
-
-								// If both locations have the same queue of road
-								// users.
-								if (this.queue.equals(location.queue)) {
-
-									// If all the conditions are met the this
-									// location and the parameter location are
-									// identical.
-									return true;
-
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return false;
 	}
 
 	/**
