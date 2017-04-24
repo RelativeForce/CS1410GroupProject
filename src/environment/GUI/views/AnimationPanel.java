@@ -316,7 +316,7 @@ public class AnimationPanel extends JPanel {
 	 * </p>
 	 * 
 	 * <p>
-	 * A groups of {@link Location} objects must share the same {@link Location#getNextLocation()},
+	 * A groups of {@link Location} objects must share the same {@link Location#nextLocation},
 	 * {@link Location} objects which meet this requierment will be placed in the same group as the
 	 * other {@link Location} object with the same next {@link Location}; otherwise the {@link Location}
 	 * is placed in the next group.
@@ -351,10 +351,10 @@ public class AnimationPanel extends JPanel {
 				 * 
 				 * Locations which exist in parallel must have the same next location.
 				 */
-				nextLoc = loc.getNextLocation();
+				nextLoc = loc.nextLocation();
 				locationGroups.peekLast().add(loc);
 			}
-			else if(nextLoc == loc.getNextLocation()){
+			else if(nextLoc == loc.nextLocation()){
 				
 				/*
 				 * The location is parallel with the locations in the same group and
@@ -370,7 +370,7 @@ public class AnimationPanel extends JPanel {
 				 * Get the next location of the current location, and add
 				 * the current location to the next group.
 				 */
-				nextLoc = loc.getNextLocation();
+				nextLoc = loc.nextLocation();
 				locationGroups.add(new LinkedList<Location>());
 				locationGroups.peekLast().add(loc);
 			}
