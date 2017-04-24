@@ -351,10 +351,10 @@ public class AnimationPanel extends JPanel {
 				 * 
 				 * Locations which exist in parallel must have the same next location.
 				 */
-				nextLoc = loc.nextLocation();
+				nextLoc = loc.nextLocation;
 				locationGroups.peekLast().add(loc);
 			}
-			else if(nextLoc == loc.nextLocation()){
+			else if(nextLoc == loc.nextLocation){
 				
 				/*
 				 * The location is parallel with the locations in the same group and
@@ -370,7 +370,7 @@ public class AnimationPanel extends JPanel {
 				 * Get the next location of the current location, and add
 				 * the current location to the next group.
 				 */
-				nextLoc = loc.nextLocation();
+				nextLoc = loc.nextLocation;
 				locationGroups.add(new LinkedList<Location>());
 				locationGroups.peekLast().add(loc);
 			}
