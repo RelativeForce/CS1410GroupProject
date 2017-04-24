@@ -14,7 +14,7 @@ import environment.model.roadusers.RoadUser;
  * @author Karandeep_Saini
  * @author Joshua_Eddy
  * 
- * @version 13/04/2017
+ * @version 24/04/2017
  * 
  * @see environment.model.locations.Locations
  * @see environment.model.roadusers.RoadUser
@@ -127,7 +127,7 @@ public class ShoppingArea extends Location implements Cloneable {
 	public ShoppingArea clone() {
 
 		// Return a clone of this location as a ShoppingArea
-		return (ShoppingArea) super.cloneLocation(new ShoppingArea(this.getNextLocation()));
+		return (ShoppingArea) super.cloneLocation(new ShoppingArea(this.nextLocation));
 
 	}
 

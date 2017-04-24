@@ -13,7 +13,7 @@ import environment.model.roadusers.*;
  * This object runs the simulation that the user will interact with.
  * 
  * @author Joshua_Eddy
- * @version 13/04/2017
+ * @version 24/04/2017
  *
  */
 public final class Simulator {

@@ -12,7 +12,7 @@ import environment.model.roadusers.RoadUser;
  * @author Karandeep_Saini
  * @author Joshua_Eddy
  * 
- * @version 13/04/2017
+ * @version 24/04/2017
  * 
  * @see environment.model.locations.Location
  * @see environment.model.roadusers.RoadUser
@@ -125,7 +125,7 @@ public class Till extends Location implements Cloneable {
 	public Till clone() {
 
 		// Return a clone of this location as a Till.
-		return (Till) super.cloneLocation(new Till(this.getNextLocation()));
+		return (Till) super.cloneLocation(new Till(this.nextLocation));
 
 	}
 

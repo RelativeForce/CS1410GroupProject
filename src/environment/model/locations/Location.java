@@ -12,7 +12,7 @@ import environment.model.roadusers.RoadUser;
  * the <code>Station</code>. This should be extended with concrete subclasses.
  * 
  * @author Joshua_Eddy
- * @version 09/04/2017
+ * @version 24/04/2017
  *
  */
 public abstract class Location implements Cloneable {
@@ -25,6 +25,14 @@ public abstract class Location implements Cloneable {
 	 * @see #id
 	 */
 	private static int nextID = 0;
+	
+	// Public Fields ---------------------------------------------------------
+	
+	/**
+	 * The <code>Class</code> of the next {@link Location}. This is generic but
+	 * must be a subclass of {@link Location}.
+	 */
+	public final Class<? extends Location> nextLocation;
 
 	// Private Fields --------------------------------------------------------
 
@@ -45,12 +53,6 @@ public abstract class Location implements Cloneable {
 	 * @see environment.model.roadusers.RoadUser
 	 */
 	protected LinkedList<RoadUser> queue;
-
-	/**
-	 * The <code>Class</code> of the next {@link Location}. This is generic but
-	 * must be a subclass of {@link Location}.
-	 */
-	protected Class<? extends Location> nextLocation;
 
 	/**
 	 * The number of {@link RoadUser}s that have passed through this
@@ -129,20 +131,6 @@ public abstract class Location implements Cloneable {
 	 * @see java.util.LinkedList
 	 */
 	public abstract void processQueue(Map<RoadUser, Location> toMove);
-
-	/**
-	 * Retrieves the <code>Class</code> of the next {@link Location} that the
-	 * <code>RoadUser</code>s inside <code>this</code> {@link Location} will be
-	 * moved to once they have been processed.
-	 * 
-	 * @return <code>Class&lt;? extends {@link Location}&gt;</code>
-	 * 
-	 * @see #processQueue(HashMap)
-	 * @see environment.model.Station
-	 */
-	public Class<? extends Location> getNextLocation() {
-		return nextLocation;
-	}
 
 	/**
 	 * Retrieves the amount of money collected from the {@link RoadUser}s that

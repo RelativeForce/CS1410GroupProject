@@ -11,7 +11,7 @@ import environment.model.roadusers.RoadUser;
  * @author Karandeep_Saini
  * @author Joshua_Eddy
  * 
- * @version 13/04/2017
+ * @version 24/04/2017
  * 
  * @see environment.model.locations.Location
  * @see environment.model.roadusers.RoadUser
@@ -60,16 +60,20 @@ public final class Pump extends Location implements Cloneable {
 					// The Road User is removed from the queue.
 					queue.poll();
 					
-				} else if (!(roadUserAtPump.isShopping() || roadUserAtPump.doneShopping())) {
-
-					// The road user is moved to the next location.
-					toMove.put(roadUserAtPump, this);
-
-				}
+					roadUsersProcessed++;
+					
+				} 
 			} else {
 
 				// The Road User is required to fill the vehicle.
 				roadUserAtPump.getVehicle().fill();
+				
+				if(roadUserAtPump.getVehicle().isFull()){
+					
+					// The road user is moved to the next location.
+					toMove.put(roadUserAtPump, this);
+					
+				}
 
 			}
 			
@@ -89,7 +93,7 @@ public final class Pump extends Location implements Cloneable {
 	public Pump clone() {
 
 		// Return a clone of this location as a Pump.
-		return (Pump) super.cloneLocation(new Pump(this.getNextLocation()));
+		return (Pump) super.cloneLocation(new Pump(this.nextLocation));
 
 	}
 

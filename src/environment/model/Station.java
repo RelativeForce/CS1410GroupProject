@@ -22,7 +22,7 @@ import environment.model.roadusers.RoadUser;
  * {@link RoadUser}s between its locations.
  * 
  * @author Joshua_Eddy
- * @version 10/04/2017
+ * @version 24/04/2017
  * 
  * @see #enter(RoadUser)
  * @see #clone()
@@ -551,7 +551,7 @@ public class Station {
 
 			// Locate and store the road user and if it is successfully added to
 			// its next location than update the statistics.
-			if (findDestinationLocation(roadUser, currentLocation.getNextLocation())) {
+			if (findDestinationLocation(roadUser, currentLocation.nextLocation)) {
 
 				// If the road user has left the till then add the vehicles
 				// value to the fuel profit of the vehicles of that type.
@@ -616,9 +616,6 @@ public class Station {
 				// add it to said location and remove it from toMove.
 				if (location.getClass() == nextLocation && location.canContain(roadUser)) {
 
-					if(nextLocation == Till.class){
-						System.out.println("Death");
-					}
 					location.enter(roadUser);
 					
 					toRemoveFrom_toMove.add(roadUser);
