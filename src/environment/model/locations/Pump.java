@@ -3,6 +3,7 @@ package environment.model.locations;
 import java.util.Map;
 
 import environment.model.roadusers.RoadUser;
+import environment.model.roadusers.vehicles.Vehicle;
 
 /**
  * Place where {@link RoadUser}s will fill up their vehicles
@@ -59,30 +60,29 @@ public final class Pump extends Location implements Cloneable {
 
 					// The Road User is removed from the queue.
 					queue.poll();
-					
+
 					roadUsersProcessed++;
-					
-				} 
+
+				}
 			} else {
 
 				// The Road User is required to fill the vehicle.
 				roadUserAtPump.getVehicle().fill();
-				
-				if(roadUserAtPump.getVehicle().isFull()){
-					
+
+				if (roadUserAtPump.getVehicle().isFull()) {
+
 					// The road user is moved to the next location.
 					toMove.put(roadUserAtPump, this);
-					
+
 				}
 
 			}
-			
+
 			// The time spent by each Road User is then incremented.
 			queue.forEach(RoadUser::spendTime);
 		}
 	}
 
-	
 	/**
 	 * Create an exact copy of this {@link Pump} which is a subclass of
 	 * {@link Location}.
@@ -94,6 +94,19 @@ public final class Pump extends Location implements Cloneable {
 
 		// Return a clone of this location as a Pump.
 		return (Pump) super.cloneLocation(new Pump(this.nextLocation));
+
+	}
+
+	/**
+	 * This {@link Pump} is more optimal for a {@link RoadUser} than another
+	 * {@link Pump} if the combination of all the {@link RoadUser}'s
+	 * {@link Vehicle#size}s in the {@link Location#queue} is smaller than the
+	 * same for the other {@link Pump}.
+	 */
+	@Override
+	public boolean compare(Location location) {
+
+		return (location instanceof Pump && location.getQueueLength() > this.getQueueLength());
 
 	}
 

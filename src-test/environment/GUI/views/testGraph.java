@@ -24,7 +24,7 @@ public class testGraph {
 	@Test
 	public void test() {
 
-		Graph testGraphView = new Graph();
+		Graph testGraphView = Graph.getInstance();
 
 		Station testStation = generateStation();
 		

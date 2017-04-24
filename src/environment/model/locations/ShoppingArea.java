@@ -122,7 +122,7 @@ public class ShoppingArea extends Location implements Cloneable {
 		}
 
 	}
-	
+
 	@Override
 	public ShoppingArea clone() {
 
@@ -132,19 +132,29 @@ public class ShoppingArea extends Location implements Cloneable {
 	}
 
 	@Override
-	public boolean canContain(RoadUser roadUser){
-		
-		if(super.canContain(roadUser)){
-			
+	public boolean canContain(RoadUser roadUser) {
+
+		if (super.canContain(roadUser)) {
+
 			// If the next location is a Shopping Area and the current
 			// road user is already shopping then don't add it to that
 			// location.
-			if(!(roadUser.isShopping() || roadUser.doneShopping())){
-				
+			if (!(roadUser.isShopping() || roadUser.doneShopping())) {
+
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
+	/**
+	 * No {@link ShoppingArea} is superior to another, therefore this method
+	 * will return true is the specified {@link Location} is also a
+	 * {@link ShoppingArea}.
+	 */
+	@Override
+	public boolean compare(Location location) {
+		return location instanceof ShoppingArea;
+	}
+
 }
