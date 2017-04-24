@@ -256,45 +256,26 @@ public class Station {
 	 */
 	public void enter(RoadUser roadUser) {
 
-		// Stores whether the station has rejected the road user attempting to
-		// enter the station. It is true until the road user is placed in a
-		// location.
-		boolean rejected = true;
-
 		if (roadUser != null) {
 
 			// If there is enough space in the station for the parameter
 			// RoadUser
+			if (findOptimalDestination(roadUser, startLoaction)) {
 
-			// Iterates through all the locations in the station.
-			for (Location currentLocation : locations) {
+				numberOfRoadUsers.update(roadUser.getClass(), 1);
 
-				// If the current location is of the same type as the start
-				// location of the station and there is enough space in that
-				// location for that road user.
-				if (currentLocation.getClass() == startLoaction && currentLocation.canContain(roadUser)) {
-
-					// Add the road user to that location and break to
-					// prevent
-					// adding that road user to multiple locations.
-					currentLocation.enter(roadUser);
-					rejected = false;
-					numberOfRoadUsers.update(roadUser.getClass(), 1);
-					break;
-				}
-			}
-
-			if (rejected) {
+			}else{
+				
 				// If there is no space for the road user in the station then
 				// increment roadUserRejected to acknowledge a road user has
 				// been rejected.
 				lostFuelprofit.update(roadUser.getClass(), roadUser.getVehicle().getMaxWorth());
 				lostSalesProfit.update(roadUser.getClass(), roadUser.getWorth());
 				roadUsersRejected.update(roadUser.getClass(), 1);
-				;
+				
+				
 			}
 		}
-
 	}
 
 	/**
@@ -551,7 +532,7 @@ public class Station {
 
 			// Locate and store the road user and if it is successfully added to
 			// its next location than update the statistics.
-			if (findDestinationLocation(roadUser, currentLocation.nextLocation)) {
+			if (move(roadUser, currentLocation.nextLocation)) {
 
 				// If the road user has left the till then add the vehicles
 				// value to the fuel profit of the vehicles of that type.
@@ -584,9 +565,48 @@ public class Station {
 	}
 
 	/**
-	 * Iterates through all the {@link Location}s in <code>this</code>
-	 * {@link Station} to find and store the specified {@link RoadUser}'s next
-	 * {@link Location}.
+	 * Moves the specified {@link RoadUser}'s next {@link Location}. If that
+	 * location is <code>null</code> then it is removed from the station.
+	 * 
+	 * @param roadUser
+	 *            The {@link RoadUser} to be relocated its next
+	 *            {@link Location}.
+	 * @param nextLocation
+	 *            The <code>Class</code> of the next {@link Location} of the
+	 *            specified {@link RoadUser}.
+	 * @return <code>boolean</code> whether the {@link RoadUser} was added to
+	 *         its next location or removed from the station.
+	 * 
+	 * @see environment.model.locations.Location
+	 * @see environment.model.roadusers.RoadUser
+	 * @see #relocateRoadUsers()
+	 * @see environment.model.locations.Location#canContain(RoadUser)
+	 * @see environment.model.locations.Location#enter(RoadUser)
+	 */
+	private boolean move(RoadUser roadUser, Class<? extends Location> nextLocation) {
+
+		if (nextLocation != null) {
+
+			return findOptimalDestination(roadUser, nextLocation);
+
+		} else {
+
+			// The road user has no next location, There for it will leave
+			// the station.
+			numberOfRoadUsers.update(roadUser.getClass(), -1);
+			roadUsersProcessed.update(roadUser.getClass(), 1);
+
+			toRemoveFrom_toMove.add(roadUser);
+
+			return true;
+		}
+
+	}
+
+	/**
+	 * Iterates through all the {@link Location}s in the
+	 * {@link Station#locations} to find the most optimum next location for the
+	 * specified {@link RoadUser}.
 	 * 
 	 * @param roadUser
 	 *            The {@link RoadUser} to be relocated its next
@@ -597,46 +617,52 @@ public class Station {
 	 * @return <code>boolean</code> whether the {@link RoadUser} was added to
 	 *         its next location.
 	 * 
-	 * @see environment.model.locations.Location
-	 * @see environment.model.roadusers.RoadUser
-	 * @see #relocateRoadUsers()
-	 * @see environment.model.locations.Location#canContain(RoadUser)
-	 * @see environment.model.locations.Location#enter(RoadUser)
 	 */
-	private boolean findDestinationLocation(RoadUser roadUser, Class<? extends Location> nextLocation) {
+	private boolean findOptimalDestination(RoadUser roadUser, Class<? extends Location> nextLocation) {
 
-		if (nextLocation != null) {
+		// Holds the best destination location found for the road user.
+		Location optimumLocation = null;
 
-			// Iterate though all the locations in the station
-			for (Location location : locations) {
+		// Iterate though all the locations in the station
+		for (Location location : locations) {
 
-				// If the type of the current location is the same at the
-				// next location the road user needs to be put in and there
-				// is enough space for the road user in that location.Then
-				// add it to said location and remove it from toMove.
-				if (location.getClass() == nextLocation && location.canContain(roadUser)) {
+			/*
+			 * If the type of the current location is the same at the next
+			 * location AND there is enough space for the road user in that
+			 * location.
+			 */
+			if (location.getClass() == nextLocation && location.canContain(roadUser)) {
 
-					location.enter(roadUser);
-					
-					toRemoveFrom_toMove.add(roadUser);
-					
-					return true;
+				/*
+				 * If there is currently no optimum location for the road user
+				 * OR the current location is more optimal than the current most
+				 * optimal location.
+				 */
+				if (optimumLocation == null || location.compare(optimumLocation)) {
+
+					// Set the current location to be the most optimal location
+					// for the road user.
+					optimumLocation = location;
 
 				}
+
 			}
-			return false;
-
-		} else {
-
-			// The road user has no next location, There for it will leave
-			// the station.
-			numberOfRoadUsers.update(roadUser.getClass(), -1);
-			roadUsersProcessed.update(roadUser.getClass(), 1);
-			
-			toRemoveFrom_toMove.add(roadUser);
-			
-			return true;
 		}
+
+		// If there is an optimal location for the road user then add it to it
+		// and remove it from toMove.
+		if (optimumLocation != null) {
+
+			optimumLocation.enter(roadUser);
+
+			toRemoveFrom_toMove.add(roadUser);
+
+			return true;
+
+		}
+
+		// If no destination location was found.
+		return false;
 
 	}
 

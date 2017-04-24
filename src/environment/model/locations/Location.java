@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import environment.model.roadusers.RoadUser;
+import environment.model.roadusers.vehicles.Vehicle;
 
 /**
  * 
@@ -25,9 +26,9 @@ public abstract class Location implements Cloneable {
 	 * @see #id
 	 */
 	private static int nextID = 0;
-	
+
 	// Public Fields ---------------------------------------------------------
-	
+
 	/**
 	 * The <code>Class</code> of the next {@link Location}. This is generic but
 	 * must be a subclass of {@link Location}.
@@ -191,25 +192,15 @@ public abstract class Location implements Cloneable {
 	 * @see environment.model.roadusers.RoadUser
 	 */
 	public boolean canContain(RoadUser roadUser) {
-
-		// Holds the cumulative size of the queue.
-		double currentQueueSize = 0;
-
-		// Add the size of each road users vehicle to the cumulative queue size.
-		for (RoadUser roadUserQueue : queue) {
-			currentQueueSize += roadUserQueue.getVehicle().size;
-		}
-
-		// Returns true if the size of the queue including the parameter
-		// RoadUser is less than the defined maximum size of
-		// the queue or the maxQueueSize is zero meaning that there is no
-		// maximum size to the queue in this location.
-		// Otherwise return false.
-		// Also return false if the RoadUser is already present in this
-		// location.
-		// + 0.05 is the margin of error that may arise from repeated
-		// double additions.
-		return ((currentQueueSize + roadUser.getVehicle().size <= maxQueueSize + 0.05) || (maxQueueSize == 0))
+		/*
+		 * Returns true if the size of the queue including the parameter
+		 * RoadUser is less than the defined maximum size of the queue or the
+		 * maxQueueSize is zero meaning that there is no maximum size to the
+		 * queue in this location. Otherwise return false. Also return false if
+		 * the RoadUser is already present in this location. + 0.05 is the
+		 * margin of error that may arise from repeated double additions.
+		 */
+		return ((getQueueLength() + roadUser.getVehicle().size <= maxQueueSize + 0.05) || (maxQueueSize == 0))
 				&& !queue.contains(roadUser);
 	}
 
@@ -288,4 +279,39 @@ public abstract class Location implements Cloneable {
 		return queue;
 	}
 
+	/**
+	 * Retrieves whether a specified {@link Location} is more optimal for a
+	 * {@link RoadUser} to enter than <code>this</code>. This method compares
+	 * these two {@link Location}s differently depending on the type of
+	 * {@link Location}.
+	 * 
+	 * @param location
+	 *            {@link Location} for <code>this</code> to be compared to.
+	 * @return <code>boolean this</code> if better that the specified
+	 *         {@link Location}.
+	 */
+	public abstract boolean compare(Location location);
+
+	/**
+	 * Retrieves the current length of the {@link #queue} at <code>this</code>
+	 * {@link Location} denoted by the sum of all the {@link RoadUser}s in
+	 * <code>this</code> {@link Location}'s {@link Vehicle#size}.
+	 * 
+	 * @return <code>double</code> size of the {@link #queue}.
+	 * 
+	 * @see environment.model.roadusers.vehicles.Vehicle
+	 */
+	protected double getQueueLength() {
+
+		// Holds the cumulative size of the queue.
+		double currentQueueSize = 0;
+
+		// Add the size of each road users vehicle to the cumulative queue
+		// size.
+		for (RoadUser roadUserQueue : queue) {
+			currentQueueSize += roadUserQueue.getVehicle().size;
+		}
+
+		return currentQueueSize;
+	}
 }

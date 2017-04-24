@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Random;
 
 import environment.model.roadusers.RoadUser;
+import environment.model.roadusers.vehicles.Vehicle;
 
 /**
  * 
@@ -68,9 +69,9 @@ public class Till extends Location implements Cloneable {
 	}
 
 	/**
-	 * The {@link RoadUser} pays for the transaction
-	 * {@link getVehicle.getMaxWorth} and moves to the <code>this</code>
-	 * {@link Location} The transaction is added to the {@link profit}
+	 * The {@link RoadUser} pays for the transaction {@link Vehicle#getMaxWorth}
+	 * and moves to the <code>this</code> {@link Location} The transaction is
+	 * added to the {@link #profit}
 	 * 
 	 * @see environment.model.roadusers.RoadUser
 	 * @see environment.model.locations.Location
@@ -127,6 +128,16 @@ public class Till extends Location implements Cloneable {
 		// Return a clone of this location as a Till.
 		return (Till) super.cloneLocation(new Till(this.nextLocation));
 
+	}
+
+	/**
+	 * This {@link Till} is more optimal for a {@link RoadUser} than another
+	 * {@link Till} if the {@link Location#queue} at for this {@link Till} is
+	 * shorted than the other {@link Till}'s {@link Location#queue}.
+	 */
+	@Override
+	public boolean compare(Location location) {
+		return (location instanceof Till && location.getQueue().size() > this.getQueue().size());
 	}
 
 }
