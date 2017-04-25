@@ -13,7 +13,7 @@ import environment.model.roadusers.*;
  * This object runs the simulation that the user will interact with.
  * 
  * @author Joshua_Eddy
- * @version 24/04/2017
+ * @version 25/04/2017
  *
  */
 public final class Simulator {
@@ -141,6 +141,8 @@ public final class Simulator {
 		}
 
 	}
+	
+	// Public Methods ---------------------------------------------------------
 
 	/**
 	 * Starts the simulation.
@@ -163,7 +165,7 @@ public final class Simulator {
 		
 	}
 	
-	// Private Methods -------------------------------------------------------
+	// Private Methods --------------------------------------------------------
 
 	/**
 	 * Simulates the ticks passing for the {@link Station} by repeating the
