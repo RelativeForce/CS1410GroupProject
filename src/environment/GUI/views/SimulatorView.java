@@ -27,7 +27,7 @@ public interface SimulatorView {
 	 * {@link SimulationView}.</strong>
 	 * </p>
 	 * 
-	 * @param time The ...
+	 * @param time The time of elpased within the current {@link Station}.
 	 * @param station The details of the {@link Station} status.
 	 */
 	public void show(final int time, final Station station);
