@@ -416,7 +416,7 @@ public class UserInterface {
 		} else if (((String) viewDropDown.getSelectedItem()).equals("Graph")) {
 			view = Graph.getInstance();
 		} else if (((String) viewDropDown.getSelectedItem()).equals("Animated View")) {
-			view = new Animated();
+			view = Animated.getInstance();
 		}
 
 		// return the value in view
