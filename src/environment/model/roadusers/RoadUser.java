@@ -1,5 +1,8 @@
 package environment.model.roadusers;
 
+import java.util.Random;
+
+import environment.model.Station;
 import environment.model.roadusers.vehicles.Vehicle;
 
 /**
@@ -35,13 +38,15 @@ import environment.model.roadusers.vehicles.Vehicle;
  * 
  * @author Adrian_Wong
  * @author Joshua_Eddy
- * @version 10/04/2017
- * @since 20/03/2017
+ * 
+ * @version 26/04/2017
+ * 
+ * @see java.util.Random
  *
  */
 public abstract class RoadUser implements Cloneable {
 
-	// Fields --------------------------------------------------------------
+	// Protected Fields -------------------------------------------------------
 
 	/**
 	 * The amount of time that <code>this</code> {@link RoadUser} has spent
@@ -57,14 +62,29 @@ public abstract class RoadUser implements Cloneable {
 	/**
 	 * The value of this Boolean object as a boolean primitive.
 	 */
-	private boolean hasPaid;
+	protected boolean finishedShopping;
 
-	private Vehicle vehicle;
+	/**
+	 * The {@link Random} generator that should be user by the sub-classes of
+	 * {@link RoadUser}.
+	 * 
+	 * @see java.util.Random
+	 */
+	protected static final Random GEN = new Random();
+
+	// Private Fields ---------------------------------------------------------
 
 	/**
 	 * The value of this Boolean object as a boolean primitive.
 	 */
-	protected boolean finishedShopping;
+	private boolean hasPaid;
+
+	/**
+	 * Holds the {@link Vehicle} assigned to <code>this</code> {@link RoadUser}.
+	 * 
+	 * @see environment.model.roadusers.vehicles.Vehicle
+	 */
+	private Vehicle vehicle;
 
 	/**
 	 * The amount of time <code>this</code> {@link RoadUser} will spend shopping
@@ -86,19 +106,41 @@ public abstract class RoadUser implements Cloneable {
 	 */
 	private boolean isShopping;
 
-	// Public Methods ------------------------------------------------------
+	/**
+	 * The <code>double</code> probability that <code>this</code>
+	 * {@link RoadUser} will shop.
+	 */
+	private double probabilityToShop;
 
 	/**
-	 * Constructor for objects of class RoadUser.
+	 * The <code>int</code> maximum time that <code>this</code> {@link RoadUser}
+	 * will spent in the {@link Station} and still shop.
+	 */
+	private int maximumTimeToShop;
+
+	// Constructor ------------------------------------------------------------
+
+	/**
+	 * Constructs a new {@link RoadUser}.
 	 * 
 	 * @param vehicle
-	 *            The vehicle type
+	 *            The {@link Vehicle} assigned to <code>this</code>
+	 *            {@link RoadUser}.
 	 * @param shoppingTime
-	 *            The amount of time will spend shopping
+	 *            The <code>int</code> amount of time will spend shopping.
 	 * @param worth
-	 *            The amount of money spent
+	 *            The <code>double</code> amount of money <code>this</code>
+	 *            {@link RoadUser} will spent.
+	 * @param probabilityToShop
+	 *            The <code>double</code> probability that <code>this</code>
+	 *            {@link RoadUser} will shop.
+	 * 
+	 * @param maximumTimeToShop
+	 *            The <code>int</code> maximum time that <code>this</code>
+	 *            {@link RoadUser} will spent in the {@link Station} and still
+	 *            shop.
 	 */
-	public RoadUser(Vehicle vehicle, int shoppingTime, double worth) {
+	public RoadUser(Vehicle vehicle, int shoppingTime, double worth, double probabilityToShop, int maximumTimeToShop) {
 
 		this.timeSpent = 0;
 		this.hasPaid = false;
@@ -108,31 +150,48 @@ public abstract class RoadUser implements Cloneable {
 		this.shoppingTime = shoppingTime;
 		this.worth = worth;
 		this.timeSpentShopping = 0;
+		this.probabilityToShop = probabilityToShop;
+		this.maximumTimeToShop = maximumTimeToShop;
 
 	}
 
+	// Public Methods ------------------------------------------------------
+
 	/**
-	 * @return the vehicle type
+	 * Retrieves the {@link Vehicle} assigned to <code>this</code>
+	 * {@link RoadUser}.
+	 * 
+	 * @return {@link Vehicle}
 	 */
 	public Vehicle getVehicle() {
 		return vehicle;
 	}
 
 	/**
-	 * Increments the time spent
+	 * Increments the time spent in the {@link Station}.
 	 */
 	public void spendTime() {
 		timeSpent++;
 	}
 
 	/**
-	 * The value of this Boolean object as a boolean primitive.
+	 * If the {@link RoadUser} spends less time than {@link #maximumTimeToShop}
+	 * and has the required probability then it will shop
 	 */
-	public abstract boolean willShop();
+	public boolean willShop() {
+
+		double prob = GEN.nextDouble();
+
+		if (timeSpent < maximumTimeToShop && prob <= probabilityToShop) {
+			return true;
+		}
+
+		return false;
+
+	}
 
 	/**
-	 * The {@link RoadUser} will have finished shopping if the time spent
-	 * shopping is less than the shopping time range
+	 * Causes the {@link RoadUser} to browse in the shop.
 	 */
 	public void shop() {
 
@@ -149,34 +208,61 @@ public abstract class RoadUser implements Cloneable {
 	}
 
 	/**
-	 * @return the amount of money spent by the <code>this</code>
-	 *         {@link RoadUser}
+	 * Retrieves the amount of money that <code>this</code> {@link RoadUser}
+	 * will spent at the shop.
 	 * 
+	 * @return <code>double</code>/
 	 */
 	public double getWorth() {
 		return worth;
 	}
 
 	/**
-	 * The {@link RoadUser} will have to pay for fuel and shopping
+	 * Changes the {@link RoadUser} state to denote that they have payed for
+	 * their fuel.
 	 */
 	public void pay() {
 		hasPaid = true;
 	}
 
 	/**
-	 * @return the value of this Boolean object as a boolean primitive.
+	 * Returns whether <code>this</code> {@link RoadUser} has paid for their
+	 * fuel.
+	 * 
+	 * @return <code>double</code>
 	 */
 	public boolean hasPaid() {
 		return hasPaid;
 	}
 
 	/**
-	 * @return the value of this Boolean object as a boolean primitive.
+	 * Returns whether <code>this</code> {@link RoadUser} is finished shopping.
+	 * 
+	 * @return <code>double</code>
 	 */
 	public boolean doneShopping() {
 		return finishedShopping;
 	}
+
+	/**
+	 * Clones <code>this</code> {@link RoadUser}. </br>
+	 * The method {@link #createClone(RoadUser)} should be used to create the
+	 * initial clone then that clone should be casted to the specific sub-class
+	 * of {@link RoadUser}. Then then that clone should be returned.
+	 */
+	@Override
+	public abstract RoadUser clone();
+
+	/**
+	 * Retrieves whether <code>this</code> is currently shopping or not.
+	 * 
+	 * @return <code>boolean</code>
+	 */
+	public boolean isShopping() {
+		return isShopping;
+	}
+
+	// Protected Methods -------------------------------------------------------
 
 	/**
 	 * For use by concrete sub-classes of <code>this</code>. Will take a road
@@ -202,17 +288,5 @@ public abstract class RoadUser implements Cloneable {
 		clone.worth = this.worth;
 
 		return clone;
-	}
-
-	@Override
-	public abstract RoadUser clone();
-
-	/**
-	 * Retrieves whether <code>this</code> is currently shopping or not.
-	 * 
-	 * @return <code>boolean</code>
-	 */
-	public boolean isShopping() {
-		return isShopping;
 	}
 }

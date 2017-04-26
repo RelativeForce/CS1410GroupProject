@@ -1,18 +1,19 @@
 package environment.model.roadusers;
 
-import java.util.Random;
-
+import environment.Simulator;
 import environment.model.roadusers.vehicles.SmallCar_Vehicle;
 
 /**
- * The <code>SmallCar</code> class is a subclass of the {@link RoadUser} class,
- * which models a Small Car User.
+ * This {@link SmallCar_RoadUser} encapsulates the behaviour of a family sedan
+ * in the {@link Station}. This is a subclass of the {@link RoadUser}.
  * 
- * @author Adrian_Wong, Josh_Eddy
- * @version 04/04/2017
- * @since 21/03/2017
- * @see roadusers
- * @see random
+ * @author Adrian_Wong
+ * @author Joshua_Eddy
+ * 
+ * @version 26/04/2017
+ * 
+ * @see environment.model.roadusers.RoadUser
+ * @see java.util.Random
  *
  */
 public class SmallCar_RoadUser extends RoadUser implements Cloneable {
@@ -49,19 +50,28 @@ public class SmallCar_RoadUser extends RoadUser implements Cloneable {
 	private static final int MAXIMUM_TIME_TO_SHOP = 30;
 
 	/**
-	 * Generates a random number
-	 */
-	private static final Random GEN = new Random();
-
-	/**
 	 * Generates a new {@link SmallCar_RoadUser}
 	 */
 	public SmallCar_RoadUser() {
 		super(new SmallCar_Vehicle(), GEN.nextInt(SHOPPING_TIME_RANGE) + MINIMUM_SHOPPING_TIME,
-				GEN.nextInt(SPENDING_RANGE) + MINIMUM_SPENDING_MONEY);
+				GEN.nextInt(SPENDING_RANGE) + MINIMUM_SPENDING_MONEY, PROB_TO_SHOP, MAXIMUM_TIME_TO_SHOP);
 
 	}
 
+	/**
+	 * Returns whether an instance of a {@link SmallCar_RoadUser} will appear in
+	 * the station using a the values of <strong>p</strong>, <strong>q</strong>
+	 * and <strong>value</strong> given by the {@link Simulator} and applying
+	 * them to a predetermined formula.
+	 * 
+	 * @param p
+	 *            <code>double</code>
+	 * @param q
+	 *            <code>double</code>
+	 * @param value
+	 *            <code>double</code>
+	 * @return <code>boolean</code>
+	 */
 	public static boolean exists(double p, double q, double value) {
 		return value <= p;
 	}
@@ -69,25 +79,10 @@ public class SmallCar_RoadUser extends RoadUser implements Cloneable {
 	/**
 	 * Clones a {@link FamilySedan_RoadUser}
 	 */
+	@Override
 	public SmallCar_RoadUser clone() {
 		SmallCar_RoadUser clone = (SmallCar_RoadUser) super.createClone(new SmallCar_RoadUser());
 		return clone;
 	}
 
-	@Override
-	/**
-	 * If the {@link SmallCar_RoadUser} spends less time than
-	 * {@link MAXIMUM_TIME_TO_SHOP} and has the required probability then it
-	 * will shop
-	 */
-	public boolean willShop() {
-
-		double prob = GEN.nextDouble();
-
-		if (timeSpent < MAXIMUM_TIME_TO_SHOP && prob <= PROB_TO_SHOP) {
-			return true;
-		}
-
-		return false;
-	}
 }

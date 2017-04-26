@@ -1,18 +1,19 @@
 package environment.model.roadusers;
 
-import java.util.Random;
-
+import environment.Simulator;
 import environment.model.roadusers.vehicles.FamilySedan_Vehicle;
 
 /**
- * The <code>FamilySedan</code> class is a subclass of the {@link RoadUser}
- * class, which models a Family Sedan User.
+ * This {@link FamilySedan_RoadUser} encapsulates the behaviour of a family
+ * sedan in the {@link Station}. This is a subclass of the {@link RoadUser}.
  * 
- * @author Adrian_Wong, Josh_Eddy
- * @version 04/04/2017
- * @since	21/03/2017
- * @see		roadusers
- * @see 	random
+ * @author Adrian_Wong
+ * @author Joshua_Eddy
+ * 
+ * @version 26/04/2017
+ * 
+ * @see environment.model.roadusers.RoadUser
+ * @see java.util.Random
  *
  */
 public class FamilySedan_RoadUser extends RoadUser implements Cloneable {
@@ -21,67 +22,67 @@ public class FamilySedan_RoadUser extends RoadUser implements Cloneable {
 	 * The probability that the {@link RoadUser} will shop
 	 */
 	private static final double PROB_TO_SHOP = 0.4;
-	
+
 	/**
-	 * The maximum amount of money minus the minimum amount of money the {@link RoadUser} will spend
+	 * The maximum amount of money minus the minimum amount of money the
+	 * {@link RoadUser} will spend
 	 */
 	private static final int SPENDING_RANGE = 8;
+	
 	/**
 	 * The minimum amount of money that the {@link RoadUser} will spend
 	 */
 	private static final int MINIMUM_SPENDING_MONEY = 8;
 
 	/**
-	 * The maximum amount of time minus the minimum amount of time the {@link RoadUser} will spend shopping
+	 * The maximum amount of time minus the minimum amount of time the
+	 * {@link RoadUser} will spend shopping
 	 */
 	private static final int SHOPPING_TIME_RANGE = 18;
+	
 	/**
 	 * The minimum amount of time the {@link RoadUser} will spend shopping
 	 */
 	private static final int MINIMUM_SHOPPING_TIME = 12;
-	
-	/**
-	 * The maximum time that the {@link RoadUser} will spend at the {@link Pump} before the {@link RoadUser} will become unhappy and decide not to shop
-	 */
-	private static final int MAXIMUM_TIME_TO_SHOP = 60;
-	
-	/**
-	 * Generates a random number
-	 */
-	private static final Random GEN = new Random();	
 
 	/**
-	 * Generates a Family Sedan Road User
+	 * The maximum time that the {@link RoadUser} will spend at the {@link Pump}
+	 * before the {@link RoadUser} will become unhappy and decide not to shop
+	 */
+	private static final int MAXIMUM_TIME_TO_SHOP = 60;
+
+	/**
+	 * Constructs a new {@link FamilySedan_RoadUser}.
 	 */
 	public FamilySedan_RoadUser() {
 
 		super(new FamilySedan_Vehicle(), GEN.nextInt(SHOPPING_TIME_RANGE) + MINIMUM_SHOPPING_TIME,
-				GEN.nextInt(SPENDING_RANGE) + MINIMUM_SPENDING_MONEY);
+				GEN.nextInt(SPENDING_RANGE) + MINIMUM_SPENDING_MONEY, PROB_TO_SHOP, MAXIMUM_TIME_TO_SHOP);
 
 	}
 
+	/**
+	 * Returns whether an instance of a {@link FamilySedan_RoadUser} will appear
+	 * in the station using a the values of <strong>p</strong>,
+	 * <strong>q</strong> and <strong>value</strong> given by the
+	 * {@link Simulator} and applying them to a predetermined formula.
+	 * 
+	 * @param p
+	 *            <code>double</code>
+	 * @param q
+	 *            <code>double</code>
+	 * @param value
+	 *            <code>double</code>
+	 * @return <code>boolean</code>
+	 */
 	public static boolean exists(double p, double q, double value) {
 		return (value > (2 * p)) && (value <= q);
-	}
-
-	@Override
-	/**
-	 * If the {@link FamilySedan_RoadUser} spends less time than {@link MAXIMUM_TIME_TO_SHOP} and has the required probability then it will shop
-	 */
-	public boolean willShop() {
-
-		double prob = GEN.nextDouble();
-
-		if (timeSpent < MAXIMUM_TIME_TO_SHOP && prob <= PROB_TO_SHOP){
-			return true;
-		}
-		
-		return false;
 	}
 
 	/**
 	 * Clones a new {@link FamilySedan_RoadUser}
 	 */
+	@Override
 	public FamilySedan_RoadUser clone() {
 
 		FamilySedan_RoadUser clone = (FamilySedan_RoadUser) super.createClone(new FamilySedan_RoadUser());

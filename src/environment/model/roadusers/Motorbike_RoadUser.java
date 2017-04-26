@@ -1,58 +1,69 @@
 package environment.model.roadusers;
 
+import environment.Simulator;
 import environment.model.roadusers.vehicles.Motorbike_Vehicle;
 
 /**
- * The <code>Motorbike</code> class is a subclass of the {@link RoadUser}
- * class, which models a Motorbike User.
+ * This {@link Motorbike_RoadUser} encapsulates the behaviour of a motor bike in
+ * the {@link Station}. This is a subclass of the {@link RoadUser}.
  * 
- * @author Adrian_Wong, Josh_Eddy
- * @version 04/04/2017
- * @since	21/03/2017
- * @see		roadusers
- * @see 	random
+ * @author Adrian_Wong
+ * @author Joshua_Eddy
+ * 
+ * @version 26/04/2017
+ * 
+ * @see environment.model.roadusers.RoadUser
+ * @see java.util.Random
  *
  */
 public class Motorbike_RoadUser extends RoadUser implements Cloneable {
 
 	/**
-	 * Generates a new {@link Motorbike_RoadUser}
+	 * Constructs a new {@link Motorbike_RoadUser}
 	 */
 	public Motorbike_RoadUser() {
-		super(new Motorbike_Vehicle(), 0, 0);
+		super(new Motorbike_Vehicle(), 0, 0, 0, 0);
 	}
 
+	/**
+	 * Returns whether an instance of a {@link Motorbike_RoadUser} will appear
+	 * in the station using a the values of <strong>p</strong>,
+	 * <strong>q</strong> and <strong>value</strong> given by the
+	 * {@link Simulator} and applying them to a predetermined formula.
+	 * 
+	 * @param p
+	 *            <code>double</code>
+	 * @param q
+	 *            <code>double</code>
+	 * @param value
+	 *            <code>double</code>
+	 * @return <code>boolean</code>
+	 */
 	public static boolean exists(double p, double q, double value) {
 		return (value > p) && (value <= (2 * p));
 	}
 
-	@Override
 	/**
-	 * The Motorbike Road User does not shop
+	 * The {@link Motorbike_RoadUser} does not shop. This method is unused as
+	 * {@link #willShop()} will always return <code>false</code>.
 	 */
+	@Override
 	public void shop() {
 		// Doesn't Shop
 	}
 
-	@Override
 	/**
-	 * @returns The worth of a {@link Motornike_RoadUser}
+	 * @returns <code>false</code> as {@link Motornike_RoadUser} does not shop.
 	 */
-	public double getWorth() {
-		return 0;
-	}
-
 	@Override
-	/**
-	 * @returns false as {@link Motornike_RoadUser} does not shop
-	 */
 	public boolean willShop() {
 		return false;
 	}
 
 	/**
-	 * Clones a {@link Motornike_RoadUser}
+	 * Clones a <code>this</code> {@link Motornike_RoadUser}.
 	 */
+	@Override
 	public Motorbike_RoadUser clone() {
 
 		Motorbike_RoadUser clone = (Motorbike_RoadUser) super.createClone(new Motorbike_RoadUser());
