@@ -17,9 +17,6 @@ import java.util.Map;
  * @author Joshua_Eddy
  * @version 27/04/2017
  * 
- * @see environment.model.Station
- * @see environment.GUI.views.Graph
- *
  */
 public class Statistic<SuperType> implements Cloneable {
 
