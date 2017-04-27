@@ -1,8 +1,9 @@
-package environment.model;
+package environment;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import environment.model.Station;
 import environment.model.roadusers.RoadUser;
 
 /**

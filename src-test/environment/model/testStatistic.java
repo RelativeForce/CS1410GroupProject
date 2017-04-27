@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import environment.Statistic;
 import environment.model.roadusers.Motorbike_RoadUser;
 import environment.model.roadusers.RoadUser;
 import environment.model.roadusers.SmallCar_RoadUser;
@@ -16,7 +17,7 @@ import environment.model.roadusers.Truck_RoadUser;
  * 
  * @version 21/04/17
  * 
- * @see environment.model.Statistic
+ * @see environment.Statistic
  * @see environment.model.roadusers.RoadUser
  *
  */

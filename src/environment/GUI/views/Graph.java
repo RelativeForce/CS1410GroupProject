@@ -21,8 +21,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import environment.Simulator;
+import environment.Statistic;
 import environment.model.Station;
-import environment.model.Statistic;
 import environment.model.locations.ShoppingArea;
 import environment.model.roadusers.*;
 

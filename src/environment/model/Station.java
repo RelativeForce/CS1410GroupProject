@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import environment.Statistic;
 import environment.GUI.views.SimulatorView;
 import environment.model.locations.Location;
 import environment.model.locations.Pump;
