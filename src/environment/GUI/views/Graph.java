@@ -21,8 +21,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import environment.Simulator;
+import environment.Statistic;
 import environment.model.Station;
-import environment.model.Statistic;
 import environment.model.locations.ShoppingArea;
 import environment.model.roadusers.*;
 
@@ -32,7 +32,7 @@ import environment.model.roadusers.*;
  * 
  * @author Joshua_Eddy
  * 
- * @version 13/04/17
+ * @version 27/04/2017
  * 
  * @see javax.swing.JFrame
  * @see javax.swing.JPanel
@@ -687,7 +687,7 @@ public class Graph implements SimulatorView {
 		 * therefore must have been rejected.
 		 * 
 		 */
-		private Statistic roadUsersRejected;
+		private Statistic<RoadUser> roadUsersRejected;
 
 		/**
 		 * Stores the {@link Double} value of fuels profit that was lost by each
@@ -696,7 +696,7 @@ public class Graph implements SimulatorView {
 		 * @see environment.model.roadusers.vehicles.Vehicle
 		 * @see environment.model.roadusers.RoadUser
 		 */
-		private Statistic lostFuelprofit;
+		private Statistic<RoadUser> lostFuelprofit;
 
 		/**
 		 * Stores the {@link Double} value of sales profit that was lost by each
@@ -704,7 +704,7 @@ public class Graph implements SimulatorView {
 		 * 
 		 * @see environment.model.roadusers.RoadUser
 		 */
-		private Statistic lostSalesProfit;
+		private Statistic<RoadUser> lostSalesProfit;
 
 		/**
 		 * Stores the {@link Double} number of each type of {@link RoadUser}s
@@ -713,7 +713,7 @@ public class Graph implements SimulatorView {
 		 * @see environment.model.roadusers.vehicles.Vehicle
 		 * @see environment.model.roadusers.RoadUser
 		 */
-		private Statistic roadUsersProcessed;
+		private Statistic<RoadUser> roadUsersProcessed;
 
 		/**
 		 * Stores the {@link Double} value of fuels profit that was gained by
@@ -722,13 +722,13 @@ public class Graph implements SimulatorView {
 		 * @see environment.model.roadusers.vehicles.Vehicle
 		 * @see environment.model.roadusers.RoadUser
 		 */
-		private Statistic fuelProfit;
+		private Statistic<RoadUser> fuelProfit;
 
 		/**
 		 * The <code>double</code> sales profit that <code>this</code>
 		 * {@link Station} has made.
 		 */
-		private Statistic salesProfit;
+		private Statistic<RoadUser> salesProfit;
 
 		public Entry(Station station) {
 
@@ -747,7 +747,7 @@ public class Graph implements SimulatorView {
 		 * @return The number of {@link RoadUser}s that this {@link Station} has
 		 *         rejected.
 		 */
-		public Statistic getRoadUsersRejected() {
+		public Statistic<RoadUser> getRoadUsersRejected() {
 			return roadUsersRejected;
 		}
 
@@ -758,7 +758,7 @@ public class Graph implements SimulatorView {
 		 * @return {@link Statistic} fuel profit.
 		 * 
 		 */
-		public Statistic getFuelProfit() {
+		public Statistic<RoadUser> getFuelProfit() {
 			return fuelProfit;
 		}
 
@@ -769,7 +769,7 @@ public class Graph implements SimulatorView {
 		 * @return {@link Statistic} amount of {@link RoadUser}s processed by
 		 *         the {@link Station}.
 		 */
-		public Statistic getRoadUsersProcessed() {
+		public Statistic<RoadUser> getRoadUsersProcessed() {
 			return roadUsersProcessed;
 		}
 
@@ -784,7 +784,7 @@ public class Graph implements SimulatorView {
 		 * @see #locations
 		 * @see #fuelProfit
 		 */
-		public Statistic getSalesProfit() {
+		public Statistic<RoadUser> getSalesProfit() {
 			return salesProfit;
 		}
 
@@ -795,7 +795,7 @@ public class Graph implements SimulatorView {
 		 * 
 		 * @return {@link Statistic} lost profit.
 		 */
-		public Statistic getLostSalesProfit() {
+		public Statistic<RoadUser> getLostSalesProfit() {
 			return lostSalesProfit;
 		}
 
@@ -806,7 +806,7 @@ public class Graph implements SimulatorView {
 		 * 
 		 * @return {@link Statistic} profit lost.
 		 */
-		public Statistic getLostFuelProfit() {
+		public Statistic<RoadUser> getLostFuelProfit() {
 			return lostFuelprofit;
 		}
 
@@ -936,7 +936,7 @@ public class Graph implements SimulatorView {
 		JPanel typePanel = new JPanel();
 		typePanel.setPreferredSize(new Dimension(200, 35));
 		typePanel.setLayout(new FlowLayout());
-		
+
 		// Initialise the lane for the combo box.
 		JLabel typeLabel = new JLabel("Vehicle Type:");
 
@@ -947,7 +947,7 @@ public class Graph implements SimulatorView {
 		// Add the elements to the panel.
 		typePanel.add(typeLabel);
 		typePanel.add(vehicleTypes);
-		
+
 		return typePanel;
 	}
 
@@ -965,7 +965,7 @@ public class Graph implements SimulatorView {
 		JPanel statisticPanel = new JPanel();
 		statisticPanel.setPreferredSize(new Dimension(200, 35));
 		statisticPanel.setLayout(new FlowLayout());
-		
+
 		// Initialise the lane for the combo box.
 		JLabel statisticLabel = new JLabel("Statistic:");
 

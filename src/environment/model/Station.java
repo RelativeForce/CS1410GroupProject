@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import environment.Statistic;
 import environment.GUI.views.SimulatorView;
 import environment.model.locations.Location;
 import environment.model.locations.Pump;
@@ -22,7 +23,7 @@ import environment.model.roadusers.RoadUser;
  * {@link RoadUser}s between its locations.
  * 
  * @author Joshua_Eddy
- * @version 24/04/2017
+ * @version 27/04/2017
  * 
  * @see #enter(RoadUser)
  * @see #clone()
@@ -82,12 +83,12 @@ public class Station {
 	 * must have been rejected.
 	 * 
 	 */
-	private Statistic roadUsersRejected;
+	private Statistic<RoadUser> roadUsersRejected;
 
 	/**
 	 * The amount of {@link RoadUser}s that are currently inside this station.
 	 */
-	private Statistic numberOfRoadUsers;
+	private Statistic<RoadUser> numberOfRoadUsers;
 
 	/**
 	 * Stores the {@link Double} value of fuels profit that was lost by each
@@ -96,7 +97,7 @@ public class Station {
 	 * @see environment.model.roadusers.vehicles.Vehicle
 	 * @see environment.model.roadusers.RoadUser
 	 */
-	private Statistic lostFuelprofit;
+	private Statistic<RoadUser> lostFuelprofit;
 
 	/**
 	 * Stores the {@link Double} value of sales profit that was lost by each
@@ -104,7 +105,7 @@ public class Station {
 	 * 
 	 * @see environment.model.roadusers.RoadUser
 	 */
-	private Statistic lostSalesProfit;
+	private Statistic<RoadUser> lostSalesProfit;
 
 	/**
 	 * Stores the {@link Double} number of each type of {@link RoadUser}s that
@@ -113,7 +114,7 @@ public class Station {
 	 * @see environment.model.roadusers.vehicles.Vehicle
 	 * @see environment.model.roadusers.RoadUser
 	 */
-	private Statistic roadUsersProcessed;
+	private Statistic<RoadUser> roadUsersProcessed;
 
 	/**
 	 * Stores the {@link Double} value of fuels profit that was gained by each
@@ -122,13 +123,13 @@ public class Station {
 	 * @see environment.model.roadusers.vehicles.Vehicle
 	 * @see environment.model.roadusers.RoadUser
 	 */
-	private Statistic fuelProfit;
+	private Statistic<RoadUser> fuelProfit;
 
 	/**
 	 * The <code>double</code> sales profit that <code>this</code>
 	 * {@link Station} has made.
 	 */
-	private Statistic salesProfit;
+	private Statistic<RoadUser> salesProfit;
 
 	/**
 	 * Holds all the elements in toMove that are to be removed. This map exists
@@ -165,13 +166,13 @@ public class Station {
 		this.toRemoveFrom_toMove = new LinkedList<RoadUser>();
 
 		// Initialise statistic instance fields
-		this.fuelProfit = new Statistic();
-		this.salesProfit = new Statistic();
-		this.roadUsersProcessed = new Statistic();
-		this.lostSalesProfit = new Statistic();
-		this.lostFuelprofit = new Statistic();
-		this.roadUsersRejected = new Statistic();
-		this.numberOfRoadUsers = new Statistic();
+		this.fuelProfit = new Statistic<RoadUser>();
+		this.salesProfit = new Statistic<RoadUser>();
+		this.roadUsersProcessed = new Statistic<RoadUser>();
+		this.lostSalesProfit = new Statistic<RoadUser>();
+		this.lostFuelprofit = new Statistic<RoadUser>();
+		this.roadUsersRejected = new Statistic<RoadUser>();
+		this.numberOfRoadUsers = new Statistic<RoadUser>();
 
 	}
 
@@ -284,7 +285,7 @@ public class Station {
 	 * @return The number of {@link RoadUser}s that this {@link Station} has
 	 *         rejected.
 	 */
-	public Statistic getRoadUsersRejected() {
+	public Statistic<RoadUser> getRoadUsersRejected() {
 		return roadUsersRejected;
 	}
 
@@ -295,7 +296,7 @@ public class Station {
 	 * @return {@link Statistic} fuel profit.
 	 * 
 	 */
-	public Statistic getFuelProfit() {
+	public Statistic<RoadUser> getFuelProfit() {
 		return fuelProfit;
 	}
 
@@ -306,7 +307,7 @@ public class Station {
 	 * @return {@link Statistic} amount of {@link RoadUser}s in the
 	 *         {@link Station}.
 	 */
-	public Statistic getNumberOfRoadUsers() {
+	public Statistic<RoadUser> getNumberOfRoadUsers() {
 		return numberOfRoadUsers;
 	}
 
@@ -317,7 +318,7 @@ public class Station {
 	 * @return {@link Statistic} amount of {@link RoadUser}s processed by the
 	 *         {@link Station}.
 	 */
-	public Statistic getRoadUsersProcessed() {
+	public Statistic<RoadUser> getRoadUsersProcessed() {
 		return roadUsersProcessed;
 	}
 
@@ -344,7 +345,7 @@ public class Station {
 	 * @see #locations
 	 * @see #fuelProfit
 	 */
-	public Statistic getSalesProfit() {
+	public Statistic<RoadUser> getSalesProfit() {
 		return salesProfit;
 	}
 
@@ -355,7 +356,7 @@ public class Station {
 	 * 
 	 * @return {@link Statistic} lost profit.
 	 */
-	public Statistic getLostSalesProfit() {
+	public Statistic<RoadUser> getLostSalesProfit() {
 		return lostSalesProfit;
 	}
 
@@ -366,7 +367,7 @@ public class Station {
 	 * 
 	 * @return {@link Statistic} profit lost.
 	 */
-	public Statistic getLostFuelProfit() {
+	public Statistic<RoadUser> getLostFuelProfit() {
 		return lostFuelprofit;
 	}
 
