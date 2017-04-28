@@ -265,16 +265,15 @@ public class Station {
 
 				numberOfRoadUsers.update(roadUser.getClass(), 1);
 
-			}else{
-				
+			} else {
+
 				// If there is no space for the road user in the station then
 				// increment roadUserRejected to acknowledge a road user has
 				// been rejected.
 				lostFuelprofit.update(roadUser.getClass(), roadUser.getVehicle().getMaxWorth());
 				lostSalesProfit.update(roadUser.getClass(), roadUser.getWorth());
 				roadUsersRejected.update(roadUser.getClass(), 1);
-				
-				
+
 			}
 		}
 	}
@@ -540,10 +539,18 @@ public class Station {
 				if (currentLocation instanceof Till) {
 					fuelProfit.update(roadUser.getClass(), roadUser.getVehicle().getMaxWorth());
 				}
-				// If the road user has left the shopping area add its worth to
-				// the sales profit for road users of that type.
+				
+				// If the road user has left the shopping area.
 				if (currentLocation instanceof ShoppingArea) {
-					salesProfit.update(roadUser.getClass(), roadUser.getWorth());
+
+					// If the road user has shopped in the shopping area add the
+					// worth of that road user to the shopping profit otherwise
+					// add it to the lost shopping profit.
+					if (roadUser.doneShopping()) {
+						salesProfit.update(roadUser.getClass(), roadUser.getWorth());
+					} else {
+						lostSalesProfit.update(roadUser.getClass(), roadUser.getWorth());
+					}
 				}
 
 				if (currentLocation instanceof Pump) {
