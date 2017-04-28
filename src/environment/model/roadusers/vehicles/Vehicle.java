@@ -36,7 +36,7 @@ import java.util.Random;
  * </p>
  * 
  * @author 	John Berg
- * @version 31/09/2017
+ * @version 27/04/2017
  * @since 	01/03/2017
  * @see 	Cloneable
  */
@@ -98,6 +98,14 @@ public abstract class Vehicle implements Cloneable {
 	 * have the {@link #size} and {@link tankSize} changed.
 	 * </p>
 	 * 
+	 * <p>
+	 * Provided arguments must be greater than 0, otherwise default values are:
+	 * <ol>
+	 * 		<li><code>{@link #size} = 0.5</code></li>
+	 * 		<li><code>{@link #tankSize} = 1</code></li>
+	 * </ol>
+	 * </p>
+	 * 
 	 * @param size The physical size of the <code>Vehicle</code>.
 	 * @param tankSize The size of the tank of the <code>Vehicle</code>.
 	 */
@@ -112,13 +120,13 @@ public abstract class Vehicle implements Cloneable {
 		 * Initialise the size of the vehicle as the provided constructor 
 		 * size argument.
 		 */
-		this.size = size;
+		this.size = 0 < size? size: 0.5;
 		
 		/*
 		 * Initialise the tankSize of the vehicle as the provided
 		 * constructor tankSize argument.
 		 */
-		this.tankSize = tankSize;
+		this.tankSize = 0 < tankSize? tankSize: 1;
 		
 		/*
 		 * Select a fuel type from the the FuelType enum.
@@ -136,6 +144,16 @@ public abstract class Vehicle implements Cloneable {
 	 * </p>
 	 * 
 	 * <p>
+	 * Provided arguments must be greater than 0 or not null, otherwise default values are:
+	 * <ol>
+	 * 		<li><code>{@link #size} = 0.5</code></li>
+	 * 		<li><code>{@link #tankSize} = 1</code></li>
+	 * 		<li><code>{@link #fuelLevel} = 0</code></li>
+	 * 		<li><code>{@link #fuelType} = {@link FuelType#PETROL}</code></li>
+	 * </ol>
+	 * </p>
+	 * 
+	 * <p>
 	 * This constructor should be used to clone the <code>Vehicle</code> objects.
 	 * </p>
 	 * 
@@ -147,10 +165,10 @@ public abstract class Vehicle implements Cloneable {
 	protected Vehicle(final double size, final int tankSize,
 			final int fuelLevel, final FuelType fuelType){
 		
-		this.size = size;
-		this.tankSize = tankSize;
-		this.fuelLevel = fuelLevel;
-		this.fuelType = fuelType;
+		this.size = 0 < size? size: 0.5;
+		this.tankSize = 0 < tankSize? tankSize: 1;
+		this.fuelLevel = 0 < fuelLevel? fuelLevel: 0;
+		this.fuelType = fuelType != null? fuelType: FuelType.PETROL;
 	}
 	/**
 	 * Get the current fuel level of the {@link Vehicle}.
