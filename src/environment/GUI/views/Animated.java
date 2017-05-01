@@ -176,7 +176,7 @@ public final class Animated extends JFrame implements SimulatorView {
 		//Creates a new Jslider in Speedslider and sets the min and max values
 		speedSlider = new JSlider(0, 1000);
 		//creates a new label and assigns its starting text
-		JLabel SpeedLabel = new JLabel("Speed of simulation");
+		JLabel SpeedLabel = new JLabel("Speed of simulation (Updates per 10 seconds)");
 	
 		//format tyhe speed sliders tick spacing and then paints the ticks and labels.
 		speedSlider.setMajorTickSpacing(speedSlider.getMaximum()/5);
