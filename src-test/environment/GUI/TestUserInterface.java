@@ -1,11 +1,11 @@
-package environment.GUI.views;
+package environment.GUI;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class testCommandLine {
+public class TestUserInterface {
 
 	@Before
 	public void setUp() throws Exception {

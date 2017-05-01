@@ -20,7 +20,7 @@ import environment.model.roadusers.Truck_RoadUser;
  *
  * @see environment.model.Station
  */
-public class testStation {
+public class TestStation {
 
 	/**
 	 * A global {@link Station} for use and reassignment by multiple tests.

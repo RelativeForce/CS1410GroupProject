@@ -21,7 +21,7 @@ import environment.model.roadusers.Truck_RoadUser;
  * @see environment.model.roadusers.RoadUser
  *
  */
-public class testStatistic {
+public class TestStatistic {
 
 	/**
 	 * A global {@link Statistic} for use and reassignment by multiple tests.
