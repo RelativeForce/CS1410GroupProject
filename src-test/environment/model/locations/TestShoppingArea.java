@@ -12,7 +12,7 @@ import environment.model.locations.*;
 import environment.model.roadusers.Motorbike_RoadUser;
 import environment.model.roadusers.RoadUser;
 
-public class testShoppingArea {
+public class TestShoppingArea extends TestLocation{
 
 	Location testShoppingArea;
 	

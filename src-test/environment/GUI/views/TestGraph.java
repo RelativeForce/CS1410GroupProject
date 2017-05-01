@@ -15,7 +15,7 @@ import environment.model.roadusers.FamilySedan_RoadUser;
 import environment.model.roadusers.Motorbike_RoadUser;
 import environment.model.roadusers.SmallCar_RoadUser;
 
-public class testGraph {
+public class TestGraph {
 
 	@Before
 	public void setUp() throws Exception {

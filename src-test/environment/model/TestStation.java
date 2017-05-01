@@ -20,7 +20,7 @@ import environment.model.roadusers.Truck_RoadUser;
  *
  * @see environment.model.Station
  */
-public class testStation {
+public class TestStation {
 
 	/**
 	 * A global {@link Station} for use and reassignment by multiple tests.
@@ -35,7 +35,7 @@ public class testStation {
 	}
 
 	/**
-	 * Tests {@link Station#addLocation(Location)}.
+	 * Tests {@link Station#addLocation(TestLocation)}.
 	 */
 	@Test
 	public void testAddLocation() {
