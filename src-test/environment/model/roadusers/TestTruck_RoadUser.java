@@ -5,9 +5,9 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import environment.model.roadusers.SmallCar_RoadUser;
+import environment.model.roadusers.Truck_RoadUser;
 
-public class testSmallCar_RoadUser {
+public class TestTruck_RoadUser {
 
 	@Before
 	public void setUp() throws Exception {
@@ -15,7 +15,7 @@ public class testSmallCar_RoadUser {
 
 	@Test
 	public void testGetWorth() {
-		SmallCar_RoadUser test = new SmallCar_RoadUser();
+		Truck_RoadUser test = new Truck_RoadUser();
 		double actual = test.getWorth();
 		double expected = 10.0;
 		assertTrue(expected == actual);
@@ -23,21 +23,21 @@ public class testSmallCar_RoadUser {
 
 	@Test
 	public void testWillShop() {
-		SmallCar_RoadUser test = new SmallCar_RoadUser();
+		Truck_RoadUser test = new Truck_RoadUser();
 		assertTrue(test.willShop());
 		assertFalse(test.willShop());
 	}
 
 	@Test
 	public void testHasPaid() {
-		SmallCar_RoadUser test = new SmallCar_RoadUser();
+		Truck_RoadUser test = new Truck_RoadUser();
 		assertTrue(test.hasPaid());
 		assertFalse(test.hasPaid());
 	}
 
 	@Test
 	public void testDoneShopping() {
-		SmallCar_RoadUser test = new SmallCar_RoadUser();
+		Truck_RoadUser test = new Truck_RoadUser();
 		assertTrue(test.doneShopping());
 		assertFalse(test.doneShopping());
 	}

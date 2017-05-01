@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import environment.model.roadusers.FamilySedan_RoadUser;
 
-public class testFamilySedan_RoadUser {
+public class TestFamilySedan_RoadUser {
 
 	@Before
 	public void setUp() throws Exception {
