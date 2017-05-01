@@ -35,7 +35,7 @@ public class testStation {
 	}
 
 	/**
-	 * Tests {@link Station#addLocation(Location)}.
+	 * Tests {@link Station#addLocation(TestLocation)}.
 	 */
 	@Test
 	public void testAddLocation() {
@@ -53,7 +53,7 @@ public class testStation {
 		assertTrue(station.getNumberOfLoactions() == 0);
 
 		// Asses whether a location can be added to the station successfully.
-		Location testLocation = new Pump(ShoppingArea.class);
+		TestLocation testLocation = new Pump(ShoppingArea.class);
 		station.addLocation(testLocation);
 
 		// Assert that the number of locations in the station has increased by
@@ -163,7 +163,7 @@ public class testStation {
 
 		assertFalse(testStation1.equals(testStation2));
 
-		Location testLocation = new Pump(ShoppingArea.class);
+		TestLocation testLocation = new Pump(ShoppingArea.class);
 		testStation1.addLocation(testLocation);
 
 		assertFalse(testStation1.equals(testStation2));

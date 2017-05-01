@@ -8,7 +8,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import environment.model.locations.Location;
+import environment.model.locations.TestLocation;
 import environment.model.locations.Pump;
 import environment.model.locations.ShoppingArea;
 import environment.model.roadusers.Motorbike_RoadUser;
@@ -21,7 +21,7 @@ import environment.model.roadusers.RoadUser;
  * 
  * @version 24/04/17
  */
-public class testPump {
+public class TestPump extends TestLocation{
 
 	Pump testPump;
 
@@ -44,7 +44,7 @@ public class testPump {
 
 		assertTrue(testPump.getRoadUsersProcessed() == 0);
 
-		Map<RoadUser, Location> toMove = new HashMap<RoadUser, Location>();
+		Map<RoadUser, TestLocation> toMove = new HashMap<RoadUser, TestLocation>();
 
 		while (toMove.isEmpty()) {
 			testPump.processQueue(toMove);

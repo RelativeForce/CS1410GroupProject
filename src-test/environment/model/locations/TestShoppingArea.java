@@ -12,7 +12,7 @@ import environment.model.locations.*;
 import environment.model.roadusers.Motorbike_RoadUser;
 import environment.model.roadusers.RoadUser;
 
-public class testShoppingArea {
+public class TestShoppingArea extends TestLocation{
 
 	Location testShoppingArea;
 	
@@ -32,7 +32,7 @@ public class testShoppingArea {
 			
 			assertTrue(testShoppingArea.getRoadUsersProcessed() == 0);
 			
-			Map<RoadUser, Location> toMove = new HashMap<RoadUser, Location>();
+			Map<RoadUser, TestLocation> toMove = new HashMap<RoadUser, TestLocation>();
 			
 			testShoppingArea.processQueue(toMove);
 			
