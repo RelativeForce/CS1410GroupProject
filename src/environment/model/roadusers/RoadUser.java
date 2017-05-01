@@ -3,43 +3,37 @@ package environment.model.roadusers;
 import java.util.Random;
 
 import environment.model.Station;
+import environment.model.locations.Pump;
+import environment.model.locations.ShoppingArea;
 import environment.model.roadusers.vehicles.Vehicle;
 
 /**
  * 
- * The <code>RoadUser</code> class models a <code>RoadUser</code> which is
- * driving a vehicle.
+ * The {@link RoadUser} encapsulates the behaviour of the driver of a
+ * {@link Vehicle}.
+ * 
  * 
  * <p>
- * The <code>RoadUser</code> class is an abstract class which cannot be used as
- * an anonymous class, and must be extended by another class to be usable.
+ * {@link RoadUser}s may {@link #shop()}, this models the driver browsing the
+ * items in a {@link ShoppingArea}. They may also {@link #pay()} which causes
+ * this {@link RoadUser} to pay for the fuel in their {@link Vehicle} and
+ * results in {@link #hasPaid()} returning <code>true</code>. Also
+ * {@link #getVehicle()} retrieves the {@link Vehicle} assigned to this
+ * {@link RoadUser}. The number of ticks spent waiting at the {@link Pump}
+ * effects whether a {@link RoadUser} will shop or not. The time spent in the
+ * {@link Station} can be incremented using {@link #spendTime()} and
+ * {@link #willShop()} method will return whether the criteria for this
+ * {@link RoadUser} to shop have been met or not. The amount of money a
+ * {@link RoadUser} will spend in the {@link ShoppingArea} can be retrieved
+ * using {@link #getWorth()}. When this {@link RoadUser} has finished shopping
+ * {@link #doneShopping()} will return <code>true</code>.
  * </p>
  * 
- * <p>
- * The <code>RoadUser</code> class provides a number of method to modify and
- * describe the status of the <code>RoadUser</code>. The <code>RoadUser</code>
- * class also contains the shared behaviour of every type of
- * <code>RoadUser</code> i.e. every <code>RoadUser
- * </code> will shop when it's probability is equal to the probability to it's
- * vehicle's given shopping probability
- * </p>
- * 
- * <p>
- * Subclasses of the <code>RoadUser</code> class should
- * 
- * <ul>
- * <li>Have a number for time spent</li>
- * <li>Have boolean whether it will shop or not</li>
- * <li>Have boolean for has it paid or not</li>
- * <li>Have a vehicle type</li>
- * <li>Have a shopping time</li>
- * <li>Have the amount spent</li>
- * </ul>
  * 
  * @author Adrian_Wong
  * @author Joshua_Eddy
  * 
- * @version 26/04/2017
+ * @version 01/05/2017
  * 
  * @see java.util.Random
  *
