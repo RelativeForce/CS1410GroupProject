@@ -14,7 +14,7 @@ public class TestTill extends TestLocation {
 	@Before
 	public void setUp() throws Exception {
 		
-		TestLocation testTill = new Till(ShoppingArea.class);
+		Location testTill = new Till(ShoppingArea.class);
 	}
 
 	@Test

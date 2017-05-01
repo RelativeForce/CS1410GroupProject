@@ -32,7 +32,7 @@ public class TestShoppingArea extends TestLocation{
 			
 			assertTrue(testShoppingArea.getRoadUsersProcessed() == 0);
 			
-			Map<RoadUser, TestLocation> toMove = new HashMap<RoadUser, TestLocation>();
+			Map<RoadUser, Location> toMove = new HashMap<RoadUser, Location>();
 			
 			testShoppingArea.processQueue(toMove);
 			

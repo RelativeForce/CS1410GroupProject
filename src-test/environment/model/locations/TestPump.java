@@ -44,7 +44,7 @@ public class TestPump extends TestLocation{
 
 		assertTrue(testPump.getRoadUsersProcessed() == 0);
 
-		Map<RoadUser, TestLocation> toMove = new HashMap<RoadUser, TestLocation>();
+		Map<RoadUser, Location> toMove = new HashMap<RoadUser, Location>();
 
 		while (toMove.isEmpty()) {
 			testPump.processQueue(toMove);
