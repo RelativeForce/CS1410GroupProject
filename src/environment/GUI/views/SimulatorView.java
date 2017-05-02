@@ -19,14 +19,14 @@ package environment.GUI.views;
 public interface SimulatorView<T> {
 	
 	/**
-	 * Show the status of a {@link Station} object.
+	 * Show the status of a {@link T} object.
 	 * 
 	 * <p>
 	 * <strong>Must be overriden in classes that implement the
 	 * {@link SimulationView}.</strong>
 	 * </p>
 	 * 
-	 * @param time The time of elpased within the current {@link Station}.
+	 * @param time The time of elpased within the current {@link T} object.
 	 * @param t The details of the object which is an instance of {@link T} status.
 	 */
 	public void show(final int time, final T t);
