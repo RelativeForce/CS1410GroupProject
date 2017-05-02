@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import environment.model.locations.TestLocation;
@@ -23,12 +22,10 @@ import environment.model.roadusers.RoadUser;
  */
 public class TestPump extends TestLocation{
 
-	Pump testPump;
-
-	@Before
-	public void setUp() throws Exception {
-
-		testPump = new Pump(ShoppingArea.class);
+	private static Pump testPump = new Pump(ShoppingArea.class);
+	
+	public TestPump() {
+		super(testPump);
 	}
 
 	@Test
