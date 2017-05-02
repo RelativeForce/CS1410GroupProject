@@ -49,7 +49,7 @@ public class TestPump extends TestLocation {
 		testFillFrontRoadUser();
 
 		testRoadUserHasPaid();
-		
+
 		testTimeIncrements();
 
 	}
@@ -63,28 +63,41 @@ public class TestPump extends TestLocation {
 	private void testTimeIncrements() {
 
 		testPump.queue.clear();
-		
+
 		RoadUser testRoadUser = new Motorbike_RoadUser();
-		
+
+		// Assert that the road user has not spent any time anywhere.
+		assertTrue(testRoadUser.getTimeSpent() == 0);
+
+		// Add the road user to the pump.
 		testPump.enter(testRoadUser);
-		
-		
-		
-		
+
+		// Imitates the toMove map in Station
+		Map<RoadUser, Location> toMove = new HashMap<RoadUser, Location>();
+
+		// Repeatedly assert that the every time the pump is processed the time
+		// spent of the test road user is incremented also.
+		for (int timeSpent = 1; timeSpent < 20; timeSpent++) {
+
+			testPump.processQueue(toMove);
+			assertTrue(testRoadUser.getTimeSpent() == timeSpent);
+
+		}
+
 	}
 
 	/**
-	 * Test that a valid {@link RoadUser} can be added to {@link Pump}
-	 * and that it is filled when it is at the front of the queue.
+	 * Test that a valid {@link RoadUser} can be added to {@link Pump} and that
+	 * it is filled when it is at the front of the queue.
 	 * 
 	 * Sub-Test {@link #testProcessQueue()}
-	 *            
+	 * 
 	 */
 	private void testFillFrontRoadUser() {
 
 		// A valid road user
 		RoadUser testRoadUser = new Motorbike_RoadUser();
-		
+
 		// Assert that the number of road users that testPump has processed is
 		// initially zero.
 		assertTrue(testPump.getRoadUsersProcessed() == 0);
