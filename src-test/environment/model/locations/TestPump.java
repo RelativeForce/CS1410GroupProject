@@ -17,15 +17,32 @@ import environment.model.roadusers.vehicles.Vehicle;
 
 /**
  * 
+ * Tests {@link Pump}. This test class tests the functionality of:
+ * 
+ * <ul>
+ * <li>{@link Pump#processQueue(Map)}</li>
+ * <li>{@link Pump#compare(Location)}</li>
+ * </ul>
+ * 
  * @author Joshua_Eddy
  * @author Karendeep_Saini
  * 
- * @version 24/04/17
+ * @version 02/05/17
+ * 
+ * @see environment.model.locations.Pump
  */
 public class TestPump extends TestLocation {
 
+	/**
+	 * Holds an instance of {@link Pump} to be used for testing purposes.
+	 * 
+	 * @see environment.model.locations.Pump
+	 */
 	private static Pump testPump = new Pump(ShoppingArea.class);
 
+	/**
+	 * Constructs a new {@link Pump} test.
+	 */
 	public TestPump() {
 		super(testPump);
 	}
@@ -52,6 +69,26 @@ public class TestPump extends TestLocation {
 
 		testTimeIncrements();
 
+	}
+
+	/**
+	 * This tests asserts that {@link Pump#compare(Location)} will return true
+	 * if:
+	 * <ul>
+	 * <li>The parameter location is also a {@link Pump}</li>
+	 * <li>The queue at the parameter location is longer than the queue at the
+	 * {@link Pump} that invoked the method.</li>
+	 * </ul>
+	 * 
+	 * @see environment.model.locations.Pump
+	 * 
+	 */
+	@Test
+	public void testCompare() {
+
+		
+		
+		
 	}
 
 	/**
