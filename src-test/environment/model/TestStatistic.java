@@ -26,13 +26,13 @@ public class TestStatistic {
 	/**
 	 * A global {@link Statistic} for use and reassignment by multiple tests.
 	 */
-	private Statistic statistic;
+	private Statistic<RoadUser> statistic;
 
 	/**
 	 * Initialise {@link #statistic}.
 	 */
 	private void setUp() {
-		statistic = new Statistic();
+		statistic = new Statistic<RoadUser>();
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class TestStatistic {
 		statistic.update(testClass1, 4);
 
 		// Clone the statistic.
-		Statistic statisticClone = statistic.clone();
+		Statistic<RoadUser> statisticClone = statistic.clone();
 
 		// Check the clone is identical to the original statistic.
 		assertTrue(statisticClone.get(testClass1) == 4);
