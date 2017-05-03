@@ -29,7 +29,7 @@ import environment.model.roadusers.Truck_RoadUser;
  * @version 13/04/2017
  * @since 08/03/2017
  */
-public final class CommandLine implements SimulatorView {
+public final class CommandLine implements SimulatorView<Station> {
 
 	/**
 	 * The single instance of {@link CommandLine}.

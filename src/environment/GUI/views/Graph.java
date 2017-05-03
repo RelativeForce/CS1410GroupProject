@@ -39,7 +39,7 @@ import environment.model.roadusers.*;
  * @see environment.GUI.views.SimulatorView
  *
  */
-public class Graph implements SimulatorView {
+public class Graph implements SimulatorView<Station> {
 
 	// Singleton --------------------------------------------------------------
 
