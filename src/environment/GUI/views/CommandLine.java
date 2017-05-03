@@ -36,7 +36,7 @@ public final class CommandLine implements SimulatorView<Station> {
 	 * 
 	 * @see environment.GUI.views.CommandLine
 	 */
-	private static CommandLine COMMANDLINE = new CommandLine();
+	private final static CommandLine COMMANDLINE = new CommandLine();
 
 	/**
 	 * Represents whether the {@link CommandLine} should display the final more

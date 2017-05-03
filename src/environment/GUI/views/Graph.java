@@ -48,7 +48,7 @@ public class Graph implements SimulatorView<Station> {
 	 * 
 	 * @see environment.GUI.views.Graph
 	 */
-	private static Graph GRAPH = new Graph();
+	private final static Graph GRAPH = new Graph();
 
 	// Public Fields ----------------------------------------------------------
 
