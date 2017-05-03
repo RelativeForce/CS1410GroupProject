@@ -27,7 +27,7 @@ public final class Simulator {
 	 * @see #simulate()
 	 * @see environment.GUI.views.SimulatorView
 	 */
-	private SimulatorView view;
+	private SimulatorView<Station> view;
 
 	/**
 	 * The {@link UserInterface} that the user will input the parameters of the

@@ -19,6 +19,7 @@ import environment.GUI.views.Animated;
 import environment.GUI.views.CommandLine;
 import environment.GUI.views.Graph;
 import environment.GUI.views.SimulatorView;
+import environment.model.Station;
 
 /**
  *
@@ -230,8 +231,9 @@ public class UserInterface {
 
 		// Create an action listener for each button and link it to a function
 		submit.addActionListener(e -> submit());
-		cancel.addActionListener(e -> {dispose();
-		System.exit(0);
+		cancel.addActionListener(e -> {
+			dispose();
+			System.exit(0);
 		});
 
 		// Create an action listener for the window and link it to a function
@@ -286,7 +288,7 @@ public class UserInterface {
 		try {
 			// Takes values from the user entry fields and assign them to
 			// respective variables
-			pumps = ((pointType) pumpsEntry.getSelectedItem()).num; 
+			pumps = ((pointType) pumpsEntry.getSelectedItem()).num;
 			tills = ((pointType) tillsEntry.getSelectedItem()).num;
 			p = ((variableType) pDropDown.getSelectedItem()).doub;
 			q = ((variableType) qDropDown.getSelectedItem()).doub;
@@ -327,7 +329,7 @@ public class UserInterface {
 	 */
 	public void dispose() {
 		display.dispose();
-		
+
 	}
 
 	/**
@@ -406,9 +408,9 @@ public class UserInterface {
 	 * 
 	 * @return <code>SimulatorView<code>
 	 */
-	public SimulatorView getView() {
+	public SimulatorView<Station> getView() {
 		// Set the value in simulator view to null
-		SimulatorView view = null;
+		SimulatorView<Station> view = null;
 		// If The string matches command line then set view to command line
 		if (((String) viewDropDown.getSelectedItem()).equals("Command Line")) {
 			view = CommandLine.getInstance();
