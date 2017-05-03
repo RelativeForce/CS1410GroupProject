@@ -25,7 +25,7 @@ import environment.model.roadusers.vehicles.Vehicle;
  * </ul>
  * 
  * @author Joshua_Eddy
- * @author Karendeep_Saini
+ * @author Karandeep_Saini
  * 
  * @version 02/05/17
  * 
