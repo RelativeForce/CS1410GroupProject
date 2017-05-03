@@ -1,7 +1,5 @@
 package environment.GUI.views;
 
-import environment.model.Station;
-
 /**
  * The <code>SimulatorView</code> interface is used by classes
  * which deliver information about the status of the simulation.
@@ -16,21 +14,22 @@ import environment.model.Station;
  * @author Joshua Eddy
  * @version	11/03/2017
  * @since	06/03/2017
+ * @param <T> The type in use by the {@link SimulatorView}
  */
-public interface SimulatorView {
+public interface SimulatorView<T> {
 	
 	/**
-	 * Show the status of a {@link Station} object.
+	 * Show the status of a {@link T} object.
 	 * 
 	 * <p>
 	 * <strong>Must be overriden in classes that implement the
 	 * {@link SimulationView}.</strong>
 	 * </p>
 	 * 
-	 * @param time The time of elpased within the current {@link Station}.
-	 * @param station The details of the {@link Station} status.
+	 * @param time The time of elpased within the current {@link T} object.
+	 * @param t The details of the object which is an instance of {@link T} status.
 	 */
-	public void show(final int time, final Station station);
+	public void show(final int time, final T t);
 	
 	/**
 	 * Set the {@link SimulatorView} to terminate.

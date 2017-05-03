@@ -3,6 +3,7 @@ package environment.model.roadusers;
 import java.util.Random;
 
 import environment.model.Station;
+import environment.model.locations.Location;
 import environment.model.locations.Pump;
 import environment.model.locations.ShoppingArea;
 import environment.model.roadusers.vehicles.Vehicle;
@@ -254,6 +255,19 @@ public abstract class RoadUser implements Cloneable {
 	 */
 	public boolean isShopping() {
 		return isShopping;
+	}
+
+	/**
+	 * Retrieves the number of ticks spent in the {@link Station} according to
+	 * this {@link RoadUser}. {@link Location}s must increment this to cause the
+	 * passage of time.
+	 * 
+	 * @return <code>int</code> number of ticks spent in the station.
+	 * 
+	 * @see #timeSpent
+	 */
+	public int getTimeSpent() {
+		return timeSpent;
 	}
 
 	// Protected Methods -------------------------------------------------------

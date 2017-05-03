@@ -121,7 +121,7 @@ public abstract class TestLocation {
 
 		// Iterate until the size of the queue of small cars is longer than the
 		// make queue size.
-		while (testLocation.maxQueueSize > queueSize) {
+		while (testLocation.maxQueueSize >= queueSize) {
 
 			// Temporary road user to be added to testQueue
 			RoadUser tempRoadUser = new SmallCar_RoadUser();

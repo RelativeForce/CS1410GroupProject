@@ -65,7 +65,7 @@ import environment.model.roadusers.vehicles.Vehicle;
  * @See JFrame
  * @see SimulatorView
  */
-public final class Animated extends JFrame implements SimulatorView {
+public final class Animated extends JFrame implements SimulatorView<Station> {
 	
 	/**
 	 * The serial ID of the {@link Animation}.

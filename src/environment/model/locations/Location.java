@@ -280,14 +280,14 @@ public abstract class Location implements Cloneable {
 	}
 
 	/**
-	 * Retrieves whether a specified {@link Location} is more optimal for a
-	 * {@link RoadUser} to enter than <code>this</code>. This method compares
-	 * these two {@link Location}s differently depending on the type of
+	 * Retrieves whether <code>this</code> is more optimal for a
+	 * {@link RoadUser} to enter than a specified {@link Location}. This method
+	 * compares these two {@link Location}s differently depending on the type of
 	 * {@link Location}.
 	 * 
 	 * @param location
 	 *            {@link Location} for <code>this</code> to be compared to.
-	 * @return <code>boolean this</code> if better that the specified
+	 * @return <code>boolean this</code> is better that the specified
 	 *         {@link Location}.
 	 */
 	public abstract boolean compare(Location location);
