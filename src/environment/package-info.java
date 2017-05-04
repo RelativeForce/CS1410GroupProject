@@ -1,9 +1,18 @@
 /**
  * 
  * This module contains the model and the different views for the Petrol Station
- * Simulation.
+ * Simulation. In addition to this it also contains the
+ * {@link environment.Statistic} library class.
  * 
- * @author Joshua_Eddy, John_Berg, David_Wightman, Adrian_Wong
+ * @author Joshua_Eddy
+ * @author John_Berg
+ * @author David_Wightman
+ * @author Adrian_Wong
+ * @author Karendeep_Saini
  *
+ * @see environment.model
+ * @see environment.GUI
+ * @see environment.Simulator
+ * @see environment.Statistic
  */
 package environment;
