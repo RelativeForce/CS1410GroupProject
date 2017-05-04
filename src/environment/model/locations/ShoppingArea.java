@@ -77,6 +77,7 @@ public class ShoppingArea extends Location implements Cloneable {
 					// The Road User's time spent in the shopping is
 					// incremented.
 					roadUser.shop();
+					roadUser.spendTime();
 				}
 
 				// Otherwise

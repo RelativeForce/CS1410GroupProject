@@ -94,6 +94,8 @@ public class Till extends Location implements Cloneable {
 				// The Road User (first element of the queue) is then retrieved
 				// and removed.
 				RoadUser tempRoadUser = queue.poll();
+				
+				tempRoadUser.spendTime();
 
 				// The Road User is then moved to the next location.
 				toMove.put(tempRoadUser, this);
@@ -113,6 +115,8 @@ public class Till extends Location implements Cloneable {
 
 			} else {
 
+				queue.peek().spendTime();
+				
 				// Wait a tick
 				timeToSpend--;
 

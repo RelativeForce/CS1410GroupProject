@@ -2,10 +2,13 @@ package environment.model.locations;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.junit.Test;
 
+import environment.model.roadusers.FamilySedan_RoadUser;
 import environment.model.roadusers.RoadUser;
 import environment.model.roadusers.SmallCar_RoadUser;
 
@@ -32,6 +35,10 @@ import environment.model.roadusers.SmallCar_RoadUser;
  */
 public abstract class TestLocation {
 
+	/**
+	 * A {@link Location} that will be assigned to as a concrete subclass. This
+	 * allows the testing of all the common functionality of {@link Location}.
+	 */
 	private Location testLocation;
 
 	/**
@@ -149,9 +156,83 @@ public abstract class TestLocation {
 		testLocation.queue.clear();
 	}
 
+	/**
+	 * This test {@link Location#returnToQueue(RoadUser)} method.
+	 * 
+	 * @see environment.model.locations.Location
+	 */
 	@Test
 	public void testReturnToQueue() {
 
+		testLocation.queue.clear();
+
+		RoadUser testRoadUser = new FamilySedan_RoadUser();
+
+		testLocation.returnToQueue(testRoadUser);
+
+		assertTrue(testLocation.queue.get(0).equals(testRoadUser));
+
+		testLocation.queue.clear();
+
 	}
 
+	/**
+	 * Tests whether {@link Location} increments the time spent for all of the
+	 * road users inside it each time it is processed.
+	 * 
+	 * @see environment.model.locations.Location
+	 */
+	@Test
+	public void testTimeIncrements() {
+
+		testLocation.queue.clear();
+
+		RoadUser testRoadUser = new SmallCar_RoadUser();
+
+		// Assert that the road user has not spent any time anywhere.
+		assertTrue(testRoadUser.getTimeSpent() == 0);
+
+		// Add the road user to the pump.
+		testLocation.enter(testRoadUser);
+
+		// Imitates the toMove map in Station
+		Map<RoadUser, Location> toMove = new HashMap<RoadUser, Location>();
+
+		// Repeatedly assert that the every time the pump is processed the time
+		// spent of the test road user is incremented also.
+		for (int timeSpent = 1; timeSpent < 20; timeSpent++) {
+
+			testLocation.processQueue(toMove);
+			assertTrue(testRoadUser.getTimeSpent() == timeSpent);
+
+		}
+
+		testLocation.queue.clear();
+
+	}
+
+	/**
+	 * This tests asserts that {@link Location#compare(Location)} will return
+	 * true if:
+	 * <ul>
+	 * <li>The parameter {@link Location} is an instance of the same subclass of
+	 * {@link Location}</li>
+	 * <li>The parameter {@link Location} is better or worse that the
+	 * {@link Location} that invoked the method.</li>
+	 * </ul>
+	 * 
+	 * @see environment.model.locations.Location
+	 * 
+	 */
+	@Test
+	public abstract void testCompare();
+
+	/**
+	 * Tests {@link Location#processQueue(Map)} which is abstact because the
+	 * implementation of the method depends on the subclass of {@link Location}
+	 * 
+	 * @see environment.model.locations.Location
+	 */
+	@Test
+	public abstract void testProcessQueue();
 }

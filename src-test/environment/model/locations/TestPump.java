@@ -8,15 +8,14 @@ import java.util.Map;
 import org.junit.Test;
 
 import environment.model.locations.TestLocation;
-import environment.model.Station;
 import environment.model.locations.Pump;
 import environment.model.locations.ShoppingArea;
 import environment.model.roadusers.Motorbike_RoadUser;
 import environment.model.roadusers.RoadUser;
+import environment.model.roadusers.SmallCar_RoadUser;
 import environment.model.roadusers.vehicles.Vehicle;
 
 /**
- * 
  * Tests {@link Pump}. This test class tests the functionality of:
  * 
  * <ul>
@@ -52,13 +51,12 @@ public class TestPump extends TestLocation {
 	 * <ul>
 	 * <li>Fill up their {@link Vehicle}'s tank if are at the front of the
 	 * queue</li>
-	 * <li>Increment the amount of time they have spent in the {@link Station}
-	 * every time {@link Location#processQueue(Map)} is called.</li>
 	 * <li>Only be removed from the front of the queue if the {@link RoadUser}
 	 * has paid.</li>
 	 * </ul>
 	 */
 	@Test
+	@Override
 	public void testProcessQueue() {
 
 		testPump.queue.clear();
@@ -66,8 +64,6 @@ public class TestPump extends TestLocation {
 		testFillFrontRoadUser();
 
 		testRoadUserHasPaid();
-
-		testTimeIncrements();
 
 	}
 
@@ -84,42 +80,31 @@ public class TestPump extends TestLocation {
 	 * 
 	 */
 	@Test
+	@Override
 	public void testCompare() {
 
-		
-		
-		
-	}
-
-	/**
-	 * Tests whether pump increments the time spent for all of the road users
-	 * inside it each time it is processed.
-	 * 
-	 * Sub-Test {@link #testProcessQueue()}
-	 */
-	private void testTimeIncrements() {
-
+		// Clear the queue of the test pump
 		testPump.queue.clear();
 
-		RoadUser testRoadUser = new Motorbike_RoadUser();
+		// Create a Location for test pump to be compared to.
+		Location testLocation = new Pump(ShoppingArea.class);
 
-		// Assert that the road user has not spent any time anywhere.
-		assertTrue(testRoadUser.getTimeSpent() == 0);
+		// Create a road user to be used in the test.
+		RoadUser testRoadUser = new SmallCar_RoadUser();
 
-		// Add the road user to the pump.
-		testPump.enter(testRoadUser);
+		// Add the road user to the new pump
+		testLocation.enter(testRoadUser);
 
-		// Imitates the toMove map in Station
-		Map<RoadUser, Location> toMove = new HashMap<RoadUser, Location>();
+		// The testPump.compare() should return true as the testLocation is also
+		// a pump and has a longer queue than the test pump.
+		assertTrue(testPump.compare(testLocation));
 
-		// Repeatedly assert that the every time the pump is processed the time
-		// spent of the test road user is incremented also.
-		for (int timeSpent = 1; timeSpent < 20; timeSpent++) {
+		// Swap the test location for a ShoppingArea
+		testLocation = new ShoppingArea(Till.class);
 
-			testPump.processQueue(toMove);
-			assertTrue(testRoadUser.getTimeSpent() == timeSpent);
-
-		}
+		// The testPump.compare() should return false as you cannot compare a
+		// pump to a ShoppingArea.
+		assertTrue(!testPump.compare(testLocation));
 
 	}
 
