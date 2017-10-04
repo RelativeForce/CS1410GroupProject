@@ -31,7 +31,7 @@ public final class Simulator {
 
 	/**
 	 * The {@link UserInterface} that the user will input the parameters of the
-	 * simulation.
+	 * simulation. :D
 	 * 
 	 * @see #getSimulationDetails()
 	 * @see environment.GUI.UserInterface
